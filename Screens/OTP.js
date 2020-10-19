@@ -33,6 +33,8 @@ const OTP = ({ navigation, route }) => {
         const { currentUser } = auth()
         const uid = { currentUser }.currentUser.uid
         // alert(uid)
+        await AsyncStorage.setItem("uid", uid)
+        
 
         const ref = await firestore().collection("influencer")
         ref.where("uid", "==", uid).get()
@@ -46,6 +48,7 @@ const OTP = ({ navigation, route }) => {
                     querySnapshot.forEach(async function (doc) {
                         // console.log(doc.data().name);
                         ToastAndroid.show("Welcome Back " + doc.data().name, ToastAndroid.SHORT)
+                        await AsyncStorage.setItem("uid", uid)
                         await AsyncStorage.setItem("datauploadeduser", "true")
                         navigation.navigate("Tabbar")
                     });

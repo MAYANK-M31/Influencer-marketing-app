@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View,TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from "react-native-vector-icons/Feather"
@@ -8,8 +8,8 @@ import Home from './Home';
 import Search from './Search';
 import Jobs from './Jobs';
 import Profile from './Profile';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import SearchStack from './SearchStack';
+import MyProfileStack from './MyProfileStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -49,7 +49,7 @@ const Tabbar = () => {
                 <Tab.Screen name="Home" component={Home}  />
                 <Tab.Screen name="Search" component={SearchStack} />
                 <Tab.Screen name="Jobs" component={Jobs} />
-                <Tab.Screen name="Profile" component={Profile} />
+                <Tab.Screen name="Profile" component={MyProfileStack} />
             </Tab.Navigator>
            
       

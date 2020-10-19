@@ -18,7 +18,7 @@ import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-community/google-signin';
 
 import InstagramLogin from 'react-native-instagram-login';
-import CookieManager from '@react-native-community/cookies';
+// import CookieManager from '@react-native-community/cookies';
 
 import axios from "axios";
 

@@ -10,6 +10,10 @@ target 'MYAPP3' do
 
   pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
 
+  pod 'react-native-cookies', :path => '../node_modules/@react-native-community/cookies'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'MYAPP3Tests' do
     inherit! :complete
     # Pods for testing

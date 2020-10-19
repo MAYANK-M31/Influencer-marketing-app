@@ -3,7 +3,6 @@ import { View, StyleSheet, Dimensions, Text } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons"
 
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { color } from 'react-native-reanimated';
 
 const FirstRoute = () => (
     <View style={[styles.scene, { backgroundColor: 'white' }]}

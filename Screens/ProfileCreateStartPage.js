@@ -31,7 +31,7 @@ const ProfileCreateStartPage = ({ navigation }) => {
         const { currentUser } = auth()
         const uid = { currentUser }.currentUser.uid
         const phonenumber = { currentUser }.currentUser.phoneNumber
-        await AsyncStorage.setItem("uid", uid)
+        // await AsyncStorage.setItem("uid", uid)
         await AsyncStorage.setItem("phonenumber", phonenumber)
         // console.log({currentUser}.currentUser);
 

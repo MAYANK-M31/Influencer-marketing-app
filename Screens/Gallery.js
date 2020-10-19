@@ -14,7 +14,6 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import axios from "axios"
-import { sub } from 'react-native-reanimated';
 
 var abbreviate = require('number-abbreviate')
 

@@ -15,7 +15,6 @@ import {
 import { TextInput, DefaultTheme } from "react-native-paper"
 import Ionicons from "react-native-vector-icons/Feather"
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
-import { color } from 'react-native-reanimated';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height

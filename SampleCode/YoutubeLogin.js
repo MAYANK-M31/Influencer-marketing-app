@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
+import { TextInput } from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-community/google-signin';
 import axios from "axios";

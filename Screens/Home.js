@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
-import { TextInput } from 'react-native-gesture-handler';
 import auth from '@react-native-firebase/auth';
 import axios from "axios"
 import firestore from "@react-native-firebase/firestore"
@@ -99,7 +98,7 @@ const Home = ({ navigation }) => {
                         </View>
                     </View>
                     
-                    <TouchableOpacity onPress={async () => { await AsyncStorage.removeItem("loggedin"),await AsyncStorage.removeItem("datauploadeduser"),BackHandler.exitApp()}} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
+                    <TouchableOpacity onPress={async () => {await AsyncStorage.multiRemove(["DocId", "datauploadeduser", "editage", "loggedin", "phonenumber", "type", "uid"]),BackHandler.exitApp()}} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
 

@@ -9,11 +9,10 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Image, Alert, BackHandler
+    Image, Alert, BackHandler,TextInput
 } from 'react-native';
 import firestore from "@react-native-firebase/firestore"
 import Ionicons from "react-native-vector-icons/Feather"
-import { TextInput } from 'react-native-gesture-handler';
 import Card from './Card';
 
 const WiDTH = Dimensions.get("window").width
