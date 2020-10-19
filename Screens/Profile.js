@@ -49,8 +49,8 @@ const Profile = ({ route, navigation }) => {
   const [loading, setloading] = useState(true)
   const [number, setnumber] = useState(null)
   const [switchtype, setswitchtype] = useState("instagram")
-  const [instaconnected,setinstaconnected] = useState(null)
-  const [youtubeconnected,setyoutubeconnected] = useState(null)
+  const [instaconnected,setinstaconnected] = useState(false)
+  const [youtubeconnected,setyoutubeconnected] = useState(false)
 
   function animateValue(start, end, duration) {
     if (start === end) return;

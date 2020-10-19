@@ -29,6 +29,11 @@ const EditProfile = ({ navigation, route }) => {
     const [city, setcity] = useState(route.params.city)
     const [name, setname] = useState(route.params.name)
     const [category, setcategory] = useState(route.params.category)
+    const [instaconnected,setinstaconnected]  = useState(route.params.instaconnected)
+    const [youtubeconnected,setyoutubeconnected]  = useState(route.params.youtubeconnected)
+
+
+
 
     useEffect(() => {
 
@@ -65,6 +70,9 @@ const EditProfile = ({ navigation, route }) => {
             const editcity = await AsyncStorage.getItem("editcity")
             const editcategory = await AsyncStorage.getItem("editcategory")
             const editname = await AsyncStorage.getItem("editname")
+            const editinstaconnected = await AsyncStorage.getItem("instaconnected")
+            const edityoutubeconnected = await AsyncStorage.getItem("youtubeconnected")
+
             if (editedage) {
                 setage(editedage)
             }
@@ -88,6 +96,24 @@ const EditProfile = ({ navigation, route }) => {
             if (editname !== null) {
                 setname(editname)
             }
+
+            if(edityoutubeconnected){
+                setyoutubeconnected(edityoutubeconnected)
+            }
+
+            if(editinstaconnected){
+                setinstaconnected(editinstaconnected)
+                
+            }
+
+            // if(route.params.youtubeconnected == null){
+            //     setyoutubeconnected(false)
+            // }
+            // if(route.params.instaconnected == null){
+            //     setinstaconnected(false)
+            // }
+          
+           
 
         });
 
@@ -121,7 +147,7 @@ const EditProfile = ({ navigation, route }) => {
                     <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15 }} >
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Social Media</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditSocialMedia",{insta:route.params.instaconnected,youtube:route.params.youtubeconnected}) }} >
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditSocialMedia",{insta:instaconnected,youtube:youtubeconnected}) }} >
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
 
@@ -132,7 +158,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Ionicons name={"instagram"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{route.params.instaconnected ? "Instagram Connected" : "Connect To Instagram"}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{instaconnected ? "Instagram Connected" : "Connect To Instagram"}</Text>
                             </View>
                         </View>
 
@@ -142,7 +168,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Ionicons name={"youtube"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{route.params.youtubeconnected ? "YouTube Connected" : "Connect To YouTube"}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{youtubeconnected ? "YouTube Connected" : "Connect To YouTube"}</Text>
                             </View>
                         </View>
                     </View>

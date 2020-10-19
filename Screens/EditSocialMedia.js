@@ -21,7 +21,7 @@ import InstagramLogin from 'react-native-instagram-login';
 import CookieManager from '@react-native-community/cookies';
 
 import axios from "axios";
-import { Button } from 'react-native-paper';
+import firestore from "@react-native-firebase/firestore"
 
 
 GoogleSignin.configure({
@@ -39,7 +39,9 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditSocialMedia = ({ navigation, route }) => {
 
-    const [disable, setdisable] = useState(true)
+    const [disable, setdisable] = useState(null)
+    const [disable2, setdisable2] = useState(null)
+
 
     // For YouTube Auth
     const [youtubedata, setyoutubedata] = useState(null)
@@ -58,7 +60,7 @@ const EditSocialMedia = ({ navigation, route }) => {
 
     // For Youtube Auth
     async function onGoogleButtonPress() {
-       
+
         // Get the users ID token
         const { idToken } = await GoogleSignin.signIn();
 
@@ -75,12 +77,24 @@ const EditSocialMedia = ({ navigation, route }) => {
 
                 setyoutubetoken(res.accessToken)
                 await axios.get("https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true&key=AIzaSyB0teIk0vu9KpyKgSXPK4WZnOqqb9aQI0Q&access_token=" + res.accessToken).then((res) => {
-                    // console.log(res.data.items[0].statistics);
-                    setloading(false)
-                    setyoutubedata(res.data)
-                    setyoutubeconnected(true)
-                    setdisable(true)
-                    // console.log(youtubedata);
+
+                    if (res.data.items == undefined) {
+                        ToastAndroid.show("Yours Youtube account has nothing to show.", ToastAndroid.LONG)
+                        setyoutubeconnected(false)
+                        setyoutubedata(null)
+                        setloading(false)
+                        signOut()
+                        setdisable(false)
+                    } else {
+                        // console.log(res.data.items[0].statistics);
+                        setloading(false)
+                        setyoutubedata(res.data)
+                        setyoutubeconnected(true)
+                        setdisable(true)
+
+                        // console.log(youtubedata);
+                    }
+
                 })
 
 
@@ -91,13 +105,13 @@ const EditSocialMedia = ({ navigation, route }) => {
 
     const signOut = async () => {
         try {
-          await GoogleSignin.revokeAccess();
-          await GoogleSignin.signOut();
-   
+            await GoogleSignin.revokeAccess();
+            await GoogleSignin.signOut();
+
         } catch (error) {
-          console.error(error);
+            console.error(error);
         }
-      };
+    };
 
 
 
@@ -118,27 +132,105 @@ const EditSocialMedia = ({ navigation, route }) => {
                 // console.log(instadata.data);
                 setinstaconnected(true)
                 setresult(true)
-                setdisable(false)
-              
+                setdisable2(true)
+
+
+
 
             })
-            
-            
+
+
 
         settoken(datas.access_token)
     }
     // console.log('data', instadata)
 
-    const submit = () => {
-        navigation.navigate("ProfileFifthPage", {
-            name: route.params.name,
-            age: route.params.age,
-            email: route.params.email,
-            city: route.params.city,
-            category: route.params.category,
-            youtubedata: youtubedata,
-            instadata: instadata
-        })
+    const onClear = () => {
+        CookieManager.clearAll(true)
+            .then((res) => {
+                setinstaconnected(false)
+                setinstadata(null)
+                setdisable2(false)
+                ToastAndroid.show("Instagram Signed out", ToastAndroid.SHORT)
+            });
+    }
+
+
+    const save = () => {
+        if (instaconnected == false && youtubeconnected == false) {
+            ToastAndroid.show("Connect atleast one account", ToastAndroid.SHORT)
+        } else {
+
+            const func = async () => {
+
+                const docid = await AsyncStorage.getItem("DocId")
+                const ref = await firestore().collection("influencer").doc(docid)
+
+                if (instadata) {
+
+                    ref.update({
+                        instadata: instadata
+                    }).then(async () => {
+                        ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                        navigation.goBack()
+                        await AsyncStorage.setItem("instaconnected","true")
+                    })
+
+
+                }
+
+                if (youtubedata) {
+
+                    ref.update({
+                        youtubedata: youtubedata
+                    }).then(async () => {
+                        ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                        navigation.goBack()
+                        await AsyncStorage.setItem("youtubeconnected","true")
+                    })
+
+
+
+
+                }
+
+
+                if(instaconnected == false){
+                    ref.update({
+                        instadata: firestore.FieldValue.delete()
+                    }).then(async () => {
+                        ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                        navigation.goBack()
+                        await AsyncStorage.setItem("instaconnected","false")
+                    })
+                }else if(youtubeconnected == false){
+                    ref.update({
+                        youtubedata: firestore.FieldValue.delete()
+                    }).then(async () => {
+                        ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                        navigation.goBack()
+                        await AsyncStorage.setItem("youtubeconnected","false")
+                    })
+                }
+
+
+                if (!instadata && !youtubedata){
+                    ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                    navigation.goBack()
+                }
+
+
+
+
+
+
+
+
+            }
+            func()
+
+
+        }
     }
 
 
@@ -166,11 +258,19 @@ const EditSocialMedia = ({ navigation, route }) => {
 
                     <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Instagram</Text>
-                        <Text style={{ fontSize: 15, fontWeight: "100", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }}>Sign Out</Text>
+                        {!instaconnected ?
+                            null
+                            :
+                            <TouchableOpacity onPress={() => onClear()}>
+                                <Text style={{ fontSize: 15, fontWeight: "100", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }}>Sign Out</Text>
+                            </TouchableOpacity>
+
+                        }
+
                     </View>
 
                     <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "#f0f2f5", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                        <TouchableOpacity disabled={disable} onPress={() => instagramLogin.show()} style={{
+                        <TouchableOpacity disabled={instaconnected} onPress={() => instagramLogin.show()} style={{
                             height: 55, width: "100%", backgroundColor: instaconnected ? "#1e87fd" : "white"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50,
@@ -207,14 +307,18 @@ const EditSocialMedia = ({ navigation, route }) => {
 
                     <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >YouTube</Text>
-                        <TouchableOpacity onPress={() => signOut().then(() => {setyoutubeconnected(false),setdisable(false),ToastAndroid.show("YouTube Signed out",ToastAndroid.SHORT)})}>
-                            <Text style={{ fontSize: 15, fontWeight: "100", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }}>Sign Out</Text>
-                        </TouchableOpacity>
+                        {!youtubeconnected ? null
+                            :
+                            <TouchableOpacity onPress={() => signOut().then(() => { setyoutubeconnected(false),setyoutubedata(null), setdisable(false), ToastAndroid.show("YouTube Signed out", ToastAndroid.SHORT) })}>
+                                <Text style={{ fontSize: 15, fontWeight: "100", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }}>Sign Out</Text>
+                            </TouchableOpacity>
+                        }
+
 
                     </View>
 
                     <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "#f0f2f5", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                        <TouchableOpacity disabled={disable} onPress={() => onGoogleButtonPress()} style={{
+                        <TouchableOpacity disabled={youtubeconnected} onPress={() => onGoogleButtonPress()} style={{
                             height: 55, width: "100%", backgroundColor: youtubeconnected ? "#1e87fd" : "white"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50,
@@ -246,8 +350,8 @@ const EditSocialMedia = ({ navigation, route }) => {
 
 
 
-                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 80, left: 20 }} >Note : It Is Recommended To Connect Your Account </Text>
-                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 62, left: 17 }} > To Both Platforms</Text>
+                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 100, left: 20 }} >Note : It Is Recommended To Connect Your Account </Text>
+                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 82, left: 17 }} > To Both Platforms</Text>
 
 
 
