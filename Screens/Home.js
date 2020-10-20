@@ -98,12 +98,12 @@ const Home = ({ navigation }) => {
                         </View>
                     </View>
                     
-                    <TouchableOpacity onPress={async () => {await AsyncStorage.multiRemove(["DocId", "datauploadeduser", "editage", "loggedin", "phonenumber", "type", "uid"]),BackHandler.exitApp()}} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
+                    <TouchableOpacity onPress={async () => {await AsyncStorage.multiRemove(["DocId", "datauploadeduser", "editage", "loggedin", "phonenumber", "type", "uid","editabout"]),BackHandler.exitApp()}} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
 
                 </View>
-
+     
 
 
 

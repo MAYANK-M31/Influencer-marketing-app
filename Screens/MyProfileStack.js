@@ -7,6 +7,7 @@ import Gallery from "./Gallery";
 import EditProfile from "./EditProfile"
 import  Settings  from "./Settings";
 import EditProfileStack from "./EditProfileStack";
+import AddAbout from "./AddAbout";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const MyProfileStack = () => {
             <Stack.Screen name="Gallery" component={Gallery} options={{headerShown:false,animationEnabled:false}} />   
             <Stack.Screen name="EditProfileStack" component={EditProfileStack} options={{headerShown:false}} /> 
             <Stack.Screen name="Settings" component={Settings} options={{headerShown:false}} />   
+            <Stack.Screen name="AddAbout" component={AddAbout} options={{headerShown:false}} />
         </Stack.Navigator>
     );
 }

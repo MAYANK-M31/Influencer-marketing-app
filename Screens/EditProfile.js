@@ -29,8 +29,9 @@ const EditProfile = ({ navigation, route }) => {
     const [city, setcity] = useState(route.params.city)
     const [name, setname] = useState(route.params.name)
     const [category, setcategory] = useState(route.params.category)
-    const [instaconnected,setinstaconnected]  = useState(route.params.instaconnected)
-    const [youtubeconnected,setyoutubeconnected]  = useState(route.params.youtubeconnected)
+    const [instaconnected, setinstaconnected] = useState(route.params.instaconnected)
+    const [youtubeconnected, setyoutubeconnected] = useState(route.params.youtubeconnected)
+    const [about, setabout] = useState(route.params.about)
 
 
 
@@ -72,6 +73,7 @@ const EditProfile = ({ navigation, route }) => {
             const editname = await AsyncStorage.getItem("editname")
             const editinstaconnected = await AsyncStorage.getItem("instaconnected")
             const edityoutubeconnected = await AsyncStorage.getItem("youtubeconnected")
+            const editabout = await AsyncStorage.getItem("editabout")
 
             if (editedage) {
                 setage(editedage)
@@ -97,13 +99,18 @@ const EditProfile = ({ navigation, route }) => {
                 setname(editname)
             }
 
-            if(edityoutubeconnected){
-                setyoutubeconnected(edityoutubeconnected)
-            }
+            // if (edityoutubeconnected) {
+            //     setyoutubeconnected(edityoutubeconnected)
+            // }
 
-            if(editinstaconnected){
-                setinstaconnected(editinstaconnected)
-                
+            // if (editinstaconnected) {
+            //     setinstaconnected(editinstaconnected)
+
+            // }
+
+            if (editabout) {
+                setabout(editabout)
+
             }
 
             // if(route.params.youtubeconnected == null){
@@ -112,8 +119,8 @@ const EditProfile = ({ navigation, route }) => {
             // if(route.params.instaconnected == null){
             //     setinstaconnected(false)
             // }
-          
-           
+
+
 
         });
 
@@ -147,7 +154,7 @@ const EditProfile = ({ navigation, route }) => {
                     <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15 }} >
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Social Media</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditSocialMedia",{insta:instaconnected,youtube:youtubeconnected}) }} >
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditSocialMedia", { insta: instaconnected, youtube: youtubeconnected }) }} >
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
 
@@ -179,17 +186,31 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >About</Text>
-                            <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
+
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditAbout",{about:about}) }}>
+                                <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
+                            </TouchableOpacity>
+
                         </View>
 
-                        <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                            <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
-                                <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                        {about ?
+
+                            <View style={{ minHeight: 10, width: "95%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
+                                <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>{about}</Text>
                             </View>
-                            <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Write something about yourself</Text>
+                            :
+                            <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
+                                <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
+                                    <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                                </View>
+                                <View style={{ width: "85%", marginTop: 5 }} >
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Write something about yourself</Text>
+                                </View>
                             </View>
-                        </View>
+
+
+
+                        }
 
 
                     </View>

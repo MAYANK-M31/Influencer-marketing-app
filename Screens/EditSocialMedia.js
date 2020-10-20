@@ -350,8 +350,8 @@ const EditSocialMedia = ({ navigation, route }) => {
 
 
 
-                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 100, left: 20 }} >Note : It Is Recommended To Connect Your Account </Text>
-                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 82, left: 17 }} > To Both Platforms</Text>
+                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: "15%", left: 20 }} >Note : It Is Recommended To Connect Your Account </Text>
+                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: "12.5%", left: 17 }} > To Both Platforms</Text>
 
 
 

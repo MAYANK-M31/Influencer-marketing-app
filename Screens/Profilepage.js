@@ -144,13 +144,13 @@ const Profilepage = ({ route, navigation }) => {
                         </View>
                     </View>
 
-               
-                        <View style={style.cardbottom} >
-                            <Text style={style.name} >{route.params.name}</Text>
-                            <Text style={style.category} >Founder -  <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/youtube.png")} /> Ranker Jee</Text>
-                            <Text style={style.category} >{route.params.category}</Text>
-                        </View>
-                  
+
+                    <View style={style.cardbottom} >
+                        <Text style={style.name} >{route.params.name}</Text>
+                        <Text style={style.category} >Founder -  <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/youtube.png")} /> Ranker Jee</Text>
+                        <Text style={style.category} >{route.params.category}</Text>
+                    </View>
+
 
 
                     <View style={style.buttondiv} >
@@ -179,7 +179,7 @@ const Profilepage = ({ route, navigation }) => {
 
                                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
                                         <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/instagram.png")} />
-                                        <Text style={{ fontSize: 14, fontWeight: "normal", color: "#bbbbbb" }} >Followers</Text>
+                                        <Text style={{ fontSize: 14, fontWeight: "normal",  color: "#9bb0bf" }} >Followers</Text>
                                     </View>
                                 </View>
                                 <View style={{ height: 25, width: 1, backgroundColor: "silver" }} >
@@ -198,7 +198,7 @@ const Profilepage = ({ route, navigation }) => {
                                     <Text style={{ fontSize: 18, fontWeight: "bold", color: "#007bff", textTransform: "uppercase" }} >{abbreviate(subs)}</Text>
                                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
                                         <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/youtube.png")} />
-                                        <Text style={{ fontSize: 14, fontWeight: "normal", color: "#bbbbbb" }} >Subscribers</Text>
+                                        <Text style={{ fontSize: 14, fontWeight: "normal",  color: "#9bb0bf" }} >Subscribers</Text>
                                     </View>
 
 
@@ -215,7 +215,7 @@ const Profilepage = ({ route, navigation }) => {
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#007bff" }} >5 +</Text>
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
                                 <Ionicons style={{ marginRight: 5 }} color={"hotpink"} size={14} name={"briefcase"} />
-                                <Text style={{ fontSize: 14, fontWeight: "normal", color: "#bbbbbb" }} >Contracts</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "normal",  color: "#9bb0bf" }} >Contracts</Text>
                             </View>
 
                         </View>
@@ -225,30 +225,30 @@ const Profilepage = ({ route, navigation }) => {
 
                     <View style={style.about} >
                         <View style={style.aboutdiv}>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", textTransform: "capitalize" }}>{route.params.budget[0]}-{route.params.budget[1]}K</Text>
-                            <Text style={{ fontSize: 13, fontWeight: "normal", color: "grey" }}>Budget</Text>
+                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{route.params.budget[0]}-{route.params.budget[1]}K</Text>
+                            <Text style={{ fontSize: 13, fontWeight: "bold",  color: "#9bb0bf"}}>Budget</Text>
                         </View>
                         <View style={style.aboutdiv}>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", textTransform: "capitalize" }}>{route.params.city}</Text>
-                            <Text style={{ fontSize: 13, fontWeight: "normal", color: "grey" }}>City</Text>
+                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{route.params.city}</Text>
+                            <Text style={{ fontSize: 13, fontWeight: "bold",  color: "#9bb0bf"}}>City</Text>
                         </View>
                         <View style={style.aboutdiv}>
                             {route.params.paymode == "both" ?
                                 <>
-                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", textTransform: "capitalize" }}>Barter</Text>
-                                    <Text style={{ fontSize: 13, fontWeight: "normal", color: "grey" }}>/Pay</Text>
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>Barter</Text>
+                                    <Text style={{ fontSize: 13, fontWeight: "bold",  color: "#9bb0bf"}}>/Pay</Text>
                                 </>
                                 :
                                 <>
-                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", textTransform: "capitalize", textTransform: "capitalize" }}>{route.params.paymode}</Text>
-                                    <Text style={{ fontSize: 13, fontWeight: "normal", color: "grey" }}>Paymode</Text>
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize", textTransform: "capitalize" }}>{route.params.paymode}</Text>
+                                    <Text style={{ fontSize: 13, fontWeight: "bold",  color: "#9bb0bf"}}>Paymode</Text>
                                 </>
                             }
 
                         </View>
                         <View style={style.aboutdiv}>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", textTransform: "capitalize" }}>{route.params.age}</Text>
-                            <Text style={{ fontSize: 13, fontWeight: "normal", color: "grey" }}>Age</Text>
+                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{route.params.age}</Text>
+                            <Text style={{ fontSize: 13, fontWeight: "bold",  color: "#9bb0bf"}}>Age</Text>
                         </View>
                     </View>
 
@@ -320,24 +320,25 @@ const Profilepage = ({ route, navigation }) => {
                     </View>
 
 
-                    {instausername ?
-                        <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.instagram.com/" + `${instausername}` }) }} style={style.linkcard} >
-                            <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/instagram.png")} />
-                            <Text style={{ fontSize: 15, fontWeight: "normal", color: "#404852" }} >Instagram</Text>
-                            <Ionicons style={{ position: "absolute", right: 20 }} size={20} name={"external-link"} />
-                        </TouchableOpacity>
-                        :
-                        null
-                    }
-                    {subs || views ?
-                        <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.youtube.com/channel/" + `${channelid}` }) }} style={style.linkcard} >
-                            <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/youtube.png")} />
-                            <Text style={{ fontSize: 15, fontWeight: "normal", color: "#404852" }} >YouTube</Text>
-                            <Ionicons style={{ position: "absolute", right: 20 }} size={20} name={"external-link"} />
-                        </TouchableOpacity>
-                        : null
-                    }
-
+                    <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingVertical: 15, alignItems: "center", justifyContent: "center" }} >
+                        {instausername ?
+                            <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.instagram.com/" + `${instausername}` }) }} style={style.linkcard} >
+                                <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/instagram.png")} />
+                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#404852" }} >Instagram</Text>
+                                <Ionicons color={"#404852"} style={{ position: "absolute", right: 20 }} size={20} name={"external-link"} />
+                            </TouchableOpacity>
+                            :
+                            null
+                        }
+                        {subs || views ?
+                            <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.youtube.com/channel/" + `${channelid}` }) }} style={style.linkcard} >
+                                <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/youtube.png")} />
+                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#404852" }} >YouTube</Text>
+                                <Ionicons color={"#404852"} style={{ position: "absolute", right: 20 }} size={20} name={"external-link"} />
+                            </TouchableOpacity>
+                            : null
+                        }
+                    </View>
 
 
                     {/* <Tabviews/> */}
@@ -469,14 +470,14 @@ const style = StyleSheet.create({
     },
     cardbottom: {
         width: "100%",
-        marginBottom:20,
+        marginBottom: 20,
         justifyContent: "center",
         alignItems: "center"
     },
     name: {
         fontSize: 20,
         fontWeight: "bold",
-        color: "#202946",
+        color: "#414d57",
         textTransform: "capitalize"
 
     },
@@ -514,14 +515,16 @@ const style = StyleSheet.create({
     linkcard: {
         width: WiDTH - WiDTH * 0.1,
         height: 50,
-        elevation: 1,
+        elevation: 0,
         backgroundColor: "white",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
         alignSelf: "center",
-        marginTop: 10,
+        marginVertical: 5,
         borderRadius: 10,
+        borderColor: "#007bff",
+        borderWidth: 1.5
     },
     about: {
         width: WiDTH,

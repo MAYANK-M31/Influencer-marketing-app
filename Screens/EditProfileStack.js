@@ -13,6 +13,7 @@ import EditBudget from "./EditBudget";
 import EditName from "./EditName";
 import EditCategory from "./EditCategory";
 import EditSocialMedia from "./EditSocialMedia";
+import EditAbout from "./EditAbout";
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,7 @@ const EditProfileStack = () => {
             <Stack.Screen name="EditName" component={EditName} options={{headerShown:false}} />
             <Stack.Screen name="EditCategory" component={EditCategory} options={{headerShown:false}} />
             <Stack.Screen name="EditSocialMedia" component={EditSocialMedia} options={{headerShown:false}} />
+            <Stack.Screen name="EditAbout" component={EditAbout} options={{headerShown:false}} />
         </Stack.Navigator>
     );
 }

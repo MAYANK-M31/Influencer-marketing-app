@@ -56,8 +56,9 @@ const OTP = ({ navigation, route }) => {
 
 
             })
-            .catch(function (error) {
+            .catch(async function (error) {
                 // console.log("Error getting documents: ", error);
+                await AsyncStorage.setItem("loggedin", "false")
             });
 
     }
