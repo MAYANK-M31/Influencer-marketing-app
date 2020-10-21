@@ -203,7 +203,7 @@ const Profile = ({ route, navigation }) => {
 
     }
     func()
-   
+
   }, [])
 
 
@@ -211,53 +211,53 @@ const Profile = ({ route, navigation }) => {
   // re render component
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
-        const editedage = await AsyncStorage.getItem("editage")
-        const editpaymode = await AsyncStorage.getItem("editpaymode")
-        const editbudget = await AsyncStorage.getItem("editbudget")
-        const editcity = await AsyncStorage.getItem("editcity")
-        const editcategory = await AsyncStorage.getItem("editcategory")
-        const editname = await AsyncStorage.getItem("editname")
-        const editinstaconnected = await AsyncStorage.getItem("instaconnected")
-        const edityoutubeconnected = await AsyncStorage.getItem("youtubeconnected")
-        const editabout = await AsyncStorage.getItem("editabout")
+      const editedage = await AsyncStorage.getItem("editage")
+      const editpaymode = await AsyncStorage.getItem("editpaymode")
+      const editbudget = await AsyncStorage.getItem("editbudget")
+      const editcity = await AsyncStorage.getItem("editcity")
+      const editcategory = await AsyncStorage.getItem("editcategory")
+      const editname = await AsyncStorage.getItem("editname")
+      const editinstaconnected = await AsyncStorage.getItem("instaconnected")
+      const edityoutubeconnected = await AsyncStorage.getItem("youtubeconnected")
+      const editabout = await AsyncStorage.getItem("editabout")
 
-        if (editedage) {
-            setage(editedage)
-        }
+      if (editedage) {
+        setage(editedage)
+      }
 
-        if (editpaymode !== null) {
-            setpaymode(editpaymode)
-        }
+      if (editpaymode !== null) {
+        setpaymode(editpaymode)
+      }
 
-        if (editbudget !== null) {
-            setbudget(JSON.parse(editbudget))
-        }
+      if (editbudget !== null) {
+        setbudget(JSON.parse(editbudget))
+      }
 
-        if (editcity !== null) {
-            setcity(editcity)
-        }
+      if (editcity !== null) {
+        setcity(editcity)
+      }
 
-        if (editcategory !== null) {
-            setcategory(editcategory)
-        }
+      if (editcategory !== null) {
+        setcategory(editcategory)
+      }
 
-        if (editname !== null) {
-            setname(editname)
-        }
+      if (editname !== null) {
+        setname(editname)
+      }
 
-        // if (edityoutubeconnected) {
-        //     setyoutubeconnected(edityoutubeconnected)
-        // }
+      // if (edityoutubeconnected) {
+      //     setyoutubeconnected(edityoutubeconnected)
+      // }
 
-        // if (editinstaconnected) {
-        //     setinstaconnected(editinstaconnected)
+      // if (editinstaconnected) {
+      //     setinstaconnected(editinstaconnected)
 
-        // }
+      // }
 
-        if (editabout) {
-            setabout(editabout)
+      if (editabout) {
+        setabout(editabout)
 
-        }
+      }
 
 
 
@@ -265,7 +265,7 @@ const Profile = ({ route, navigation }) => {
     });
 
     return unsubscribe;
-}, [navigation])
+  }, [navigation])
 
 
 
@@ -477,6 +477,20 @@ const Profile = ({ route, navigation }) => {
                 <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >India's 2nd most viewed comedy channel</Text>
               </View>
 
+              {/* Add More Achievements */}
+              <View>
+                <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 15, marginBottom: 15, alignSelf: "center" }}></View>
+                <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
+                  <View style={{ height: 40, width: 40, backgroundColor: "#e6f1ff", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
+                    <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                  </View>
+                  <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >Add more </Text>
+                </View>
+              </View>
+
+
+
+
             </View>
             :
             <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15, paddingBottom: 20 }} >
@@ -486,18 +500,19 @@ const Profile = ({ route, navigation }) => {
                   <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Achievements</Text>
                   <Image style={{ height: 22, width: 22, marginLeft: 5 }} source={require("../Icons/trophy.png")} />
                 </View>
-
-                <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Add</Text>
+                <TouchableOpacity onPress={() => { navigation.navigate("AddAchievements") }}>
+                  <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Add</Text>
+                </TouchableOpacity>
               </View>
 
-              <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
+              <TouchableOpacity onPress={() => { navigation.navigate("AddAchievements") }} style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
                 <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
                   <Ionicons name={"plus"} size={25} color={"#007bff"} />
                 </View>
                 <View style={{ width: "85%", marginTop: 5 }} >
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add about your achievements</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
 
 
             </View>
@@ -546,17 +561,19 @@ const Profile = ({ route, navigation }) => {
                   <Image style={{ height: 22, width: 22, marginLeft: 5 }} source={require("../Icons/briefcase.png")} />
                 </View>
 
-                <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Add</Text>
+                <TouchableOpacity onPress={() => { navigation.navigate("AddExperience") }}>
+                  <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Add</Text>
+                </TouchableOpacity>
               </View>
 
-              <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
+              <TouchableOpacity onPress={() => { navigation.navigate("AddExperience") }} style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
                 <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
                   <Ionicons name={"plus"} size={25} color={"#007bff"} />
                 </View>
                 <View style={{ width: "85%", marginTop: 5 }} >
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add about your achievements</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
 
 
             </View>
