@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -15,6 +15,7 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import firestore from "@react-native-firebase/firestore"
+import {MyContext} from "../Screens/AppStartStack"
 
 
 const WiDTH = Dimensions.get("window").width
@@ -23,8 +24,9 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditAge = ({ navigation, route }) => {
 
-
-    const [value, setvalue] = useState(route.params.age)
+    const {state,dispatch} = useContext(MyContext)
+    const {age} = state;
+    const [value, setvalue] = useState(age)
     
    
 
@@ -42,7 +44,8 @@ const EditAge = ({ navigation, route }) => {
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
                     navigation.goBack()
-                    await AsyncStorage.setItem("editage",value)
+                    dispatch({type:"ADD_AGE",payload:value})
+                    // await AsyncStorage.setItem("editage",value)
                 })
                 
               

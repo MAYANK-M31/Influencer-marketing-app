@@ -28,7 +28,7 @@ const ProfileCreationStack = () => {
             <Stack.Screen name="ProfileFourthPage" component={ProfileFourthPage} options={{headerShown:false}} /> 
             <Stack.Screen name="ProfileFifthPage" component={ProfileFifthtPage} options={{headerShown:false}} /> 
             <Stack.Screen name="ProfileSixthPage" component={ProfileSixthtPage} options={{headerShown:false}} /> 
-            <Stack.Screen name="Tabbar" component={Tabbar} options={{headerShown:false}} /> 
+            {/* <Stack.Screen name="Tabbar" component={Tabbar} options={{headerShown:false}} />  */}
         </Stack.Navigator>
         </NavigationContainer>
     );

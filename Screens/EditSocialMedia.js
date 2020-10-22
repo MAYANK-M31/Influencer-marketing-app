@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -22,6 +22,7 @@ import CookieManager from '@react-native-community/cookies';
 
 import axios from "axios";
 import firestore from "@react-native-firebase/firestore"
+import { MyContext } from './AppStartStack';
 
 
 GoogleSignin.configure({
@@ -42,11 +43,14 @@ const EditSocialMedia = ({ navigation, route }) => {
     const [disable, setdisable] = useState(null)
     const [disable2, setdisable2] = useState(null)
 
+    const { state, dispatch } = useContext(MyContext)
+    const { instaconnected,youtubeconnected } = state
+
 
     // For YouTube Auth
     const [youtubedata, setyoutubedata] = useState(null)
-    const [youtubeconnected, setyoutubeconnected] = useState(route.params.youtube)
-    const [instaconnected, setinstaconnected] = useState(route.params.insta)
+    const [youtubeconnectedTemp, setyoutubeconnectedTemp] = useState(youtubeconnected)
+    const [instaconnectedTemp, setinstaconnectedTemp] = useState(instaconnected)
     const [instatoken, setinstatoken] = useState(null)
     const [youtubetoken, setyoutubetoken] = useState(null)
     const [loading, setloading] = useState(false)
@@ -56,6 +60,8 @@ const EditSocialMedia = ({ navigation, route }) => {
     const [instadata, setinstadata] = useState(null)
     const [result, setresult] = useState(false)
     const [loading2, setloading2] = useState(false)
+
+  
 
 
     // For Youtube Auth
@@ -80,7 +86,7 @@ const EditSocialMedia = ({ navigation, route }) => {
 
                     if (res.data.items == undefined) {
                         ToastAndroid.show("Yours Youtube account has nothing to show.", ToastAndroid.LONG)
-                        setyoutubeconnected(false)
+                        setyoutubeconnectedTemp(false)
                         setyoutubedata(null)
                         setloading(false)
                         signOut()
@@ -89,7 +95,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                         // console.log(res.data.items[0].statistics);
                         setloading(false)
                         setyoutubedata(res.data)
-                        setyoutubeconnected(true)
+                        setyoutubeconnectedTemp(true)
                         setdisable(true)
 
                         // console.log(youtubedata);
@@ -130,7 +136,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                 ToastAndroid.show("Connected to Instagram", ToastAndroid.SHORT)
                 setinstadata(res.data)
                 // console.log(instadata.data);
-                setinstaconnected(true)
+                setinstaconnectedTemp(true)
                 setresult(true)
                 setdisable2(true)
 
@@ -148,7 +154,7 @@ const EditSocialMedia = ({ navigation, route }) => {
     const onClear = () => {
         CookieManager.clearAll(true)
             .then((res) => {
-                setinstaconnected(false)
+                setinstaconnectedTemp(false)
                 setinstadata(null)
                 setdisable2(false)
                 ToastAndroid.show("Instagram Signed out", ToastAndroid.SHORT)
@@ -157,7 +163,7 @@ const EditSocialMedia = ({ navigation, route }) => {
 
 
     const save = () => {
-        if (instaconnected == false && youtubeconnected == false) {
+        if (instaconnectedTemp == false && youtubeconnectedTemp == false) {
             ToastAndroid.show("Connect atleast one account", ToastAndroid.SHORT)
         } else {
 
@@ -172,8 +178,10 @@ const EditSocialMedia = ({ navigation, route }) => {
                         instadata: instadata
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                        dispatch({type:"ADD_INSTACONNECTED",payload:true})
                         navigation.goBack()
-                        await AsyncStorage.setItem("instaconnected","true")
+
+                 
                     })
 
 
@@ -185,8 +193,8 @@ const EditSocialMedia = ({ navigation, route }) => {
                         youtubedata: youtubedata
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                        dispatch({type:"ADD_YOUTUBECONNECTED",payload:true})
                         navigation.goBack()
-                        await AsyncStorage.setItem("youtubeconnected","true")
                     })
 
 
@@ -195,26 +203,26 @@ const EditSocialMedia = ({ navigation, route }) => {
                 }
 
 
-                if(instaconnected == false){
+                if (instaconnectedTemp == false) {
                     ref.update({
                         instadata: firestore.FieldValue.delete()
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
+                        dispatch({type:"ADD_INSTACONNECTED",payload:false})
                         navigation.goBack()
-                        await AsyncStorage.setItem("instaconnected","false")
                     })
-                }else if(youtubeconnected == false){
+                } else if (youtubeconnectedTemp == false) {
                     ref.update({
                         youtubedata: firestore.FieldValue.delete()
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
                         navigation.goBack()
-                        await AsyncStorage.setItem("youtubeconnected","false")
+                        dispatch({type:"ADD_YOUTUBECONNECTED",payload:false})
                     })
                 }
 
 
-                if (!instadata && !youtubedata){
+                if (!instadata && !youtubedata) {
                     ToastAndroid.show("Updated", ToastAndroid.SHORT)
                     navigation.goBack()
                 }
@@ -258,7 +266,7 @@ const EditSocialMedia = ({ navigation, route }) => {
 
                     <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Instagram</Text>
-                        {!instaconnected ?
+                        {!instaconnectedTemp ?
                             null
                             :
                             <TouchableOpacity onPress={() => onClear()}>
@@ -270,22 +278,22 @@ const EditSocialMedia = ({ navigation, route }) => {
                     </View>
 
                     <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "#f0f2f5", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                        <TouchableOpacity disabled={instaconnected} onPress={() => instagramLogin.show()} style={{
-                            height: 55, width: "100%", backgroundColor: instaconnected ? "#1e87fd" : "white"
+                        <TouchableOpacity disabled={instaconnectedTemp} onPress={() => instagramLogin.show()} style={{
+                            height: 55, width: "100%", backgroundColor: instaconnectedTemp ? "#1e87fd" : "white"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50,
                         }} >
                             {loading2 ?
                                 <ActivityIndicator style={{ alignSelf: "center", position: "absolute", left: 20 }} size={20} color={"#1e87fd"} />
                                 :
-                                instaconnected ?
+                                instaconnectedTemp ?
                                     <Ionicons name={"check"} size={20} color={"white"} style={{ alignSelf: "center", position: "absolute", left: 20 }} />
                                     :
                                     null
 
                             }
                             <Image style={{ width: 30, height: 30, marginRight: 10 }} source={require("../Icons/instagram.png")} />
-                            <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instaconnected ? "white" : "black" }} >{instaconnected ? "Connected" : "Connect To Instagram"}</Text>
+                            <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instaconnectedTemp ? "white" : "black" }} >{instaconnectedTemp ? "Connected" : "Connect To Instagram"}</Text>
                         </TouchableOpacity>
 
 
@@ -307,9 +315,9 @@ const EditSocialMedia = ({ navigation, route }) => {
 
                     <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >YouTube</Text>
-                        {!youtubeconnected ? null
+                        {!youtubeconnectedTemp ? null
                             :
-                            <TouchableOpacity onPress={() => signOut().then(() => { setyoutubeconnected(false),setyoutubedata(null), setdisable(false), ToastAndroid.show("YouTube Signed out", ToastAndroid.SHORT) })}>
+                            <TouchableOpacity onPress={() => signOut().then(() => { setyoutubeconnectedTemp(false), setyoutubedata(null), setdisable(false), ToastAndroid.show("YouTube Signed out", ToastAndroid.SHORT) })}>
                                 <Text style={{ fontSize: 15, fontWeight: "100", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }}>Sign Out</Text>
                             </TouchableOpacity>
                         }
@@ -318,8 +326,8 @@ const EditSocialMedia = ({ navigation, route }) => {
                     </View>
 
                     <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "#f0f2f5", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                        <TouchableOpacity disabled={youtubeconnected} onPress={() => onGoogleButtonPress()} style={{
-                            height: 55, width: "100%", backgroundColor: youtubeconnected ? "#1e87fd" : "white"
+                        <TouchableOpacity disabled={youtubeconnectedTemp} onPress={() => onGoogleButtonPress()} style={{
+                            height: 55, width: "100%", backgroundColor: youtubeconnectedTemp ? "#1e87fd" : "white"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50,
                         }} >
@@ -327,7 +335,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                             {loading ?
                                 <ActivityIndicator style={{ alignSelf: "center", position: "absolute", left: 20 }} size={20} color={"#1e87fd"} />
                                 :
-                                youtubeconnected ?
+                                youtubeconnectedTemp ?
                                     <Ionicons name={"check"} size={20} color={"white"} style={{ alignSelf: "center", position: "absolute", left: 20 }} />
                                     :
                                     null
@@ -337,7 +345,7 @@ const EditSocialMedia = ({ navigation, route }) => {
 
 
                             <Image style={{ width: 30, height: 30, marginRight: 10 }} source={require("../Icons/youtube.png")} />
-                            <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubeconnected ? "white" : "black" }} >{youtubeconnected ? "Connected" : "Connect To Youtube"} </Text>
+                            <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubeconnectedTemp ? "white" : "black" }} >{youtubeconnectedTemp ? "Connected" : "Connect To Youtube"} </Text>
                         </TouchableOpacity>
 
                     </View>

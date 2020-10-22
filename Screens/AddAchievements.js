@@ -28,6 +28,7 @@ const AddAchievements = ({ navigation, route }) => {
     const [value, setvalue] = useState("")
     const [disable, setdisable] = useState(true)
     const [category, setcategory] = useState("0")
+   
 
     const theme = {
         ...DefaultTheme,
@@ -53,34 +54,35 @@ const AddAchievements = ({ navigation, route }) => {
     }, [value.length])
 
 
-    const save = () => {
-        if (value.length <= 80) {
-            ToastAndroid.show("Please write minimum 80 words", ToastAndroid.LONG)
-        } else {
+    // const save = () => {
+    //     if (value.length <= 80) {
+    //         ToastAndroid.show("Please write minimum 80 words", ToastAndroid.LONG)
+    //     } else {
 
-            const func = async () => {
+    //         const func = async () => {
 
-                const docid = await AsyncStorage.getItem("DocId")
-                const ref = await firestore().collection("influencer").doc(docid)
-                ref.update({
-                    about: value.toLowerCase()
-                }).then(async () => {
-                    ToastAndroid.show("Updated", ToastAndroid.SHORT)
-                    navigation.goBack()
-                    await AsyncStorage.setItem("editabout", value)
-                })
-
-
+    //             const docid = await AsyncStorage.getItem("DocId")
+    //             const ref = await firestore().collection("influencer").doc(docid)
+    //             ref.update({
+    //                 about: value.toLowerCase()
+    //             }).then(async () => {
+    //                 ToastAndroid.show("Updated", ToastAndroid.SHORT)
+    //                 navigation.goBack()
+    //                 await AsyncStorage.setItem("editabout", value)
+    //             })
 
 
-            }
-            func()
 
 
-        }
-    }
+    //         }
+    //         func()
 
 
+    //     }
+    // }
+
+
+      
 
     return (
         <>
@@ -95,7 +97,7 @@ const AddAchievements = ({ navigation, route }) => {
                         <View style={style.heading} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852" }} >Achievements</Text>
                         </View>
-                        <TouchableOpacity disabled={disable} onPress={() => { save() }} style={style.chat} >
+                        <TouchableOpacity   style={style.chat} >
                             <View style={{ width: 50, height: 30, backgroundColor: disable ? "#007bffCC" : "#007bff", right: 10, justifyContent: "center", alignItems: "center", borderRadius: 5, paddingBottom: 2 }} >
                                 <Text style={{ color: "white", fontWeight: "100" }} >Save</Text>
                             </View>

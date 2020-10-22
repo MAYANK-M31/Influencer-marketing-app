@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,12 +9,14 @@ import {
   StatusBar,
   Dimensions,
   TouchableOpacity,
-  Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage
+  Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, Modal
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
 import axios from "axios"
 import firestore from '@react-native-firebase/firestore';
+import { TouchableRipple } from 'react-native-paper';
+import { MyContext } from "../Screens/AppStartStack"
 
 var abbreviate = require('number-abbreviate')
 
@@ -36,11 +38,8 @@ const HEIGHT = Dimensions.get("window").height
 var abbreviate = require('number-abbreviate')
 
 const Profile = ({ route, navigation }) => {
-  const [result, setresult] = useState([])
   const [followers, setfollowers] = useState(null)
   const [instaposts, setinstaposts] = useState(null)
-  const [instausername, setinstausername] = useState(null)
-  const [instaimages, setinstaimages] = useState(null)
   const [subs, setsubs] = useState(null)
   const [views, setviews] = useState(null)
   const [channelid, setchannelid] = useState(null)
@@ -49,18 +48,18 @@ const Profile = ({ route, navigation }) => {
   const [loading, setloading] = useState(true)
   const [number, setnumber] = useState(null)
   const [switchtype, setswitchtype] = useState("instagram")
-  const [instaconnected, setinstaconnected] = useState(false)
-  const [youtubeconnected, setyoutubeconnected] = useState(false)
-  const [about, setabout] = useState(null)
-  const [achievements, setachievements] = useState(null)
-  const [experience, setexperience] = useState(null)
-  const [name, setname] = useState(null)
-  const [city, setcity] = useState(null)
-  const [paymode, setpaymode] = useState(null)
-  const [age, setage] = useState(null)
-  const [category, setcategory] = useState(null)
-  const [minrange, setminrange] = useState(null)
-  const [maxrange, setmaxrange] = useState(null)
+  const [see, setsee] = useState(null)
+  const [seeless, setseeless] = useState(null)
+  const [InitLoading, setInitLoading] = useState(true)
+
+
+
+  const { state, dispatch } = useContext(MyContext)
+  const { name, age, city, minrange, maxrange, category, paymode, result, about, achievements, experiences, instaconnected, instaimages, instausername, youtubeconnected } = state
+
+
+
+
 
   function animateValue(start, end, duration) {
     if (start === end) return;
@@ -84,6 +83,7 @@ const Profile = ({ route, navigation }) => {
   useEffect(() => {
 
     const func = async () => {
+      setInitLoading(true)
       const ref = await firestore().collection("influencer")
       const uid = await AsyncStorage.getItem("uid")
       // console.log(uid);
@@ -110,53 +110,61 @@ const Profile = ({ route, navigation }) => {
 
 
   useEffect(() => {
+    setInitLoading(true)
     const func = async () => {
       const ref = await firestore().collection("influencer")
       const uid = await AsyncStorage.getItem("uid")
       // console.log(uid);
+     
 
       ref.where("uid", "==", uid).get()
         .then(function (querySnapshot) {
 
           querySnapshot.forEach(async function (doc) {
             // console.log(doc.data());
+            dispatch({ type: "ADD_NAME", payload: doc.data().name })
+            dispatch({ type: "ADD_RESULT", payload: doc.data() })
+            dispatch({ type: "ADD_AGE", payload: doc.data().age })
+            dispatch({ type: "ADD_MINRANGE", payload: doc.data().minrange })
+            dispatch({ type: "ADD_MAXRANGE", payload: doc.data().maxrange })
+            dispatch({ type: "ADD_CITY", payload: doc.data().city })
+            dispatch({ type: "ADD_CATEGORY", payload: doc.data().category })
+            dispatch({ type: "ADD_PAYMODE", payload: doc.data().paymode })
 
+            if (doc.data()) {
+              setInitLoading(false)
+            }
 
-            setresult(doc.data())
-            setname(doc.data().name)
-            setage(doc.data().age)
-            setminrange(doc.data().minrange)
-            setmaxrange(doc.data().maxrange)
-            setcity(doc.data().city)
-            setcategory(doc.data().category)
-            setpaymode(doc.data().paymode)
 
 
             if (doc.data().youtubedata !== undefined) {
               // alert(doc.data().youtubedata.items[0].statistics.subscriberCount)
               setsubs(doc.data().youtubedata.items[0].statistics.subscriberCount)
               setchannelid(doc.data().youtubedata.items[0].id)
-              setyoutubeconnected(true)
+              dispatch({ type: "ADD_YOUTUBECONNECTED", payload: true })
+              // setyoutubeconnected(true)
 
               // About Column Logic
               if (doc.data().about !== undefined) {
-                setabout(doc.data().about)
+                dispatch({ type: "ADD_ABOUT", payload: doc.data().about })
               } else {
-                setabout(null)
+                dispatch({ type: "ADD_ABOUT", payload: null })
               }
 
               // Achievements Column Logic
               if (doc.data().achievements !== undefined) {
-                setachievements(doc.data().achievements)
+                dispatch({ type: "ADD_ACHIEVEMENTS", payload: doc.data().achievements })
               } else {
-                setachievements(null)
+                dispatch({ type: "ADD_ACHIEVEMENTS", payload: null })
               }
 
-              // experience Column Logic
-              if (doc.data().experience !== undefined) {
-                setexperience(doc.data().experience)
+              // experiences Column Logic
+              if (doc.data().experiences !== undefined) {
+                dispatch({ type: "ADD_EXPERIENCES", payload: doc.data().experiences })
               } else {
-                setexperience(null)
+                dispatch({ type: "ADD_EXPERIENCES", payload: [] })
+
+
               }
 
 
@@ -164,14 +172,17 @@ const Profile = ({ route, navigation }) => {
 
             if (doc.data().instadata !== undefined) {
               // alert(doc.data().instadata.data[0].username)
-              setinstaconnected(true)
+              dispatch({ type: "ADD_INSTACONNECTED", payload: true })
+
               var filtered = doc.data().instadata.data.filter(function (item) {
                 return item.media_type !== "VIDEO";
               });
 
-              setinstaimages(filtered)
+              dispatch({ type: "ADD_INSTAIMAGES", payload: filtered })
+              // setinstaimages(filtered)
 
-              setinstausername(doc.data().instadata.data[0].username)
+              dispatch({ type: "ADD_INSTAUSERNAME", payload: doc.data().instadata.data[0].username })
+              // setinstausername(doc.data().instadata.data[0].username)
               setloading(true)
 
               const myfunc = async () => {
@@ -208,64 +219,6 @@ const Profile = ({ route, navigation }) => {
 
 
 
-  // re render component
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', async () => {
-      const editedage = await AsyncStorage.getItem("editage")
-      const editpaymode = await AsyncStorage.getItem("editpaymode")
-      const editbudget = await AsyncStorage.getItem("editbudget")
-      const editcity = await AsyncStorage.getItem("editcity")
-      const editcategory = await AsyncStorage.getItem("editcategory")
-      const editname = await AsyncStorage.getItem("editname")
-      const editinstaconnected = await AsyncStorage.getItem("instaconnected")
-      const edityoutubeconnected = await AsyncStorage.getItem("youtubeconnected")
-      const editabout = await AsyncStorage.getItem("editabout")
-
-      if (editedage) {
-        setage(editedage)
-      }
-
-      if (editpaymode !== null) {
-        setpaymode(editpaymode)
-      }
-
-      if (editbudget !== null) {
-        setbudget(JSON.parse(editbudget))
-      }
-
-      if (editcity !== null) {
-        setcity(editcity)
-      }
-
-      if (editcategory !== null) {
-        setcategory(editcategory)
-      }
-
-      if (editname !== null) {
-        setname(editname)
-      }
-
-      // if (edityoutubeconnected) {
-      //     setyoutubeconnected(edityoutubeconnected)
-      // }
-
-      // if (editinstaconnected) {
-      //     setinstaconnected(editinstaconnected)
-
-      // }
-
-      if (editabout) {
-        setabout(editabout)
-
-      }
-
-
-
-
-    });
-
-    return unsubscribe;
-  }, [navigation])
 
 
 
@@ -274,6 +227,10 @@ const Profile = ({ route, navigation }) => {
     setswitchtype(item)
   }
 
+  const seemore = (index) => {
+    setsee(index)
+    // setseeless(true)
+  }
 
 
   return (
@@ -520,13 +477,78 @@ const Profile = ({ route, navigation }) => {
 
 
 
-          {/*----------------- Experience Column------------------- */}
+          {/*----------------- Experiences Column------------------- */}
 
-          {experience ?
+          {experiences.length > 0 ?
             <View style={{ minHeight: 100, width: "95%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
-              <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Experience</Text>
+              <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Experiences</Text>
 
-              <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
+              {experiences.map((item, index) =>
+                <View>
+                  {index == 0 ?
+                    null
+                    :
+                    <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 10, marginBottom: 10, alignSelf: "center" }}></View>
+                  }
+
+                  <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
+                    <View style={{ height: "100%", width: 40, paddingTop: 5 }} >
+                      <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 2, justifyContent: "center", alignItems: "center", overflow: 'hidden' }} >
+                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.url }} />
+                      </View>
+                    </View>
+                    <View style={{ width: "100%" }}>
+                      <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
+                        <View style={{ width: "75%" }}>
+                          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >worked with {item.companyname}</Text>
+                        </View>
+                        <View style={{ width: "25%", alignItems: "flex-end", justifyContent: "flex-start" }}>
+                          {index == see ?
+                            <TouchableOpacity activeOpacity={1} onPress={() => { seemore(130) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
+                              <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See less</Text>
+                              <Ionicons color={"#007bff"} size={15} name={"chevron-up"} style={{ alignSelf: "center" }} />
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity activeOpacity={1} onPress={() => { setsee(index) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
+                              <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See more</Text>
+                              <Ionicons color={"#007bff"} size={15} name={"chevron-down"} style={{ alignSelf: "center" }} />
+                            </TouchableOpacity>
+
+
+                          }
+                        </View>
+                      </View>
+                      {index == see ?
+                        <Text numberOfLines={index == see ? 500 : 2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{item.description}</Text>
+                        :
+                        <Text numberOfLines={2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{item.description}</Text>
+                      }
+
+                    </View>
+
+                  </View>
+
+
+                </View>
+              )}
+
+              {/* Add More Experience */}
+
+              <View>
+                <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 15, marginBottom: 15, alignSelf: "center" }}></View>
+                <TouchableOpacity onPress={() => { navigation.navigate("AddExperience") }}  >
+                  <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
+                    <View style={{ height: 40, width: 40, backgroundColor: "#e6f1ff", borderRadius: 5, justifyContent: "center", alignItems: "center" }} >
+                      <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                    </View>
+                    <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >Add more about your experience </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+
+
+              {/* <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
                 <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 2, justifyContent: "center", alignItems: "center", overflow: 'hidden', }} >
                   <Image style={{ width: "100%", height: "100%" }} source={{ uri: "data:image/png;base64,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" }} />
                 </View>
@@ -549,7 +571,7 @@ const Profile = ({ route, navigation }) => {
                   <Image style={{ width: "100%", height: "100%" }} source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Xiaomi_logo.svg/768px-Xiaomi_logo.svg.png" }} />
                 </View>
                 <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >Worked With Mi</Text>
-              </View>
+              </View> */}
 
             </View>
             :
@@ -557,7 +579,7 @@ const Profile = ({ route, navigation }) => {
 
               <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                 <View style={{ flexDirection: "row" }} >
-                  <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Experience</Text>
+                  <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Experiences</Text>
                   <Image style={{ height: 22, width: 22, marginLeft: 5 }} source={require("../Icons/briefcase.png")} />
                 </View>
 
@@ -682,6 +704,13 @@ const Profile = ({ route, navigation }) => {
 
 
       </SafeAreaView>
+      <Modal visible={InitLoading}   >
+        
+        <View style={{ width: WiDTH, height: HEIGHT, backgroundColor: "white",justifyContent:"center",alignItems:"center" }} >
+          <ActivityIndicator size={50} color={"#007bff"} />
+          <Text style={{fontSize:13,color:"#414d57",marginTop:5,marginLeft:5}}>Loading...</Text>
+        </View>
+      </Modal>
     </>
 
   )

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -16,6 +16,7 @@ import {
 import Ionicons from "react-native-vector-icons/Feather"
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import firestore from "@react-native-firebase/firestore"
+import { MyContext } from './AppStartStack';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -23,8 +24,11 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditBudget = ({ navigation,route }) => {
 
-    const [value1, setvalue1] = useState(route.params.budget[0])
-    const [value2, setvalue2] = useState(route.params.budget[1])
+    const {state,dispatch} = useContext(MyContext)
+    const {minrange,maxrange} = state;
+
+    const [value1, setvalue1] = useState(minrange)
+    const [value2, setvalue2] = useState(maxrange)
 
 
     const save = () => {
@@ -42,7 +46,8 @@ const EditBudget = ({ navigation,route }) => {
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
                     navigation.goBack()
-                    await AsyncStorage.setItem("editbudget",JSON.stringify([value1,value2]))
+                    dispatch({type:"ADD_MINRANGE",payload:value1})
+                    dispatch({type:"ADD_MAXRANGE",payload:value2})
                 })
                 
               

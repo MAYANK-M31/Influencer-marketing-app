@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -16,6 +16,7 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import firestore from "@react-native-firebase/firestore"
+import {MyContext} from "../Screens/AppStartStack"
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -23,7 +24,10 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditLocation = ({ navigation,route }) => {
 
-    const [value,setvalue] = useState(route.params.city)
+  
+    const {state,dispatch} = useContext(MyContext)
+    const {city} = state;
+    const [value,setvalue] = useState(city)
 
     const save = () => {
         if (value == undefined) {
@@ -39,7 +43,7 @@ const EditLocation = ({ navigation,route }) => {
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
                     navigation.goBack()
-                    await AsyncStorage.setItem("editcity",value)
+                    dispatch({type:"ADD_CITY",payload:value})
                 })
                 
               

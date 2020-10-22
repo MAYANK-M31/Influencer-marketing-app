@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -16,6 +16,7 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import firestore from "@react-native-firebase/firestore"
+import { MyContext } from './AppStartStack';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -23,18 +24,22 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditCategory = ({ navigation, route }) => {
 
-    const [category, setcategory] = useState(route.params.category)
+    const {state,dispatch} = useContext(MyContext)
+    const {category} = state;
+
+    const [selectcategory, setselectcategory] = useState(category)
     const [disable, setdisable] = useState(true)
 
     const select = async (item) => {
-        setcategory(item)
+        setselectcategory(item)
         setdisable(false)
+        // alert(item)
     }
 
 
 
     const save = () => {
-        if (category == undefined) {
+        if (selectcategory == undefined) {
             ToastAndroid.show("Please choose category", ToastAndroid.SHORT)
         } else {
 
@@ -43,11 +48,11 @@ const EditCategory = ({ navigation, route }) => {
                 const docid = await AsyncStorage.getItem("DocId")
                 const ref = await firestore().collection("influencer").doc(docid)
                 ref.update({
-                    category: category.toLowerCase()
+                    category: selectcategory.toLowerCase()
                 }).then(async () => {
                     ToastAndroid.show("Updated", ToastAndroid.SHORT)
                     navigation.goBack()
-                    await AsyncStorage.setItem("editcategory", category)
+                    dispatch({type:"ADD_CATEGORY",payload:selectcategory})
                 })
 
             }
@@ -91,26 +96,26 @@ const EditCategory = ({ navigation, route }) => {
                             <TouchableOpacity activeOpacity={1} onPress={() => select("vlogger")} style={{
                                 height: 45, width: "30%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "vlogger" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "vlogger" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "vlogger" ? "white" : "#1e87fd" }} >Vlogger</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "vlogger" ? "white" : "#1e87fd" }} >Vlogger</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("tech")} style={{
                                 height: 45, width: "30%"
                                 , alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "tech" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "tech" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "tech" ? "white" : "#1e87fd" }} >Tech</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "tech" ? "white" : "#1e87fd" }} >Tech</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("comedy")} style={{
                                 height: 45, width: "30%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "comedy" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "comedy" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "comedy" ? "white" : "#1e87fd" }} >Comedy</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "comedy" ? "white" : "#1e87fd" }} >Comedy</Text>
                             </TouchableOpacity>
 
                         
@@ -118,41 +123,41 @@ const EditCategory = ({ navigation, route }) => {
                             <TouchableOpacity activeOpacity={1} onPress={() => select("beauty")} style={{
                                 height: 45, width: "50%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "beauty" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "beauty" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "beauty" ? "white" : "#1e87fd" }} >Beauty & Fashion</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "beauty" ? "white" : "#1e87fd" }} >Beauty & Fashion</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("food")} style={{
                                 height: 45, width: "43%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "food" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "food" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "food" ? "white" : "#1e87fd" }} >Food</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "food" ? "white" : "#1e87fd" }} >Food</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("fitness")} style={{
                                 height: 45, width: "30%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "fitness" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "fitness" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "fitness" ? "white" : "#1e87fd" }} >Fitness</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "fitness" ? "white" : "#1e87fd" }} >Fitness</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("music")} style={{
                                 height: 45, width: "30%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "music" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "music" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "music" ? "white" : "#1e87fd" }} >Music</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "music" ? "white" : "#1e87fd" }} >Music</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("gaming")} style={{
                                 height: 45, width: "30%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "gaming" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "gaming" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "gaming" ? "white" : "#1e87fd" }} >Gaming</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "gaming" ? "white" : "#1e87fd" }} >Gaming</Text>
                             </TouchableOpacity>
 
 
@@ -161,33 +166,33 @@ const EditCategory = ({ navigation, route }) => {
                             <TouchableOpacity activeOpacity={1} onPress={() => select("dance")} style={{
                                 height: 45, width: "43%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "dance" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "dance" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "dance" ? "white" : "#1e87fd" }} >Dance</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "dance" ? "white" : "#1e87fd" }} >Dance</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("education")} style={{
                                 height: 45, width: "50%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "education" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "education" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "education" ? "white" : "#1e87fd" }} >Education</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "education" ? "white" : "#1e87fd" }} >Education</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("business")} style={{
                                 height: 45, width: "50%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "business" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "business" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "business" ? "white" : "#1e87fd" }} >Business</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "business" ? "white" : "#1e87fd" }} >Business</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity activeOpacity={1} onPress={() => select("motivation")} style={{
                                 height: 45, width: "43%", alignItems: "center", flexDirection: "row", justifyContent: "center",
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
-                                backgroundColor: category == "motivation" ? "#1e87fd" : "white"
+                                backgroundColor: selectcategory == "motivation" ? "#1e87fd" : "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: category == "motivation" ? "white" : "#1e87fd" }} >Motivation</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: selectcategory == "motivation" ? "white" : "#1e87fd" }} >Motivation</Text>
                             </TouchableOpacity>
 
 

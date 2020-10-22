@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -12,12 +12,13 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     TextInput,
-    AsyncStorage, ToastAndroid,
+    AsyncStorage, ToastAndroid, Modal,
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
 import auth from "@react-native-firebase/auth"
 import firestore from "@react-native-firebase/firestore"
+import { MyContext } from './AppStartStack';
 
 
 const WiDTH = Dimensions.get("window").width
@@ -28,29 +29,36 @@ const OTP = ({ navigation, route }) => {
     const [confirm, setConfirm] = useState(route.params.data);
     const [code, setCode] = useState('');
     const [loading, setloading] = useState(false)
+    const { dispatch } = useContext(MyContext)
+    const [loading2, setloading2] = useState(false)
 
     const existinguser = async () => {
+        setloading2(true)
         const { currentUser } = auth()
         const uid = { currentUser }.currentUser.uid
         // alert(uid)
         await AsyncStorage.setItem("uid", uid)
-        
+
 
         const ref = await firestore().collection("influencer")
         ref.where("uid", "==", uid).get()
             .then(function (querySnapshot) {
                 if (querySnapshot.empty) {
                     // alert("no")
-                    
-                    navigation.navigate("ProfileCreationStack")
-                   
+                    dispatch({ type: "ADD_LOGGEDIN", payload: true })
+                    dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
+                    setloading2(true)
                 } else {
                     querySnapshot.forEach(async function (doc) {
+                        dispatch({ type: "ADD_LOGGEDIN", payload: true })
+                        dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
                         // console.log(doc.data().name);
                         ToastAndroid.show("Welcome Back " + doc.data().name, ToastAndroid.SHORT)
                         await AsyncStorage.setItem("uid", uid)
                         await AsyncStorage.setItem("datauploadeduser", "true")
-                        navigation.navigate("Tabbar")
+                        // navigation.navigate("Tabbar")
+                        setloading2(true)
+
                     });
                 }
 
@@ -59,6 +67,8 @@ const OTP = ({ navigation, route }) => {
             .catch(async function (error) {
                 // console.log("Error getting documents: ", error);
                 await AsyncStorage.setItem("loggedin", "false")
+                dispatch({ type: "ADD_LOGGEDIN", payload: false })
+                setloading2(false)
             });
 
     }
@@ -149,6 +159,13 @@ const OTP = ({ navigation, route }) => {
 
 
             </SafeAreaView>
+
+            <Modal visible={loading2}   >
+                <View style={{ width: WiDTH, height: HEIGHT, backgroundColor: "white", justifyContent: "center", alignItems: "center" }} >
+                    <ActivityIndicator size={50} color={"#007bff"} />
+                    <Text style={{ fontSize: 13, color: "#414d57", marginTop: 5, marginLeft: 5 }}>Loading...</Text>
+                </View>
+            </Modal>
         </>
 
     )

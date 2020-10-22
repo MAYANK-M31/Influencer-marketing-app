@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, createContext, useReducer } from "react"
 import { AsyncStorage } from "react-native"
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from "@react-navigation/stack"
@@ -11,23 +11,36 @@ import OTP from "./OTP";
 import Logo from "./Logo";
 import ProfileCreatePage from "./ProfileCreateStartPage";
 import ProfileCreationStack from "./ProfileCreationStack";
+import { reducer, initState } from "../reducer/reducer"
 
 const Stack = createStackNavigator();
 
+
+
+export const MyContext = createContext()
+
+
+
 const AppStartStack = () => {
-    const [loggedin, setloggedin] = useState(null)
+
+
+    const [state, dispatch] = useReducer(reducer, initState)
+    const {isloggedin,uploadeduser} = state;
+
+
+
+
+   
     const [loading, setloading] = useState(true)
-    const [uploadeduser, setuploadeduser] = useState(null)
 
     useEffect(() => {
         setloading(true)
         const func = async () => {
             const a = await AsyncStorage.getItem("loggedin")
             const b = await AsyncStorage.getItem("datauploadeduser")
-            // console.log(a);
             setloading(false)
-            setloggedin(a)
-            setuploadeduser(b)
+            dispatch({type:"ADD_LOGGEDIN",payload:a})
+            dispatch({type:"ADD_UPLOADEDUSER",payload:b})
 
 
 
@@ -36,12 +49,16 @@ const AppStartStack = () => {
     }, [])
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }} >
-                {loading ?
+        <MyContext.Provider value={
+            { state, dispatch }
+        }>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }} >
+
+                    {loading ?
                     <Stack.Screen name="Logo" component={Logo} options={{ headerShown: false  ,animationEnabled:false}} />
                     :
-                    loggedin ?
+                    isloggedin ?
                         uploadeduser ?
                             <Stack.Screen name="Tabbar" component={Tabbar} options={{ headerShown: false ,animationEnabled:false}} />
                             :
@@ -52,16 +69,17 @@ const AppStartStack = () => {
                             <Stack.Screen name="Choose" component={Choose} options={{ headerShown: false }} />
                             <Stack.Screen name="PhoneNumber" component={PhoneNumber} options={{ headerShown: false }} />
                             <Stack.Screen name="OTP" component={OTP} options={{ headerShown: false }} />
-                            <Stack.Screen name="ProfileCreationStack" component={ProfileCreationStack} options={{ headerShown: false }} />
-                            <Stack.Screen name="Tabbar" component={Tabbar} options={{ headerShown: false }} />
+                            {/* <Stack.Screen name="ProfileCreationStack" component={ProfileCreationStack} options={{ headerShown: false }} />
+                            <Stack.Screen name="Tabbar" component={Tabbar} options={{ headerShown: false }} /> */}
                         </>
 
                 }
 
 
 
-            </Stack.Navigator>
-        </NavigationContainer>
+                </Stack.Navigator>
+            </NavigationContainer>
+        </MyContext.Provider>
     );
 }
 

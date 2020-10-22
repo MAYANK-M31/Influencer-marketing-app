@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -16,16 +16,26 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import firestore from "@react-native-firebase/firestore"
+import {MyContext} from "../Screens/AppStartStack"
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
 
+
+
+
 const EditName = ({ navigation,route }) => {
 
-    const [value,setvalue] = useState(route.params.name.toUpperCase())
+  const {state,dispatch} = useContext(MyContext)
+  const {name} = state
+  
+
+    const [value,setvalue] = useState(name.toUpperCase())
 
     const save = () => {
+       
+        
         if (value == undefined) {
             ToastAndroid.show("Please enter your name", ToastAndroid.SHORT)
         } else {
@@ -38,8 +48,8 @@ const EditName = ({ navigation,route }) => {
                     name:value.toLowerCase()
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
+                    dispatch({type:"ADD_NAME",payload:value})
                     navigation.goBack()
-                    await AsyncStorage.setItem("editname",value)
                 })
                 
               

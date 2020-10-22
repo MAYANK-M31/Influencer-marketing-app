@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -23,6 +23,7 @@ import { TextInput, DefaultTheme, TouchableRipple, Modal, Dialog, Paragraph, Act
 import ImagePicker from 'react-native-image-picker';
 import { utils } from '@react-native-firebase/app';
 import storage from '@react-native-firebase/storage';
+import { MyContext } from './AppStartStack';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -40,7 +41,12 @@ const options = {
 
 
 
-const AddExperience = ({ navigation, route }) => {
+const AddExperience = ({ navigation }) => {
+
+
+    const { state, dispatch } = useContext(MyContext)
+    const { experiences } = state
+   
 
     const [value, setvalue] = useState("")
     const [value2, setvalue2] = useState("")
@@ -48,6 +54,7 @@ const AddExperience = ({ navigation, route }) => {
     const [source, setsource] = useState("")
     const [filename, setfilename] = useState("")
     const [loading, setloading] = useState(null)
+    const [array, setarray] = useState([])
 
     const theme = {
         ...DefaultTheme,
@@ -63,6 +70,7 @@ const AddExperience = ({ navigation, route }) => {
     };
 
 
+
     useEffect(() => {
 
         if (value.length >= 80) {
@@ -73,32 +81,7 @@ const AddExperience = ({ navigation, route }) => {
     }, [value.length])
 
 
-    const save = () => {
-        if (value.length <= 80) {
-            ToastAndroid.show("Please write minimum 80 words", ToastAndroid.LONG)
-        } else {
-
-            const func = async () => {
-
-                const docid = await AsyncStorage.getItem("DocId")
-                const ref = await firestore().collection("influencer").doc(docid)
-                ref.update({
-                    about: value.toLowerCase()
-                }).then(async () => {
-                    ToastAndroid.show("Updated", ToastAndroid.SHORT)
-                    navigation.goBack()
-                    // await AsyncStorage.setItem("editabout", value)
-                })
-
-
-
-
-            }
-            func()
-
-
-        }
-    }
+   
 
 
     //Selecting images from phone storage
@@ -131,6 +114,7 @@ const AddExperience = ({ navigation, route }) => {
     // Uploading images to cloud storage 
 
     const upload = async () => {
+      
         if (!(/\S/.test(value)) || !(/\S/.test(value2))) {
             ToastAndroid.show("Please fill all details", ToastAndroid.SHORT)
         } else if (!source) {
@@ -147,7 +131,7 @@ const AddExperience = ({ navigation, route }) => {
 
 
                 setloading(true)
-                
+
                 reference.putFile(source.uri)
                     .then((res) => {
                         // console.log(res);
@@ -171,8 +155,12 @@ const AddExperience = ({ navigation, route }) => {
                                     experiences: firestore.FieldValue.arrayUnion(insidedata)
                                 }).then(async () => {
                                     ToastAndroid.show("Data Uploaded successfully", ToastAndroid.SHORT)
-                                    navigation.goBack()
+
+                                    experiences.push(insidedata)
+                                    dispatch({type:"ADD_EXPERIENCES",payload:experiences})
                                     setloading(false)
+                                    navigation.goBack()
+
                                 })
 
                             })
@@ -225,7 +213,7 @@ const AddExperience = ({ navigation, route }) => {
 
                         <View style={{ width: "95%", height: 50, alignSelf: "center", justifyContent: "center", borderRadius: 10, alignItems: "flex-start", paddingHorizontal: 10, marginBottom: 20 }} >
                             <TextInput label={"Company Name"}
-                                placeholder={"Company or Organization name"}
+                                placeholder={"i.e worked with/brand ambassdor of xyz"}
                                 style={{ width: "100%", height: 50 }}
                                 mode={"outlined"}
                                 maxLength={200}
@@ -233,6 +221,7 @@ const AddExperience = ({ navigation, route }) => {
                                 onChangeText={(text) => { setvalue(text) }}
                                 autoCapitalize={"words"}
                                 theme={theme}
+                                multiline={false}
                             />
                         </View>
                     </View>

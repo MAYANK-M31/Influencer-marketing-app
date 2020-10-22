@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -16,6 +16,7 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import firestore from "@react-native-firebase/firestore"
+import { MyContext } from './AppStartStack';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -23,12 +24,14 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditAbout = ({ navigation, route }) => {
 
+    const {state,dispatch} = useContext(MyContext)
+    const {about} = state;
     const [value, setvalue] = useState("")
     const [disable, setdisable] = useState(true)
 
     useEffect(()=>{
-        if (route.params.about) {
-            setvalue(route.params.about)
+        if (about) {
+            setvalue(about)
         }
     },[])
 
@@ -57,7 +60,7 @@ const EditAbout = ({ navigation, route }) => {
                 }).then(async () => {
                     ToastAndroid.show("Updated", ToastAndroid.SHORT)
                     navigation.goBack()
-                    await AsyncStorage.setItem("editabout", value)
+                    dispatch({type:"ADD_ABOUT",payload:value})
                 })
                
 

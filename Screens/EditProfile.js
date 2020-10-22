@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -12,10 +12,9 @@ import {
     Image,
     AsyncStorage
 } from 'react-native';
-import firestore from "@react-native-firebase/firestore"
 
 import Ionicons from "react-native-vector-icons/Feather"
-import axios from "axios"
+import { MyContext } from './AppStartStack';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -23,109 +22,13 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditProfile = ({ navigation, route }) => {
 
-    const [age, setage] = useState(route.params.age)
-    const [paymode, setpaymode] = useState(route.params.paymode)
-    const [budget, setbudget] = useState(route.params.budget)
-    const [city, setcity] = useState(route.params.city)
-    const [name, setname] = useState(route.params.name)
-    const [category, setcategory] = useState(route.params.category)
-    const [instaconnected, setinstaconnected] = useState(route.params.instaconnected)
-    const [youtubeconnected, setyoutubeconnected] = useState(route.params.youtubeconnected)
-    const [about, setabout] = useState(route.params.about)
 
 
 
 
-    useEffect(() => {
 
-        const func = async () => {
-            const ref = await firestore().collection("influencer")
-            const uid = await AsyncStorage.getItem("uid")
-            // console.log(uid);
-
-            ref.where("uid", "==", uid).get()
-                .then(async function (querySnapshot) {
-
-                    await querySnapshot.forEach(async function (doc) {
-                        const docId = doc.id
-                        // alert(docId)
-                        await AsyncStorage.setItem("DocId", docId)
-
-                    })
-
-
-                })
-
-
-        }
-        func()
-    }, [])
-
-
-    // re render component
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', async () => {
-            const editedage = await AsyncStorage.getItem("editage")
-            const editpaymode = await AsyncStorage.getItem("editpaymode")
-            const editbudget = await AsyncStorage.getItem("editbudget")
-            const editcity = await AsyncStorage.getItem("editcity")
-            const editcategory = await AsyncStorage.getItem("editcategory")
-            const editname = await AsyncStorage.getItem("editname")
-            const editinstaconnected = await AsyncStorage.getItem("instaconnected")
-            const edityoutubeconnected = await AsyncStorage.getItem("youtubeconnected")
-            const editabout = await AsyncStorage.getItem("editabout")
-
-            if (editedage) {
-                setage(editedage)
-            }
-
-            if (editpaymode !== null) {
-                setpaymode(editpaymode)
-            }
-
-            if (editbudget !== null) {
-                setbudget(JSON.parse(editbudget))
-            }
-
-            if (editcity !== null) {
-                setcity(editcity)
-            }
-
-            if (editcategory !== null) {
-                setcategory(editcategory)
-            }
-
-            if (editname !== null) {
-                setname(editname)
-            }
-
-            // if (edityoutubeconnected) {
-            //     setyoutubeconnected(edityoutubeconnected)
-            // }
-
-            // if (editinstaconnected) {
-            //     setinstaconnected(editinstaconnected)
-
-            // }
-
-            if (editabout) {
-                setabout(editabout)
-
-            }
-
-            // if(route.params.youtubeconnected == null){
-            //     setyoutubeconnected(false)
-            // }
-            // if(route.params.instaconnected == null){
-            //     setinstaconnected(false)
-            // }
-
-
-
-        });
-
-        return unsubscribe;
-    }, [navigation])
+    const { state } = useContext(MyContext)
+    const { name, age, city, minrange, maxrange, category, paymode, result, about, achievements, experiences, instaconnected, instaimages, instausername, youtubeconnected } = state
 
 
 
@@ -154,7 +57,7 @@ const EditProfile = ({ navigation, route }) => {
                     <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15 }} >
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Social Media</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditSocialMedia", { insta: instaconnected, youtube: youtubeconnected }) }} >
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditSocialMedia") }} >
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
 
@@ -187,7 +90,7 @@ const EditProfile = ({ navigation, route }) => {
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >About</Text>
 
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditAbout",{about:about}) }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditAbout") }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
 
@@ -264,7 +167,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Name</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditName", { name: name }) }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditName") }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -286,7 +189,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Category</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditCategory", { category: category }) }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditCategory") }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -308,7 +211,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Location</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditLocation", { city: city }) }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditLocation") }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -330,7 +233,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Paymode</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditPayMode", { paymode: paymode }) }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditPayMode") }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -353,7 +256,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Budget</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditBudget", { budget: budget }) }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditBudget") }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -364,7 +267,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Text style={{ color: "#007bff", fontSize: 25 }}>&#x20B9;</Text>
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{budget[0]}K - {budget[1]}K </Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{minrange}K - {maxrange}K </Text>
                             </View>
                         </View>
 
@@ -376,7 +279,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Age</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditAge", { age: age }) }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditAge") }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>

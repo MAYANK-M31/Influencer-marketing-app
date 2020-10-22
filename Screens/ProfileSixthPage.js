@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -21,6 +21,7 @@ import InstagramLogin from 'react-native-instagram-login';
 // import CookieManager from '@react-native-community/cookies';
 
 import axios from "axios";
+import { MyContext } from './AppStartStack';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -28,6 +29,7 @@ const HEIGHT = Dimensions.get("window").height
 const ProfileSixthPage = ({ navigation, route }) => {
 
     const [disable, setdisable] = useState(true)
+    const {dispatch} = useContext(MyContext)
 
     // For YouTube Auth
     const [stats, setstats] = useState([])
@@ -104,7 +106,8 @@ const ProfileSixthPage = ({ navigation, route }) => {
 
 
                     await AsyncStorage.setItem("datauploadeduser", "true")
-                    navigation.navigate("Tabbar")
+                    dispatch({type:"ADD_UPLOADEDUSER",payload:true})
+                    // navigation.navigate("Tabbar")
                     ToastAndroid.show("Signed In",ToastAndroid.SHORT)
 
 
@@ -113,6 +116,8 @@ const ProfileSixthPage = ({ navigation, route }) => {
 
                 } catch (error) {
                     console.log(error);
+                    dispatch({type:"ADD_LOGGEDIN",payload:false})
+              
 
                 }
             }
