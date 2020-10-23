@@ -49,7 +49,7 @@ const Profile = ({ route, navigation }) => {
   const [number, setnumber] = useState(null)
   const [switchtype, setswitchtype] = useState("instagram")
   const [see, setsee] = useState(null)
-  const [seeless, setseeless] = useState(null)
+  const [achievesee, setachievesee] = useState(null)
   const [InitLoading, setInitLoading] = useState(true)
 
 
@@ -115,7 +115,7 @@ const Profile = ({ route, navigation }) => {
       const ref = await firestore().collection("influencer")
       const uid = await AsyncStorage.getItem("uid")
       // console.log(uid);
-     
+
 
       ref.where("uid", "==", uid).get()
         .then(function (querySnapshot) {
@@ -155,7 +155,7 @@ const Profile = ({ route, navigation }) => {
               if (doc.data().achievements !== undefined) {
                 dispatch({ type: "ADD_ACHIEVEMENTS", payload: doc.data().achievements })
               } else {
-                dispatch({ type: "ADD_ACHIEVEMENTS", payload: null })
+                dispatch({ type: "ADD_ACHIEVEMENTS", payload: [] })
               }
 
               // experiences Column Logic
@@ -229,6 +229,11 @@ const Profile = ({ route, navigation }) => {
 
   const seemore = (index) => {
     setsee(index)
+    // setseeless(true)
+  }
+
+  const seemoreachieve = (index) => {
+    setachievesee(index)
     // setseeless(true)
   }
 
@@ -414,36 +419,116 @@ const Profile = ({ route, navigation }) => {
 
           {/*----------------- Achievements Column------------------- */}
 
-          {achievements ?
+          {achievements.length > 0 ?
+
+
             <View style={{ minHeight: 100, width: "95%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
               <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Achievements</Text>
 
-              <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
-                <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
-                  <Ionicons name={"award"} size={25} />
-                </View>
-                <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20 }} >Socify Awards Most Popular Lifestyle Influencer </Text>
-              </View>
+              {achievements.map((items, index) =>
+                <View>
+                  {index == 0 ?
+                    null
+                    :
+                    <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 10, marginBottom: 10, alignSelf: "center" }}></View>
+                  }
+                  <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
 
-              <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 15, marginBottom: 15, alignSelf: "center" }}></View>
+                    <View style={{ height: "100%", width: 40, paddingTop: 5 }} >
+                      <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
+                        {items.category == "award" ?
+                          <Ionicons name={"award"} size={25} />
+                          : null
+                        }
+                        {items.category == "youtube views" ?
+                          <Ionicons name={"video"} size={25} />
+                          : null
+                        }
+                        {items.category == "youtube subscibers" ?
+                          <Ionicons name={"youtube"} size={25} />
+                          : null
+                        }
+                        {items.category == "instagram followers" ?
+                          <Ionicons name={"instagram"} size={25} />
+                          : null
+                        }
+                        {items.category == "other" ?
+                          <Ionicons name={"flag"} size={25} />
+                          :
+                          null
+                        }
 
-              <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
-                <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
-                  <Ionicons name={"video"} size={25} />
+                      </View>
+                    </View>
+                    <View style={{ width: "100%" }}>
+                      <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
+                        <View style={{ width: items.description == null ? "100%" : items.description.length > 80 ? "75%" : "100%" }}>
+                          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.title}</Text>
+                        </View>
+                        {items.description !== null ?
+                          <View style={{ width: "25%", alignItems: "flex-end", justifyContent: "flex-start" }}>
+                            {items.description.length > 80 ?
+                              <View >
+
+                                {index == achievesee ?
+                                  <TouchableOpacity activeOpacity={1} onPress={() => { seemoreachieve(130) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
+                                    <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See less</Text>
+                                    <Ionicons color={"#007bff"} size={15} name={"chevron-up"} style={{ alignSelf: "center" }} />
+                                  </TouchableOpacity>
+                                  :
+                                  <TouchableOpacity activeOpacity={1} onPress={() => { seemoreachieve(index) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
+                                    <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See more</Text>
+                                    <Ionicons color={"#007bff"} size={15} name={"chevron-down"} style={{ alignSelf: "center" }} />
+                                  </TouchableOpacity>
+
+
+                                }
+                              </View>
+                              : null
+                            }
+
+                          </View>
+                          :
+                          null
+                        }
+
+                      </View>
+
+                      {items.description !== null ?
+                        <View>
+                          {index == achievesee ?
+
+                            <Text numberOfLines={index == achievesee ? 500 : 2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.description}</Text>
+                            :
+                            <Text numberOfLines={2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.description}</Text>
+                          }
+                        </View>
+                        :
+                        null
+                      }
+
+
+                    </View>
+                  </View>
+
+
+
                 </View>
-                <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >India's 2nd most viewed comedy channel</Text>
-              </View>
+
+              )}
+
 
               {/* Add More Achievements */}
-              <View>
+
+              <TouchableOpacity onPress={() => { navigation.navigate("AddAchievements") }} >
                 <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 15, marginBottom: 15, alignSelf: "center" }}></View>
                 <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
                   <View style={{ height: 40, width: 40, backgroundColor: "#e6f1ff", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
                     <Ionicons name={"plus"} size={25} color={"#007bff"} />
                   </View>
-                  <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >Add more </Text>
+                  <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >Add More About Your Achievements </Text>
                 </View>
-              </View>
+              </TouchableOpacity>
 
 
 
@@ -499,23 +584,28 @@ const Profile = ({ route, navigation }) => {
                     </View>
                     <View style={{ width: "100%" }}>
                       <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
-                        <View style={{ width: "75%" }}>
-                          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >worked with {item.companyname}</Text>
+                        <View style={{ width: item.description.length > 80 ? "75%" : "100%" }}>
+                          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{item.companyname}</Text>
                         </View>
                         <View style={{ width: "25%", alignItems: "flex-end", justifyContent: "flex-start" }}>
-                          {index == see ?
-                            <TouchableOpacity activeOpacity={1} onPress={() => { seemore(130) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
-                              <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See less</Text>
-                              <Ionicons color={"#007bff"} size={15} name={"chevron-up"} style={{ alignSelf: "center" }} />
-                            </TouchableOpacity>
+                          {item.description.length > 80 ?
+                            <View>
+                              {index == see ?
+                                <TouchableOpacity activeOpacity={1} onPress={() => { seemore(130) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
+                                  <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See less</Text>
+                                  <Ionicons color={"#007bff"} size={15} name={"chevron-up"} style={{ alignSelf: "center" }} />
+                                </TouchableOpacity>
+                                :
+                                <TouchableOpacity activeOpacity={1} onPress={() => { setsee(index) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
+                                  <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See more</Text>
+                                  <Ionicons color={"#007bff"} size={15} name={"chevron-down"} style={{ alignSelf: "center" }} />
+                                </TouchableOpacity>
+                              }
+                            </View>
                             :
-                            <TouchableOpacity activeOpacity={1} onPress={() => { setsee(index) }} style={{ flexDirection: "row", height: 18, width: "100%", alignItems: "flex-end", justifyContent: "flex-end" }}>
-                              <Text style={{ fontSize: 13, fontWeight: "100", color: "#007bff" }}>See more</Text>
-                              <Ionicons color={"#007bff"} size={15} name={"chevron-down"} style={{ alignSelf: "center" }} />
-                            </TouchableOpacity>
-
-
+                            null
                           }
+
                         </View>
                       </View>
                       {index == see ?
@@ -548,30 +638,6 @@ const Profile = ({ route, navigation }) => {
 
 
 
-              {/* <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
-                <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 2, justifyContent: "center", alignItems: "center", overflow: 'hidden', }} >
-                  <Image style={{ width: "100%", height: "100%" }} source={{ uri: "data:image/png;base64,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" }} />
-                </View>
-                <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20 }} >Brand Ambassdor of FoxBags</Text>
-              </View>
-
-              <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 10, marginBottom: 10, alignSelf: "center" }}></View>
-
-              <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
-                <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 2, justifyContent: "center", alignItems: "center", overflow: 'hidden', }} >
-                  <Image style={{ width: "100%", height: "100%" }} source={{ uri: "data:image/png;base64,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" }} />
-                </View>
-                <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >Worked With Dream11</Text>
-              </View>
-
-              <View style={{ width: "95%", height: 1, backgroundColor: "#f0f2f5", marginTop: 10, marginBottom: 10, alignSelf: "center" }}></View>
-
-              <View style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
-                <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 2, justifyContent: "center", alignItems: "center", overflow: 'hidden', }} >
-                  <Image style={{ width: "100%", height: "100%" }} source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Xiaomi_logo.svg/768px-Xiaomi_logo.svg.png" }} />
-                </View>
-                <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >Worked With Mi</Text>
-              </View> */}
 
             </View>
             :
@@ -705,10 +771,10 @@ const Profile = ({ route, navigation }) => {
 
       </SafeAreaView>
       <Modal visible={InitLoading}   >
-        
-        <View style={{ width: WiDTH, height: HEIGHT, backgroundColor: "white",justifyContent:"center",alignItems:"center" }} >
+
+        <View style={{ width: WiDTH, height: HEIGHT, backgroundColor: "white", justifyContent: "center", alignItems: "center" }} >
           <ActivityIndicator size={50} color={"#007bff"} />
-          <Text style={{fontSize:13,color:"#414d57",marginTop:5,marginLeft:5}}>Loading...</Text>
+          <Text style={{ fontSize: 13, color: "#414d57", marginTop: 5, marginLeft: 5 }}>Loading...</Text>
         </View>
       </Modal>
     </>

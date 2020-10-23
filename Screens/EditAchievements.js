@@ -17,29 +17,31 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import firestore from "@react-native-firebase/firestore"
-import { TextInput, DefaultTheme, Dialog, Paragraph, ActivityIndicator } from "react-native-paper"
+import { TextInput, DefaultTheme, Dialog, Paragraph, ActivityIndicator, Button } from "react-native-paper"
 import { MyContext } from './AppStartStack';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
+var _ = require('underscore');
 
-const AddAchievements = ({ navigation, route }) => {
+const EditAchievements = ({ navigation, route }) => {
 
 
     const { state, dispatch } = useContext(MyContext)
     const { achievements } = state
+    console.log(route.params.data)
 
 
-
-    const [value, setvalue] = useState("")
-    const [value2, setvalue2] = useState("")
+    const [value, setvalue] = useState(route.params.data.title)
+    const [value2, setvalue2] = useState(route.params.data.description)
     const [disable, setdisable] = useState(true)
-    const [category, setcategory] = useState("award")
+    const [category, setcategory] = useState(route.params.data.category)
     const [otherinput, setotherinput] = useState(false)
-    const [inputcategory, setinputcategory] = useState(null)
+    const [inputcategory, setinputcategory] = useState(route.params.data.othercategory)
     const [shiftview, setshiftview] = useState(false)
     const [loading, setloading] = useState(null)
+    const [visible, setvisible] = useState(false)
 
 
     const theme = {
@@ -69,46 +71,46 @@ const AddAchievements = ({ navigation, route }) => {
         } else if (category == "other") {
             if (!(/\S/.test(inputcategory))) {
                 ToastAndroid.show("Please fill category", ToastAndroid.SHORT)
-            }else{
+            } else {
                 Keyboard.dismiss()
                 const func = async () => {
                     setloading(true)
                     const docid = await AsyncStorage.getItem("DocId")
                     const ref = await firestore().collection("influencer").doc(docid)
-    
-    
-    
-    
-    
-    
-                    const insidedata = { title: value.toLowerCase(), description: !value2 ? null : value2.toLowerCase(), category: category == "other" ? "other" : category,othercategory:category == "other" ? inputcategory :null }
+
+
+
+
+
+
+                    const insidedata = { title: value.toLowerCase(), description: !value2 ? null : value2.toLowerCase(), category: category == "other" ? "other" : category, othercategory: category == "other" ? inputcategory : null }
                     // alert(insidedata)
-    
+
                     ref.update({
                         achievements: firestore.FieldValue.arrayUnion(insidedata)
                     }).then(async () => {
                         ToastAndroid.show("Data Uploaded successfully", ToastAndroid.SHORT)
-    
+
                         achievements.push(insidedata)
                         dispatch({ type: "ADD_ACHIEVEMENTS", payload: achievements })
                         setloading(false)
                         navigation.goBack()
-    
+
                     })
                         .catch((e) => {
                             console.log("error to uplaod", e);
                             setloading(false)
                             ToastAndroid.show("Something went wrong", ToastAndroid.SHORT)
                         })
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
                 }
                 func()
             }
@@ -124,9 +126,9 @@ const AddAchievements = ({ navigation, route }) => {
 
 
 
-                const insidedata = { title: value.toLowerCase(), description: !value2 ? null : value2.toLowerCase(), category: category,othercategory:category == "other" ? inputcategory : null }
+                const insidedata = { title: value.toLowerCase(), description: !value2 ? null : value2.toLowerCase(), category: category, othercategory: category == "other" ? inputcategory : null }
                 // alert(insidedata)
-
+                removeToUpdate()
                 ref.update({
                     achievements: firestore.FieldValue.arrayUnion(insidedata)
                 }).then(async () => {
@@ -174,6 +176,50 @@ const AddAchievements = ({ navigation, route }) => {
         }
 
     }, [category])
+
+
+
+    const removeToUpdate = async () => {
+        setvisible(false)
+        const docid = await AsyncStorage.getItem("DocId")
+        const ref = await firestore().collection("influencer").doc(docid)
+
+
+        ref.update({
+            achievements: firestore.FieldValue.arrayRemove(route.params.data)
+        }).then(async () => {
+
+            const array = _.without(achievements, route.params.data)
+            // console.log(array);
+            dispatch({ type: "ADD_ACHIEVEMENTS", payload: array })
+
+        })
+
+    }
+
+
+
+    const remove = async () => {
+        setvisible(false)
+        const docid = await AsyncStorage.getItem("DocId")
+        const ref = await firestore().collection("influencer").doc(docid)
+
+
+        ref.update({
+            achievements: firestore.FieldValue.arrayRemove(route.params.data)
+        }).then(async () => {
+
+            const array = _.without(achievements, route.params.data)
+            // console.log(array);
+            dispatch({ type: "ADD_ACHIEVEMENTS", payload: array })
+            ToastAndroid.show("Achievement removed successfully", ToastAndroid.SHORT)
+            navigation.goBack()
+
+        })
+
+
+
+    }
 
 
 
@@ -278,15 +324,37 @@ const AddAchievements = ({ navigation, route }) => {
 
                 </KeyboardAvoidingView>
 
-                <Dialog dismissable={false} visible={loading} >
-                    <Dialog.Content>
-                        <View style={{ flexDirection: "row" }} >
-                            <ActivityIndicator color={"#409cff"} size={20} style={{ marginRight: 20 }} />
-                            <Paragraph>Uploading...</Paragraph>
-                        </View>
-                    </Dialog.Content>
-                </Dialog>
+
+                <TouchableOpacity onPress={() => { setvisible(true) }} style={style.button1} >
+                    <Text style={style.button1text} >Remove</Text>
+                </TouchableOpacity>
+
+
+
+
             </SafeAreaView>
+
+            <Dialog dismissable={false} visible={loading} >
+                <Dialog.Content>
+                    <View style={{ flexDirection: "row" }} >
+                        <ActivityIndicator color={"#409cff"} size={20} style={{ marginRight: 20 }} />
+                        <Paragraph>Uploading...</Paragraph>
+                    </View>
+                </Dialog.Content>
+            </Dialog>
+
+            <Dialog onDismiss={() => { setvisible(false) }} visible={visible} >
+                <Dialog.Content>
+                    <View style={{ flexDirection: "row" }} >
+                        <Paragraph style={{ fontSize: 18 }}>Are you sure want to delete this achievements.</Paragraph>
+                    </View>
+                </Dialog.Content>
+                <Dialog.Actions>
+                    <Button color={"black"} onPress={() => setvisible(false)}>Cancel</Button>
+                    <Button color={"red"} onPress={() => { remove() }}>Yes</Button>
+                </Dialog.Actions>
+            </Dialog>
+
 
         </>
 
@@ -324,9 +392,28 @@ const style = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
+    button1: {
+        width: WiDTH / 2.5,
+        height: 45,
+        backgroundColor: "white",
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        borderColor: "#de4229",
+        borderWidth: 1.5,
+        marginLeft: 10,
+        alignSelf: "center",
+        top: 30
+    },
+
+    button1text: {
+        fontSize: 16,
+        color: "#de4229",
+        fontWeight: 'bold'
+    },
 
 
 })
 
 
-export default AddAchievements;
+export default EditAchievements;

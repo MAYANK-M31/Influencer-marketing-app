@@ -14,6 +14,8 @@ import EditName from "./EditName";
 import EditCategory from "./EditCategory";
 import EditSocialMedia from "./EditSocialMedia";
 import EditAbout from "./EditAbout";
+import EditExperience from "./EditExperience";
+import EditAchievements from "./EditAchievements"
 
 const Stack = createStackNavigator();
 
@@ -29,6 +31,8 @@ const EditProfileStack = () => {
             <Stack.Screen name="EditCategory" component={EditCategory} options={{headerShown:false}} />
             <Stack.Screen name="EditSocialMedia" component={EditSocialMedia} options={{headerShown:false}} />
             <Stack.Screen name="EditAbout" component={EditAbout} options={{headerShown:false}} />
+            <Stack.Screen name="EditExperience" component={EditExperience} options={{headerShown:false}} />
+            <Stack.Screen name="EditAchievements" component={EditAchievements} options={{headerShown:false}} />
         </Stack.Navigator>
     );
 }

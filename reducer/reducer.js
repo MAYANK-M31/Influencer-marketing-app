@@ -8,7 +8,7 @@ export const initState = {
     minrange: null,
     maxrange: null,
     about: null,
-    achievements: null,
+    achievements: [],
     experiences: [],
     instaconnected: false,
     instaimages: null,

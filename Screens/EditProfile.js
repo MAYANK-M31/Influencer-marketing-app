@@ -120,46 +120,202 @@ const EditProfile = ({ navigation, route }) => {
 
                     {/*----------------- ExperinceColumn------------------- */}
 
-                    <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15, paddingBottom: 20 }} >
+                    {experiences.length > 0 ?
+                        <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Experiences</Text>
 
-                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
-                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Experience</Text>
-                            <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
-                        </View>
+                            {experiences.map((item, index) =>
+                                <View >
+                                    {index == 0 ?
+                                        null
+                                        :
+                                        <View style={{ width: "95%", height: 1, backgroundColor: "white", marginTop: 10, marginBottom: 10, alignSelf: "center" }}></View>
+                                    }
 
-                        <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                            <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
-                                <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate("EditExperience", { data: item }) }} style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
+                                        <View style={{ height: "100%", width: 40, paddingTop: 5 }} >
+                                            <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 2, justifyContent: "center", alignItems: "center", overflow: 'hidden' }} >
+                                                <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.url }} />
+                                            </View>
+                                        </View>
+                                        <View style={{ width: "100%" }}>
+                                            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
+                                                <View style={{ width: "75%" }}>
+                                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{item.companyname}</Text>
+                                                </View>
+                                                <View style={{ width: "25%", alignItems: "flex-end", justifyContent: "flex-start" }}>
+                                                    <Ionicons size={18} color={"#007bff"} name={"edit-2"} />
+                                                </View>
+                                            </View>
+
+                                            <Text numberOfLines={2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{item.description}</Text>
+
+
+                                        </View>
+
+                                    </ TouchableOpacity>
+
+
+                                </View>
+                            )}
+
+                            {/* Add More Experience */}
+
+                            <View>
+                                <View style={{ width: "95%", height: 1, backgroundColor: "white", marginTop: 15, marginBottom: 10, alignSelf: "center" }}></View>
+
+                                <TouchableOpacity onPress={() => { navigation.navigate("AddExperience") }} style={{ width: "102%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", alignItems: "center", paddingHorizontal: 10 }} >
+                                    <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
+                                        <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                                    </View>
+                                    <View style={{ width: "85%", marginTop: 5 }} >
+                                        <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add more about your experiences</Text>
+                                    </View>
+                                </TouchableOpacity>
+
                             </View>
-                            <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add about your experience</Text>
-                            </View>
+
+
+
+
                         </View>
+                        :
+                        <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15, paddingBottom: 20 }} >
+
+                            <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
+                                <View style={{ flexDirection: "row" }} >
+                                    <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Experiences</Text>
+                                    <Image style={{ height: 22, width: 22, marginLeft: 5 }} source={require("../Icons/briefcase.png")} />
+                                </View>
+
+                                <TouchableOpacity onPress={() => { navigation.navigate("AddExperience") }}>
+                                    <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Add</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <TouchableOpacity onPress={() => { navigation.navigate("AddExperience") }} style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
+                                <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
+                                    <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                                </View>
+                                <View style={{ width: "85%", marginTop: 5 }} >
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add about your achievements</Text>
+                                </View>
+                            </TouchableOpacity>
 
 
-                    </View>
+                        </View>
+                    }
+
+
+
 
 
                     {/*----------------- Achievemnts Column------------------- */}
 
-                    <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15, paddingBottom: 20 }} >
+                    {achievements.length > 0 ?
 
-                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
-                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Achievements</Text>
-                            <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
-                        </View>
 
-                        <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                            <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
-                                <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                        <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Achievements</Text>
+
+                            {achievements.map((items, index) =>
+                                <View>
+                                    {index == 0 ?
+                                        null
+                                        :
+                                        <View style={{ width: "95%", height: 1, backgroundColor: "white", marginTop: 10, marginBottom: 10, alignSelf: "center" }}></View>
+                                    }
+                                    <TouchableOpacity onPress={()=>{navigation.navigate("EditAchievements",{data:items})}} style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
+
+                                        <View style={{ height: "100%", width: 40, paddingTop: 5 }} >
+                                            <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
+                                                {items.category == "award" ?
+                                                    <Ionicons name={"award"} size={25} />
+                                                    : null
+                                                }
+                                                {items.category == "youtube views" ?
+                                                    <Ionicons name={"video"} size={25} />
+                                                    : null
+                                                }
+                                                {items.category == "youtube subscibers" ?
+                                                    <Ionicons name={"youtube"} size={25} />
+                                                    : null
+                                                }
+                                                {items.category == "instagram followers" ?
+                                                    <Ionicons name={"instagram"} size={25} />
+                                                    : null
+                                                }
+                                                {items.category == "other" ?
+                                                    <Ionicons name={"flag"} size={25} />
+                                                    :
+                                                    null
+                                                }
+
+                                            </View>
+                                        </View>
+                                        <View style={{ width: "100%" }}>
+                                            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
+                                                <View style={{ width: items.description == null ? "100%" : items.description.length > 80 ? "75%" : "100%" }}>
+                                                    <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.title}</Text>
+                                                </View>
+                                            </View>
+
+                                            <Text numberOfLines={2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.description}</Text>
+
+                                        </View>
+                                    </TouchableOpacity>
+
+
+
+                                </View>
+
+                            )}
+
+
+                            {/* Add More Achievements */}
+                            <View>
+                                <View style={{ width: "95%", height: 1, backgroundColor: "white", marginTop: 15, marginBottom: 10, alignSelf: "center" }}></View>
+
+                                <TouchableOpacity onPress={() => { navigation.navigate("AddAchievements") }} style={{ width: "102%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", alignItems: "center", paddingHorizontal: 10 }} >
+                                    <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
+                                        <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                                    </View>
+                                    <View style={{ width: "85%", marginTop: 5 }} >
+                                        <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add more about your achievements</Text>
+                                    </View>
+                                </TouchableOpacity>
+
                             </View>
-                            <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add your achievements</Text>
-                            </View>
+
+
+
+
                         </View>
+                        :
+                        <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15, paddingBottom: 20 }} >
+
+                            <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
+                                <View style={{ flexDirection: "row" }} >
+                                    <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Achievements</Text>
+                                    <Image style={{ height: 22, width: 22, marginLeft: 5 }} source={require("../Icons/trophy.png")} />
+                                </View>
+                                <TouchableOpacity onPress={() => { navigation.navigate("AddAchievements") }}>
+                                    <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Add</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <TouchableOpacity onPress={() => { navigation.navigate("AddAchievements") }} style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
+                                <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff", alignItems: "center", justifyContent: "center" }} >
+                                    <Ionicons name={"plus"} size={25} color={"#007bff"} />
+                                </View>
+                                <View style={{ width: "85%", marginTop: 5 }} >
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Add about your achievements</Text>
+                                </View>
+                            </TouchableOpacity>
 
 
-                    </View>
+                        </View>
+                    }
 
                     {/*----------------- Name Column------------------- */}
 
