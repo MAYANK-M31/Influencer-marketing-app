@@ -35,9 +35,11 @@ const options = {
     storageOptions: {
         skipBackup: true,
         path: 'images',
+       
 
     },
     quality: 0.6,
+    allowsEditing:true
 };
 
 

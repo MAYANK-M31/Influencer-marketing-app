@@ -30,7 +30,7 @@ const EditAchievements = ({ navigation, route }) => {
 
     const { state, dispatch } = useContext(MyContext)
     const { achievements } = state
-    console.log(route.params.data)
+    // console.log(route.params.data)
 
 
     const [value, setvalue] = useState(route.params.data.title)

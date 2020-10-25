@@ -22,15 +22,8 @@ var abbreviate = require('number-abbreviate')
 
 
 const images = [
-  "https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-  "https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528__340.jpg",
-  "https://static.toiimg.com/photo/72975551.cms",
-  "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcThTgEcopn3OPT-NJzQhonAm317Js0Ye_M6hw&usqp=CAU",
-  "https://m.economictimes.com/thumb/msid-68721417,width-1200,height-900,resizemode-4,imgsize-1016106/nature1_gettyimages.jpg",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR44cv1ylNive73e-Xx2N0WvetvMmaGoT3s-w&usqp=CAU",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSyYiivRzt1u3Hh1PxNFIC7t6z2_E_ewPQLcw&usqp=CAU",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTnu0iNiJXo9v63aomTvoWRA1iXHed93-B2LA&usqp=CAU"
+  "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg",
+  "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg"
 ]
 
 const WiDTH = Dimensions.get("window").width
@@ -51,11 +44,12 @@ const Profile = ({ route, navigation }) => {
   const [see, setsee] = useState(null)
   const [achievesee, setachievesee] = useState(null)
   const [InitLoading, setInitLoading] = useState(true)
-
+  // const [profileimage, setprofileimage] = useState("https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg")
+  // const [backgroundimage, setbackgroundimage] = useState("https://thumbs.dreamstime.com/b/abstract-connection-blue-background-network-d-rendering-digital-153616052.jpg")
 
 
   const { state, dispatch } = useContext(MyContext)
-  const { name, age, city, minrange, maxrange, category, paymode, result, about, achievements, experiences, instaconnected, instaimages, instausername, youtubeconnected } = state
+  const { name, age, city, minrange, maxrange, category, paymode, result, about, achievements, experiences, instaconnected, instaimages, instausername, youtubeconnected, profileimage, backgroundimage } = state
 
 
 
@@ -81,6 +75,7 @@ const Profile = ({ route, navigation }) => {
 
 
   useEffect(() => {
+
 
     const func = async () => {
       setInitLoading(true)
@@ -133,6 +128,19 @@ const Profile = ({ route, navigation }) => {
 
             if (doc.data()) {
               setInitLoading(false)
+            }
+
+
+            // ADD Profile picture  if exist to state 
+
+            if (doc.data().profileimage !== undefined) {
+              dispatch({ type: "ADD_PROFILEIMAGE", payload: doc.data().profileimage })
+            }
+
+            // ADD Background picture  if exist to state 
+
+            if (doc.data().backgroundimage !== undefined) {
+              dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: doc.data().backgroundimage })
             }
 
 
@@ -257,8 +265,8 @@ const Profile = ({ route, navigation }) => {
 
 
         <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{ paddingBottom: 100 }} >
-          <TouchableOpacity activeOpacity={1}>
-            <ImageBackground style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#e6fff6", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }} source={{ uri: "https://thumbs.dreamstime.com/b/abstract-connection-blue-background-network-d-rendering-digital-153616052.jpg" }} >
+          <TouchableOpacity onPress={() => { navigation.navigate("ProfileBackground", { image: profileimage !== null ? profileimage : images[1] }) }} activeOpacity={1}>
+            <ImageBackground style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#e6fff6", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }} source={{ uri: profileimage !== null ? profileimage : images[1] }} >
               <TouchableOpacity style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                 <Ionicons color={"white"} size={22} name={"edit-2"} />
               </TouchableOpacity>
@@ -266,9 +274,9 @@ const Profile = ({ route, navigation }) => {
           </TouchableOpacity>
           <View style={style.topprofile} >
             <View style={{ borderRadius: 30, height: 150, width: 150, overflow: "hidden", elevation: 5, zIndex: 10, borderWidth: 3, borderColor: "white" }}>
-              <TouchableOpacity activeOpacity={1}>
-                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6", alignItems: "flex-end", justifyContent: "flex-end" }} source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU" }} >
-                  <TouchableOpacity style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
+              <TouchableOpacity onPress={() => { navigation.navigate("ProfilePicture", { image: backgroundimage !== null ? backgroundimage : images[0] }) }} activeOpacity={1}>
+                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6", alignItems: "flex-end", justifyContent: "flex-end" }} source={{ uri: backgroundimage !== null ? backgroundimage : images[0] }} >
+                  <TouchableOpacity onPress={() => {  navigation.navigate("ProfilePicture", { image: backgroundimage !== null ? backgroundimage : images[0] }) }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                     <Ionicons color={"white"} size={22} name={"edit-2"} />
                   </TouchableOpacity>
                 </ImageBackground>

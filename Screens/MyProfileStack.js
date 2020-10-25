@@ -11,6 +11,8 @@ import AddAbout from "./AddAbout";
 import AddAchievements from "./AddAchievements";
 import AddExperience from "./AddExperience";
 import ImageReview from "./ImageReview";
+import ProfilePicture from "./ProfilePicture";
+import ProfileBackground from "./ProfileBackground";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +28,8 @@ const MyProfileStack = () => {
             <Stack.Screen name="AddAchievements" component={AddAchievements} options={{headerShown:false}} />
             <Stack.Screen name="AddExperience" component={AddExperience} options={{headerShown:false}} />
             <Stack.Screen name="ImageReview" component={ImageReview} options={{headerShown:false,animationEnabled:false}} />   
+            <Stack.Screen name="ProfilePicture" component={ProfilePicture} options={{headerShown:false,animationEnabled:false}} /> 
+            <Stack.Screen name="ProfileBackground" component={ProfileBackground} options={{headerShown:false,animationEnabled:false}} /> 
         </Stack.Navigator>
     );
 }

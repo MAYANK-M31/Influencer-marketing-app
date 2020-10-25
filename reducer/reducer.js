@@ -15,7 +15,9 @@ export const initState = {
     instausername: null,
     youtubeconnected: false,
     isloggedin: null,
-    uploadeduser: null
+    uploadeduser: null,
+    profileimage:null,
+    backgroundimage:null
 
 }
 
@@ -113,6 +115,16 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 uploadeduser: action.payload
+            }
+        case "ADD_PROFILEIMAGE":
+            return {
+                ...state,
+                profileimage: action.payload
+            }
+        case "ADD_BACKGROUNDIMAGE":
+            return {
+                ...state,
+                backgroundimage: action.payload
             }
 
 

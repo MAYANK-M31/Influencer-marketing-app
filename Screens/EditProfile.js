@@ -225,10 +225,10 @@ const EditProfile = ({ navigation, route }) => {
                                         :
                                         <View style={{ width: "95%", height: 1, backgroundColor: "white", marginTop: 10, marginBottom: 10, alignSelf: "center" }}></View>
                                     }
-                                    <TouchableOpacity onPress={()=>{navigation.navigate("EditAchievements",{data:items})}} style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
+                                    <TouchableOpacity onPress={() => { navigation.navigate("EditAchievements", { data: items }) }} style={{ width: "90%", flexDirection: "row", alignItems: "center" }} >
 
                                         <View style={{ height: "100%", width: 40, paddingTop: 5 }} >
-                                            <View style={{ height: 40, width: 40, backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
+                                            <View style={{ height: 40, width: 40, backgroundColor: "white", borderRadius: 50, justifyContent: "center", alignItems: "center" }} >
                                                 {items.category == "award" ?
                                                     <Ionicons name={"award"} size={25} />
                                                     : null
@@ -253,14 +253,18 @@ const EditProfile = ({ navigation, route }) => {
 
                                             </View>
                                         </View>
-                                        <View style={{ width: "100%" }}>
-                                            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
+                                        <View style={{ width: "100%", justifyContent: "center" }}>
+                                            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} >
                                                 <View style={{ width: items.description == null ? "100%" : items.description.length > 80 ? "75%" : "100%" }}>
                                                     <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.title}</Text>
                                                 </View>
                                             </View>
+                                            {items.description ?
+                                                <Text numberOfLines={2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.description}</Text>
+                                                :
+                                                null
+                                            }
 
-                                            <Text numberOfLines={2} style={{ fontSize: 13, fontWeight: "100", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.description}</Text>
 
                                         </View>
                                     </TouchableOpacity>
