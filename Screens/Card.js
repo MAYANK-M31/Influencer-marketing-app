@@ -18,6 +18,12 @@ import axios from "axios"
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
+
+const images = [
+    "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg",
+    "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg"
+  ]
+
 var abbreviate = require('number-abbreviate')
 
 const Card = (props) => {
@@ -26,6 +32,8 @@ const Card = (props) => {
     const [instaposts, setinstaposts] = useState(null)
     const [subs, setsubs] = useState(null)
     const [views, setviews] = useState(null)
+    const [profileimage, setprofileimage] = useState(null)
+    const [backgroundimage, setbackgroundimage] = useState(null)
 
 
     useEffect(() => {
@@ -53,6 +61,17 @@ const Card = (props) => {
             // console.log(JSON.parse(props.youtubedata).items[0].statistics);
 
         }
+
+        const image = props.profileimage
+        // profile image logic
+        if (image !== undefined) {
+            setprofileimage(JSON.parse(image))
+            
+
+        }
+
+
+
     }, [])
 
 
@@ -63,7 +82,7 @@ const Card = (props) => {
                 <View style={style.insidecard} >
                     <View style={style.cardleft} >
                         <View style={{ borderRadius: 120 / 2, height: 100, width: 100, overflow: "hidden", elevation: 5 }}>
-                            <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: props.image }} />
+                            <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: profileimage ? profileimage : images[0] }} />
                         </View>
                     </View>
                     <View style={style.cardright} >
@@ -73,9 +92,9 @@ const Card = (props) => {
                             {subs || views ?
                                 <View style={{ width: "100%", height: 30, flexDirection: "row", alignItems: "center", marginTop: 3 }}>
                                     <Image style={{ width: 25, height: 25 }} source={require("../Icons/youtube.png")} />
-                                    <Text style={{ fontSize: 14, marginLeft: 20, color: "#878ca0", left: -10, fontWeight: "bold" }} ><Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold" ,textTransform:"uppercase" }} >{abbreviate(subs)} </Text>Subscribers  |</Text>
+                                    <Text style={{ fontSize: 14, marginLeft: 20, color: "#878ca0", left: -10, fontWeight: "bold" }} ><Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }} >{abbreviate(subs)} </Text>Subscribers  |</Text>
                                     <View style={{ width: 60, height: 30, flexDirection: "row", justifyContent: "space-around", left: -5, alignItems: "center" }}>
-                                        <Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold",textTransform:"uppercase" }}>{abbreviate(views)} </Text>
+                                        <Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }}>{abbreviate(views)} </Text>
                                         <Ionicons name={"eye"} size={20} color={"gray"} />
                                     </View>
                                 </View>

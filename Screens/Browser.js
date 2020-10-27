@@ -14,6 +14,7 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import WebView from 'react-native-webview';
+import { ActivityIndicator } from 'react-native-paper';
 
 
 
@@ -21,7 +22,7 @@ const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
 const Browser = ({ route, navigation }) => {
-
+    const [loading, setloading] = useState(true)
 
 
     return (
@@ -33,11 +34,19 @@ const Browser = ({ route, navigation }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                         <Ionicons color={"#404852"} size={28} name={"arrow-left"} />
                     </TouchableOpacity>
-                  
+
+                    <View style={style.chat} >
+                        {loading ? <ActivityIndicator color={"#007bff"} size={20} /> : null}
+                    </View>
+
+
                 </View>
 
-                <View style={{ height: HEIGHT-10 }}>
-                    <WebView  source={{ uri: route.params.link }} />
+                <View style={{ height: HEIGHT - 10 }}>
+                    <WebView
+                    
+                        onLoadEnd={() => { setloading(false) }}
+                        source={{ uri: route.params.link }} />
                 </View>
 
 

@@ -136,7 +136,7 @@ const EditExperience = ({ navigation, route }) => {
 
                 setloading(true)
 
-                if (source == route.params.data.url) {    // To not to upload file again if images is not changed from phone
+                if (source == route.params.data.url) {    // To not to upload file again if images is not changed from phone to upload.
                     removeToUpdate()
                     // console.log(url);
                     const insidedata = { companyname: value.toLowerCase(), description: value2.toLowerCase(), url: route.params.data.url }

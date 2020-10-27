@@ -9,11 +9,12 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Image, Alert, BackHandler,TextInput
+    Image, Alert, BackHandler, TextInput
 } from 'react-native';
 import firestore from "@react-native-firebase/firestore"
 import Ionicons from "react-native-vector-icons/Feather"
 import Card from './Card';
+import { TouchableRipple } from 'react-native-paper';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -66,17 +67,17 @@ const Search = ({ navigation }) => {
 
                 <ScrollView scrollEventThrottle={16} contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }} >
                     {result.map((item) =>
-                        <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate("Profilepage", { uid: item.uid, name: item.name, category: item.category,age:item.age, image: item.image,city:item.city,budget:[item.minrange,item.maxrange],paymode:item.paymode, youtubedata:JSON.stringify(item.youtubedata), instadata:JSON.stringify(item.instadata) })} >
-                            <Card key={item.uid} name={item.name} category={item.category} youtubedata={JSON.stringify(item.youtubedata)} instausername={JSON.stringify(item.instadata)} image={item.image} />
-                        </TouchableOpacity>
+                        <TouchableRipple rippleColor="rgb(0,0,0,0.32)" activeOpacity={0.9} onPress={() => navigation.navigate("Profilepage", { uid: item.uid,data:item ,name: item.name, category: item.category, age: item.age, image: item.image, city: item.city, budget: [item.minrange, item.maxrange], paymode: item.paymode, youtubedata: JSON.stringify(item.youtubedata), instadata: JSON.stringify(item.instadata) })} >
+                            <Card  key={item.uid} profileimage={JSON.stringify(item.profileimage)} name={item.name} category={item.category} youtubedata={JSON.stringify(item.youtubedata)} instausername={JSON.stringify(item.instadata)} image={item.image} />
+                        </TouchableRipple>
 
                     )}
 
-                    <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} />
+                    {/* <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} />
                     <Card name={"Sahil Khanna"} category={"Moto Vlogger"} subscribers={"300K"} views={"1M"} followers={"50K"} image={"https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"} />
                     <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} />
                     <Card name={"Ranvir Chaudhary"} category={"Fitness"} subscribers={"120K"} views={"12M"} followers={"20K"} image={"https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"} />
-                    <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} />
+                    <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} /> */}
                 </ScrollView>
             </SafeAreaView>
         </>
@@ -85,6 +86,10 @@ const Search = ({ navigation }) => {
 
 
 }
+
+
+
+
 
 
 const style = StyleSheet.create({

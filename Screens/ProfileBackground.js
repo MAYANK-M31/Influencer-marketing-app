@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -9,36 +9,194 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Image, FlatList, ImageBackground, ActivityIndicator,
+    Image, AsyncStorage, ToastAndroid
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
 import Icons from "react-native-vector-icons/FontAwesome5"
-import { Modal } from "react-native-paper"
+import { Modal, ActivityIndicator } from "react-native-paper"
+import ImagePicker from 'react-native-image-picker';
+import { MyContext } from './AppStartStack';
+import storage from '@react-native-firebase/storage';
+import firestore from "@react-native-firebase/firestore"
 
-var abbreviate = require('number-abbreviate')
 
 
-const images = [
-    "https://images.unsplash.com/photo-1494548162494-384bba4ab999?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80",
-    "https://cdn.pixabay.com/photo/2015/02/24/15/41/dog-647528__340.jpg",
-    "https://static.toiimg.com/photo/72975551.cms",
-    "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcThTgEcopn3OPT-NJzQhonAm317Js0Ye_M6hw&usqp=CAU",
-    "https://m.economictimes.com/thumb/msid-68721417,width-1200,height-900,resizemode-4,imgsize-1016106/nature1_gettyimages.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcR44cv1ylNive73e-Xx2N0WvetvMmaGoT3s-w&usqp=CAU",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSyYiivRzt1u3Hh1PxNFIC7t6z2_E_ewPQLcw&usqp=CAU",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTnu0iNiJXo9v63aomTvoWRA1iXHed93-B2LA&usqp=CAU"
-]
+const options = {
+    title: 'Select Image',
+    storageOptions: {
+        skipBackup: true,
+        path: 'images',
+
+    },
+    quality: 0.5,
+};
+
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
 const ProfileBackground = ({ route, navigation }) => {
-    const [image, setimage] = useState(route.params.image)
     const [visible, setvisible] = useState(false)
+    const [visible2, setvisible2] = useState(false)
+    const [selectimage, setselectimage] = useState(null)
+    const [filename, setfilename] = useState("")
+    const [loading, setloading] = useState(null)
+
+    const { state, dispatch } = useContext(MyContext)
+    const { backgroundimage } = state
 
 
+
+
+
+    const launchgallery = () => {
+        ImagePicker.launchImageLibrary(options, (response) => {
+            // console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                // alert(response.fileSize)
+                const source = response.uri;
+                setselectimage(source)
+                setvisible2(true)
+                // You can also display the image using data:
+                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+                // setsource(source)
+                setfilename(response.fileName)
+                // alert(response.fileName)
+            }
+        });
+    }
+
+
+
+
+
+    const launchcamera = () => {
+        ImagePicker.launchCamera(options, (response) => {
+            // console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                // alert(response.fileSize)
+                const source = response.uri;
+                setselectimage(source)
+                setvisible2(true)
+                // You can also display the image using data:
+                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+                // setsource(source)
+                // setfilename(response.fileName)
+                // alert(response.fileName)
+            }
+        });
+    }
+
+
+    const upload = async () => {
+        setloading(true)
+        const docid = await AsyncStorage.getItem("DocId")
+        const ref = await firestore().collection("influencer").doc(docid)
+        const reference = storage().ref(`/images/userbackgroundimage/${filename}`)
+
+        reference.putFile(selectimage)
+            .then((res) => {
+                // console.log(res);
+                // console.log(res.state);
+                if (res.state == "success") {
+                    ToastAndroid.show("Image Uploaded Successfully", ToastAndroid.SHORT)
+                } else if (res.state == "running") {
+                    ToastAndroid.show("uploading", ToastAndroid.LONG)
+                } else if (res.state == "error") {
+                    ToastAndroid.show("Failed to upload Try again", ToastAndroid.LONG)
+                    setloading(false)
+                }
+
+
+                const imageref = storage().ref(res.metadata.fullPath)
+                imageref
+                    .getDownloadURL()
+                    .then((url) => {
+                        // console.log(url);
+                        const backgroundimageurl = url
+                        ref.update({
+                            backgroundimage: backgroundimageurl
+                        }).then(async () => {
+                            setloading(false)
+                            // ToastAndroid.show("Data Updated successfully", ToastAndroid.SHORT)
+                            // ToastAndroid.show("Image Uploaded Successfully", ToastAndroid.SHORT)
+
+                            dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: backgroundimageurl })
+                            setloading(false)
+                            // navigation.goBack()
+
+                        })
+
+                    })
+
+            })
+            .catch((e) => {
+                ToastAndroid.show("Failed to upload try again", ToastAndroid.SHORT)
+                setloading(false)
+            })
+
+    }
+
+    // seprate the image name from url to remove it from storage for further use
+    const ImageNameFinder = (url) => {
+        var x = url
+        var y = x.split("%2F")
+        var x = y[2]
+        var y = x.split("?")
+        // console.log(y[0]);
+        return y[0]
+
+
+    }
+
+
+
+
+
+    const remove = async () => {
+        const imagename = ImageNameFinder(backgroundimage)
+        setvisible(false)
+        setloading(true)
+        const docid = await AsyncStorage.getItem("DocId")
+        const ref = await firestore().collection("influencer").doc(docid)
+        const reference = storage().ref(`/images/userbackgroundimage/${imagename}`)
+        reference.delete().then(() => {
+            ref.update({
+                backgroundimage: firestore.FieldValue.delete()
+            }).then(async () => {
+
+                setloading(false)
+                dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: null })
+                ToastAndroid.show("Background Photo removed successfully", ToastAndroid.SHORT)
+                // navigation.goBack()
+
+            })
+        })
+            .catch((e) => {
+                ToastAndroid.show("Failed to remove try again", ToastAndroid.SHORT)
+                setloading(false)
+            })
+
+
+
+    }
 
 
     return (
@@ -58,20 +216,30 @@ const ProfileBackground = ({ route, navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                <ScrollView style={{ backgroundColor: "black", paddingTop: HEIGHT / 8 }} horizontal={true} pagingEnabled={true} decelerationRate={'fast'} scrollEventThrottle={16} snapToInterval={WiDTH}  >
-                    <View style={{ width: WiDTH, height: 450 }} >
-                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: image }} />
-                    </View>
+                <View style={{ backgroundColor: "black", height: HEIGHT - 85 }}  >
+                    {loading ?
+                        <View style={{ width: "100%", height: "80%", alignItems: "center", justifyContent: "center" }} >
+                            <ActivityIndicator color={"#007bff"} size={40} />
+                        </View>
+                        :
+                        <View style={{ width: WiDTH, maxHeight: HEIGHT }} >
+                            <Image style={{ width: "100%", height: "100%", resizeMode: "contain" }} source={{ uri: backgroundimage !== null ? backgroundimage : "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg" }} />
+                        </View>
+                    }
+                </View>
 
-                </ScrollView>
+
+
+
+
 
 
             </SafeAreaView>
 
-            
-            <Modal visible={visible} onDismiss={()=>setvisible(false)}>
+
+            <Modal visible={visible} onDismiss={() => setvisible(false)}>
                 <View style={{ width: WiDTH, height: HEIGHT }}>
-                    <TouchableOpacity onPress={()=>setvisible(false)} style={{ width: WiDTH, height: HEIGHT*3/4}}>
+                    <TouchableOpacity onPress={() => setvisible(false)} style={{ width: WiDTH, height: HEIGHT * 3 / 4 }}>
 
                     </TouchableOpacity>
                     <View style={{ width: WiDTH, height: HEIGHT / 4, backgroundColor: "white", position: "absolute", bottom: 0, borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
@@ -79,43 +247,75 @@ const ProfileBackground = ({ route, navigation }) => {
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2a3659", marginLeft: 20 }} >Profile Photo</Text>
                         </View>
                         <View style={{ width: "100%", height: "55%", justifyContent: "flex-start", flexDirection: "row" }}>
-                            <View >
-                                <View style={{ height: 45, width: 45, backgroundColor: "#e7164c", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
-                                    <Icons size={18} color={"white"} name={"trash"} />
-                                </View>
 
-                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5 }}>
-                                    <Text style={{ fontSize: 14, color: "grey" }}>Remove</Text>
-                                    <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text>
-                                </View>
-                            </View>
+                            {backgroundimage == null ?
+                                null
+                                :
 
-                            <View >
+                                <TouchableOpacity activeOpacity={1} onPress={() => { remove() }}>
+                                    <View style={{ height: 45, width: 45, backgroundColor: "#e7164c", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
+                                        <Icons size={18} color={"white"} name={"trash"} />
+                                    </View>
+
+                                    <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5 }}>
+                                        <Text style={{ fontSize: 14, color: "grey" }}>Remove</Text>
+                                        <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            }
+
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { launchgallery() }} >
                                 <View style={{ height: 45, width: 45, backgroundColor: "#00ca95", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
                                     <Icons size={20} color={"white"} name={"image"} />
                                 </View>
 
-                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5 }}>
+                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5 ,left:-2.5}}>
                                     <Text style={{ fontSize: 14, color: "grey" }}>Gallery</Text>
                                     {/* <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text> */}
                                 </View>
-                            </View>
+                            </TouchableOpacity>
 
-                            <View >
+                            <TouchableOpacity activeOpacity={1} onPress={() => { launchcamera() }}>
                                 <View style={{ height: 45, width: 45, backgroundColor: "#4285f4", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
                                     <Icons size={20} color={"white"} name={"camera"} />
                                 </View>
 
-                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5 }}>
+                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5,left:-2.5 }}>
                                     <Text style={{ fontSize: 14, color: "grey" }}>Camera</Text>
                                     {/* <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text> */}
                                 </View>
-                            </View>
+                            </TouchableOpacity>
 
                         </View>
                     </View>
                 </View>
             </Modal>
+
+
+            <Modal visible={visible2} onDismiss={() => setvisible2(false)} >
+                <View style={{ width: WiDTH, height: "100%" }}>
+
+                    <View style={style.header} >
+                        <TouchableOpacity onPress={() => { setvisible2(false) }} style={style.back} >
+                            <Ionicons color={"white"} size={28} name={"x"} />
+                        </TouchableOpacity>
+                        <View style={style.heading} >
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }} >Upload</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => { setvisible(false), setvisible2(false), upload() }} style={style.chat} >
+                            <Ionicons color={"white"} size={22} name={"check"} />
+                        </TouchableOpacity>
+                    </View>
+
+                    <ScrollView style={{ backgroundColor: "black" }} horizontal={true} pagingEnabled={true} decelerationRate={'fast'} scrollEventThrottle={16} snapToInterval={WiDTH}  >
+                        <View style={{ width: WiDTH, maxHeight: HEIGHT }} >
+                            <Image style={{ width: "100%", height: "100%", resizeMode: "contain" }} source={{ uri: selectimage }} />
+                        </View>
+                    </ScrollView>
+                </View>
+            </Modal>
+
         </>
 
     )

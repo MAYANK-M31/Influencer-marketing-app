@@ -73,7 +73,7 @@ const ProfileFourthtPage = ({ navigation, route }) => {
                 // console.log(res.accessToken);
 
                 setyoutubetoken(res.accessToken)
-                await axios.get("https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&mine=true&key=AIzaSyB0teIk0vu9KpyKgSXPK4WZnOqqb9aQI0Q&access_token=" + res.accessToken).then((res) => {
+                await axios.get("https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,contentDetails&mine=true&key=AIzaSyB0teIk0vu9KpyKgSXPK4WZnOqqb9aQI0Q&access_token=" + res.accessToken).then((res) => {
                     // console.log(res.data.items[0].statistics);
                     setloading(false)
                     setyoutubedata(res.data)

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -16,6 +16,7 @@ import Ionicons from "react-native-vector-icons/Feather"
 import auth from '@react-native-firebase/auth';
 import axios from "axios"
 import firestore from "@react-native-firebase/firestore"
+import { MyContext } from './AppStartStack';
 
 
 const WiDTH = Dimensions.get("window").width
@@ -24,6 +25,7 @@ const HEIGHT = Dimensions.get("window").height
 const Home = ({ navigation }) => {
 
 
+    const { state, dispatch } = useContext(MyContext)
 
     // const func = async () => {
     //     await firestore().collection("chats").doc("RDFPR0AodjGrjTwQoHWm")
@@ -98,7 +100,7 @@ const Home = ({ navigation }) => {
                         </View>
                     </View>
                     
-                    <TouchableOpacity onPress={async () => {await AsyncStorage.multiRemove(["DocId", "datauploadeduser", "editage", "loggedin", "phonenumber", "type", "uid","editabout"]),BackHandler.exitApp()}} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
+                    <TouchableOpacity onPress={async () => {await AsyncStorage.clear(),dispatch({ type: "ADD_LOGGEDIN", payload: false })}} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
 

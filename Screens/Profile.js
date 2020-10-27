@@ -44,8 +44,7 @@ const Profile = ({ route, navigation }) => {
   const [see, setsee] = useState(null)
   const [achievesee, setachievesee] = useState(null)
   const [InitLoading, setInitLoading] = useState(true)
-  // const [profileimage, setprofileimage] = useState("https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg")
-  // const [backgroundimage, setbackgroundimage] = useState("https://thumbs.dreamstime.com/b/abstract-connection-blue-background-network-d-rendering-digital-153616052.jpg")
+  
 
 
   const { state, dispatch } = useContext(MyContext)
@@ -265,18 +264,18 @@ const Profile = ({ route, navigation }) => {
 
 
         <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{ paddingBottom: 100 }} >
-          <TouchableOpacity onPress={() => { navigation.navigate("ProfileBackground", { image: profileimage !== null ? profileimage : images[1] }) }} activeOpacity={1}>
-            <ImageBackground style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#e6fff6", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }} source={{ uri: profileimage !== null ? profileimage : images[1] }} >
-              <TouchableOpacity style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
+          <TouchableOpacity onPress={() => { navigation.navigate("ProfileBackground") }} activeOpacity={1}>
+            <ImageBackground style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#e6fff6", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }} source={{ uri: backgroundimage !== null ? backgroundimage : images[1] }} >
+              <TouchableOpacity  onPress={() => { navigation.navigate("ProfileBackground") }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                 <Ionicons color={"white"} size={22} name={"edit-2"} />
               </TouchableOpacity>
             </ImageBackground>
           </TouchableOpacity>
           <View style={style.topprofile} >
             <View style={{ borderRadius: 30, height: 150, width: 150, overflow: "hidden", elevation: 5, zIndex: 10, borderWidth: 3, borderColor: "white" }}>
-              <TouchableOpacity onPress={() => { navigation.navigate("ProfilePicture", { image: backgroundimage !== null ? backgroundimage : images[0] }) }} activeOpacity={1}>
-                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6", alignItems: "flex-end", justifyContent: "flex-end" }} source={{ uri: backgroundimage !== null ? backgroundimage : images[0] }} >
-                  <TouchableOpacity onPress={() => {  navigation.navigate("ProfilePicture", { image: backgroundimage !== null ? backgroundimage : images[0] }) }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
+              <TouchableOpacity onPress={() => { navigation.navigate("ProfilePicture") }} activeOpacity={1}>
+                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6", alignItems: "flex-end", justifyContent: "flex-end" }} source={{ uri: profileimage == null ?  images[0] : profileimage }} >
+                  <TouchableOpacity onPress={() => {  navigation.navigate("ProfilePicture") }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                     <Ionicons color={"white"} size={22} name={"edit-2"} />
                   </TouchableOpacity>
                 </ImageBackground>
