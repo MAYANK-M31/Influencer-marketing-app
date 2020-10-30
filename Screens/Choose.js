@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
+import { MyContext } from './AppStartStack';
 
 
 
@@ -22,10 +23,14 @@ const HEIGHT = Dimensions.get("window").height
 
 const Choose = ({navigation}) => {
 
+    
+    const {dispatch } = useContext(MyContext)
+
 
    const  choose=async(item)=>{
     navigation.navigate("PhoneNumber")
     await AsyncStorage.setItem("type",item)
+    dispatch({ type: "ADD_TYPE", payload: item })
    }
 
 

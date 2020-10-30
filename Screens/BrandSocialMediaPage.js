@@ -37,7 +37,7 @@ const HEIGHT = Dimensions.get("window").height
 
 
 
-const ProfileFourthtPage = ({ navigation, route }) => {
+const BrandSocialMediaPage = ({ navigation, route }) => {
 
     const [disable, setdisable] = useState(true)
 
@@ -167,6 +167,10 @@ const ProfileFourthtPage = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                         <Ionicons color={"black"} size={28} name={"arrow-left"} />
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{navigation.navigate("BrandPostCampaignPage")}} style={{height:30,width:50,borderRadius:50,backgroundColor:"#1e87fd",justifyContent:"center",alignItems:"center",position:"absolute",right:30}}>
+                    <Text style={{color:"white",fontWeight:"bold",alignSelf:"center"}} >Skip</Text>
+                    </TouchableOpacity>
+                   
                 </View>
 
                 <View style={style.heading} >
@@ -271,12 +275,15 @@ const style = StyleSheet.create({
         backgroundColor: "white",
         justifyContent: "center",
         alignItems: "center",
-        width: "100%"
+
+        
     },
     header: {
         top: 10,
         left: 15,
         position: "absolute",
+        flexDirection:"row",
+        width: WiDTH
     },
     heading: {
         top: 50,
@@ -289,4 +296,4 @@ const style = StyleSheet.create({
 })
 
 
-export default ProfileFourthtPage;
+export default BrandSocialMediaPage;

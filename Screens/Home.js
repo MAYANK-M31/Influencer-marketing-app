@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
+import Icons from "react-native-vector-icons/Ionicons"
 import auth from '@react-native-firebase/auth';
 import axios from "axios"
 import firestore from "@react-native-firebase/firestore"
@@ -41,7 +42,7 @@ const Home = ({ navigation }) => {
     // useEffect(()=>{
     //     const { currentUser } = auth()
     //     console.log({currentUser});
-        
+
     // },[])
 
 
@@ -53,7 +54,20 @@ const Home = ({ navigation }) => {
             <SafeAreaView style={style.container}>
 
                 <View style={style.header} >
-                    <Text style={style.headingtext} >Explore</Text>
+                    <View style={style.back} >
+                        <Text style={style.headingtext} >Explore
+                        
+                        </Text>
+                    </View>
+
+                    <View style={style.chat} >
+                        <View style={{ width: 40, height: 40, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 15 }} >
+                            <Ionicons color={"black"} size={25} name={"bell"} />
+                        </View>
+                        <View style={{ width: 40, height: 40, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 6 }} >
+                            <Ionicons color={"black"} size={25} name={"message-circle"} />
+                        </View>
+                    </View>
                 </View>
                 {/* //#878ca0 */}
                 <TouchableOpacity onPress={() => { navigation.navigate("Search") }} style={style.textinput} >
@@ -99,13 +113,13 @@ const Home = ({ navigation }) => {
                             </View>
                         </View>
                     </View>
-                    
-                    <TouchableOpacity onPress={async () => {await AsyncStorage.clear(),dispatch({ type: "ADD_LOGGEDIN", payload: false })}} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
+
+                    <TouchableOpacity onPress={async () => { await AsyncStorage.clear(), dispatch({ type: "ADD_LOGGEDIN", payload: false }) }} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
 
                 </View>
-     
+
 
 
 
@@ -124,11 +138,31 @@ const style = StyleSheet.create({
         backgroundColor: "white",
     },
     header: {
-        top: 0,
-        height: 45,
-        width: "100%",
-        justifyContent: "center",
+        height: 50,
+        width: WiDTH,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
         backgroundColor: "white"
+    },
+    back: {
+        height: "100%",
+        width: WiDTH / 5,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    heading: {
+        height: "100%",
+        width: WiDTH / 2,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    chat: {
+        height: "100%",
+        width: WiDTH / 3.8,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
     },
     headingtext: {
         color: "#404852",

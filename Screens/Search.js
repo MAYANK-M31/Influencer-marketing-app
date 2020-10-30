@@ -75,7 +75,8 @@ const Search = ({ navigation }) => {
 
                     {/* <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} />
                     <Card name={"Sahil Khanna"} category={"Moto Vlogger"} subscribers={"300K"} views={"1M"} followers={"50K"} image={"https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"} />
-                    <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} />
+                    <Card name={"Nikhil Chinnapa"} category={"Sin
+                    ger"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} />
                     <Card name={"Ranvir Chaudhary"} category={"Fitness"} subscribers={"120K"} views={"12M"} followers={"20K"} image={"https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg"} />
                     <Card name={"Nikhil Chinnapa"} category={"Singer"} subscribers={"800K"} views={"120M"} followers={"2.4M"} image={"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTq2hiMM4LY3J-nPX9QFO0URL2siUWeJP-t-A&usqp=CAU"} /> */}
                 </ScrollView>

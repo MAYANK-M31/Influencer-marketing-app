@@ -16,8 +16,9 @@ export const initState = {
     youtubeconnected: false,
     isloggedin: null,
     uploadeduser: null,
-    profileimage:null,
-    backgroundimage:null
+    profileimage: null,
+    backgroundimage: null,
+    type: null     // wheater user is brand or influencer
 
 }
 
@@ -125,6 +126,11 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 backgroundimage: action.payload
+            }
+        case "ADD_TYPE":
+            return {
+                ...state,
+                type: action.payload
             }
 
 

@@ -12,6 +12,7 @@ import Logo from "./Logo";
 import ProfileCreatePage from "./ProfileCreateStartPage";
 import ProfileCreationStack from "./ProfileCreationStack";
 import { reducer, initState } from "../reducer/reducer"
+import BrandProfileCreationStack from "./BrandProfileCreationStack";
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ const AppStartStack = () => {
 
 
     const [state, dispatch] = useReducer(reducer, initState)
-    const {isloggedin,uploadeduser} = state;
+    const {isloggedin,uploadeduser,type} = state;
 
 
 
@@ -62,7 +63,10 @@ const AppStartStack = () => {
                         uploadeduser ?
                             <Stack.Screen name="Tabbar" component={Tabbar} options={{ headerShown: false ,animationEnabled:false}} />
                             :
+                            type == "influencer" ?
                             <Stack.Screen name="ProfileCreateStack" component={ProfileCreationStack} options={{ headerShown: false }} />
+                            :
+                            <Stack.Screen name="BrandProfileCreateStack" component={BrandProfileCreationStack} options={{ headerShown: false }} />
 
                         :
                         <>

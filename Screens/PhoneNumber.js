@@ -53,7 +53,8 @@ const PhoneNumber = ({ navigation }) => {
                 })
             
         }else{
-            alert("incorrect number")
+            ToastAndroid.show("Please enter valid number",ToastAndroid.LONG
+            )
             setloading(false)
         }
        
@@ -87,7 +88,7 @@ const PhoneNumber = ({ navigation }) => {
 
                 <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "#404852", left: 30, top: 225, position: "absolute" }} >Enter Your Mobile Number</Text>
 
-                <View style={{ height: 50, width: "85%", flexDirection: "row", alignItems: "center", justifyContent: "center", borderBottomWidth: 2, borderBottomColor: "grey", position: "absolute", top: 250 }}>
+                <View style={{ height: 50, width: "85%", flexDirection: "row", alignItems: "center", justifyContent: "center", borderBottomWidth: 2, borderBottomColor: "#192537", position: "absolute", top: 250 }}>
                     <View style={{ width: "20%", height: "100%", backgroundColor: "white", justifyContent: "center", alignItems: "center" }} >
                         <Text style={{ fontSize: 18, fontWeight: "700", color: "#192537" }} >(IN) +91</Text>
                     </View>
