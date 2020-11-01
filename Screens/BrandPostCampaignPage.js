@@ -54,18 +54,9 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
     const submit = () => {
-        navigation.navigate("ProfileSixthPage", {
-            name: route.params.name,
-            age: route.params.age,
-            email: route.params.email,
-            city: route.params.city,
-            category: route.params.category,
-            youtubedata: route.params.youtubedata,
-            instadata: route.params.instadata,
-            paymode: paymode,
-            minrange: value1,
-            maxrange: value2
-        })
+        // 
+        
+        
     }
 
 
@@ -91,9 +82,13 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
                 <View style={style.header} >
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: "absolute", left: 15 }} >
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                         <Ionicons color={"black"} size={28} name={"arrow-left"} />
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => { navigation.navigate("BrandPostCampaignPage") }} style={{ height: 30, width: 60, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 10 }}>
+                        <Text style={{ color: "white", fontWeight: "100", alignSelf: "center" }} >Later</Text>
+                    </TouchableOpacity>
+
                 </View>
 
                 <ScrollView style={{ width: "100%", height: HEIGHT }} contentContainerStyle={{ paddingBottom: 50 }} >
@@ -131,9 +126,13 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     </View> */}
 
 
-                    <View style={{ flexWrap: "wrap", width: "100%", flexDirection: "row", alignItems: "center", paddingHorizontal: 20, marginTop: 30 }} >
+
+                    <View style={{
+                        flexWrap: "wrap", width: "100%", flexDirection: "row", alignItems: "center", paddingHorizontal: 20, marginTop: 30
+
+                    }} >
                         <Text style={{ alignSelf: "flex-start", fontSize: 28, fontWeight: "bold", color: "#404852" }} >Select Campaign Platform</Text>
-                        <TouchableOpacity activeOpacity={1} onPress={() => {select2("instagram"),setinstafollowers(null)}} style={{
+                        <TouchableOpacity activeOpacity={1} onPress={() => { select2("instagram"), setinstafollowers(null) }} style={{
                             height: 55, width: "40%", backgroundColor: platform == "instagram" ? "#1e87fd" : "white"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10,
@@ -147,7 +146,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                         </TouchableOpacity>
 
                         <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "#1e87fd" }} >OR</Text>
-                        <TouchableOpacity activeOpacity={1} onPress={() => {select2("youtube"),setyoutubesubs(null)}} style={{
+                        <TouchableOpacity activeOpacity={1} onPress={() => { select2("youtube"), setyoutubesubs(null) }} style={{
                             height: 55, width: "40%", backgroundColor: platform == "youtube" ? "#1e87fd" : "white"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10,
@@ -161,8 +160,10 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
 
-                        <TouchableOpacity activeOpacity={1} onPress={() => {select2("both"),setyoutubesubs(null),setinstafollowers(null 
-                        )}} style={{
+                        <TouchableOpacity activeOpacity={1} onPress={() => {
+                        select2("both"), setyoutubesubs(null), setinstafollowers(null
+                        )
+                        }} style={{
                             height: 55, width: "92%", backgroundColor: "#1e87fd"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10,
@@ -189,7 +190,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "1K-10K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("10K-50K")} style={{
@@ -198,7 +199,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "10K-50K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("shopping")} style={{
                                     height: 45, width: "30%"
@@ -206,7 +207,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "shopping" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("50K-100K")} style={{
                                     height: 45, width: "30%"
@@ -214,7 +215,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "50K-100K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("500K-1M")} style={{
                                     height: 45, width: "30%"
@@ -222,7 +223,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "500K-1M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("1M-5M")} style={{
                                     height: 45, width: "30%"
@@ -230,7 +231,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "1M-5M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("5M-10M")} style={{
                                     height: 45, width: "30%"
@@ -238,7 +239,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "5M-10M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("10M-20M")} style={{
                                     height: 45, width: "30%"
@@ -246,7 +247,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "10M-20M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("20M+")} style={{
                                     height: 45, width: "30%"
@@ -254,7 +255,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "20M+" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
                                 </TouchableOpacity>
 
                             </View>
@@ -276,7 +277,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "1K-10K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("10K-50K")} style={{
@@ -285,7 +286,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "10K-50K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("shopping")} style={{
                                     height: 45, width: "30%"
@@ -293,7 +294,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "shopping" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("50K-100K")} style={{
                                     height: 45, width: "30%"
@@ -301,7 +302,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "50K-100K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("500K-1M")} style={{
                                     height: 45, width: "30%"
@@ -309,7 +310,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "500K-1M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("1M-5M")} style={{
                                     height: 45, width: "30%"
@@ -317,7 +318,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "1M-5M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("5M-10M")} style={{
                                     height: 45, width: "30%"
@@ -325,7 +326,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "5M-10M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("10M-20M")} style={{
                                     height: 45, width: "30%"
@@ -333,7 +334,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "10M-20M" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("20M+")} style={{
                                     height: 45, width: "30%"
@@ -341,7 +342,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "20M+" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
                                 </TouchableOpacity>
 
                             </View>
@@ -363,7 +364,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "1K-10K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("10K-50K")} style={{
@@ -372,7 +373,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "10K-50K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("shopping")} style={{
                                         height: 45, width: "30%"
@@ -380,7 +381,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "shopping" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("50K-100K")} style={{
                                         height: 45, width: "30%"
@@ -388,7 +389,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "50K-100K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("500K-1M")} style={{
                                         height: 45, width: "30%"
@@ -396,7 +397,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "500K-1M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("1M-5M")} style={{
                                         height: 45, width: "30%"
@@ -404,7 +405,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "1M-5M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("5M-10M")} style={{
                                         height: 45, width: "30%"
@@ -412,7 +413,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "5M-10M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("10M-20M")} style={{
                                         height: 45, width: "30%"
@@ -420,7 +421,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "10M-20M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("20M+")} style={{
                                         height: 45, width: "30%"
@@ -428,7 +429,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "20M+" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: instafollowers == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
                                     </TouchableOpacity>
 
                                 </View>
@@ -444,7 +445,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "1K-10K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "1K-10K" ? "white" : "#1e87fd" }} >1K-10K</Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("10K-50K")} style={{
@@ -453,7 +454,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "10K-50K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("shopping")} style={{
                                         height: 45, width: "30%"
@@ -461,7 +462,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "shopping" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("50K-100K")} style={{
                                         height: 45, width: "30%"
@@ -469,7 +470,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "50K-100K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("500K-1M")} style={{
                                         height: 45, width: "30%"
@@ -477,7 +478,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "500K-1M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "500K-1M" ? "white" : "#1e87fd" }} >500K-1M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("1M-5M")} style={{
                                         height: 45, width: "30%"
@@ -485,7 +486,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "1M-5M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "1M-5M" ? "white" : "#1e87fd" }} >1M-5M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("5M-10M")} style={{
                                         height: 45, width: "30%"
@@ -493,7 +494,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "5M-10M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "5M-10M" ? "white" : "#1e87fd" }} >5M-10M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("10M-20M")} style={{
                                         height: 45, width: "30%"
@@ -501,7 +502,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "10M-20M" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "10M-20M" ? "white" : "#1e87fd" }} >10M-20M</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("20M+")} style={{
                                         height: 45, width: "30%"
@@ -509,7 +510,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "20M+" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: youtubesubs == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "20M+" ? "white" : "#1e87fd" }} >20M+</Text>
                                     </TouchableOpacity>
 
                                 </View>
@@ -657,7 +658,6 @@ const style = StyleSheet.create({
     },
     back: {
         left: 15,
-        backgroundColor: "red",
     },
     heading: {
         width: WiDTH,
