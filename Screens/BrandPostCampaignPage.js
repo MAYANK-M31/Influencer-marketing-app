@@ -10,7 +10,8 @@ import {
     Dimensions,
     TouchableOpacity,
     AsyncStorage,
-    Slider
+    Slider,
+    ToastAndroid
 } from 'react-native';
 import { TextInput, DefaultTheme } from "react-native-paper"
 import Ionicons from "react-native-vector-icons/Feather"
@@ -24,6 +25,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
     const [value1, setvalue1] = useState(20)
     const [value2, setvalue2] = useState(50)
+    const [title, settitle] = useState(null)
+    const [description, setdescription] = useState(null)
     const [paymode, setpaymode] = useState(null)
     const [platform, setplatform] = useState(null)
     const [youtubesubs, setyoutubesubs] = useState(null)
@@ -52,11 +55,12 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
 
-
     const submit = () => {
-        // 
+        if (title == null || description == null) {
+            ToastAndroid.show("Please Fill Campaign Title", ToastAndroid.SHORT)
+        }
         
-        
+
     }
 
 
@@ -99,7 +103,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
                     <TextInput
-
+                        value={description}
+                        onChangeText={(text) => { setdescription(text) }}
                         style={{ height: 50, width: "90%", backgroundColor: "white", alignSelf: "center", fontSize: 18, marginTop: 20 }}
                         mode={"outlined"}
                         underlineColor={"grey"}
@@ -110,7 +115,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     />
 
                     <TextInput
-
+                        value={title}
+                        onChangeText={(text) => { settitle(text) }}
                         style={{ maxHeight: 300, width: "90%", backgroundColor: "white", alignSelf: "center", fontSize: 18, marginTop: 20 }}
                         mode={"outlined"}
                         underlineColor={"grey"}
@@ -161,8 +167,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
                         <TouchableOpacity activeOpacity={1} onPress={() => {
-                        select2("both"), setyoutubesubs(null), setinstafollowers(null
-                        )
+                            select2("both"), setyoutubesubs(null), setinstafollowers(null
+                            )
                         }} style={{
                             height: 55, width: "92%", backgroundColor: "#1e87fd"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",

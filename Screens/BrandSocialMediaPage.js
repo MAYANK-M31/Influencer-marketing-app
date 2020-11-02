@@ -78,6 +78,18 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
         onClear()
     }, [])
 
+    // YouTube SignOut Function
+
+    const signOut = async () => {
+        try {
+            await GoogleSignin.revokeAccess();
+            await GoogleSignin.signOut();
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     // For Youtube Auth
     async function onGoogleButtonPress() {
      
@@ -98,18 +110,31 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                 setyoutubetoken(res.accessToken)
                 await axios.get("https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics,contentDetails&mine=true&key=AIzaSyB0teIk0vu9KpyKgSXPK4WZnOqqb9aQI0Q&access_token=" + res.accessToken).then((res) => {
                     // console.log(res.data.items[0].statistics);
-                    setloading(false)
-                    setyoutubedata(res.data)
-                    setyoutubeconnected(true)
-                    setdisable(false)
-                    // console.log(youtubedata);
+                    if (res.data.items == undefined) {
+                        ToastAndroid.show("Yours Youtube account has nothing to show.", ToastAndroid.LONG)
+                        setyoutubedata(null)
+                        setloading(false)
+                        signOut()
+                        setdisable(true)
+                    }else{
+                        setloading(false)
+                        setyoutubedata(res.data)
+                        setyoutubeconnected(true)
+                        setdisable(false)
+                        // console.log(youtubedata);
+                    }
+                  
                 })
+               
 
 
             })
             .catch((e)=>{
-                set
-                
+                setdisable(true)
+                setyoutubedata(null)
+                setloading(false)
+                signOut()
+                ToastAndroid.show("Try Again", ToastAndroid.LONG)
                 loading(false)
             })
 
@@ -144,10 +169,24 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
     }
     // console.log('data', instadata)
 
+
+
     const submit = () => {
-        navigation.navigate("ProfileFifthPage", {
+        navigation.navigate("BrandPostCampaignPage", {
             name: route.params.name,
-            age: route.params.age,
+            brandname: route.params.brandname,
+            email: route.params.email,
+            city: route.params.city,
+            category: route.params.category,
+            youtubedata: youtubedata,
+            instadata: instadata
+        })
+    }
+
+    const skip = () => {
+        navigation.navigate("BrandPostCampaignPage", {
+            name: route.params.name,
+            brandname: route.params.brandname,
             email: route.params.email,
             city: route.params.city,
             category: route.params.category,
@@ -167,7 +206,7 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                         <Ionicons color={"black"} size={28} name={"arrow-left"} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{navigation.navigate("BrandPostCampaignPage")}} style={{height:30,width:50,borderRadius:50,backgroundColor:"#1e87fd",justifyContent:"center",alignItems:"center",position:"absolute",right:30}}>
+                    <TouchableOpacity onPress={()=>{skip()}} style={{height:30,width:50,borderRadius:50,backgroundColor:"#1e87fd",justifyContent:"center",alignItems:"center",position:"absolute",right:30}}>
                     <Text style={{color:"white",fontWeight:"bold",alignSelf:"center"}} >Skip</Text>
                     </TouchableOpacity>
                    
@@ -246,7 +285,7 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
 
 
                 <TouchableOpacity disabled={disable} onPress={() => { submit() }} style={{
-                    height: 55, width: "85%", backgroundColor: disable ? "#1e87fdCC" : "#1e87fd"
+                    height: 55, width: "85%", backgroundColor: disable ? "#1e87fd44" : "#1e87fd"
                     , alignItems: "center", flexDirection: "row", justifyContent: "center",
                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, position: "absolute", top: HEIGHT - 85
                 }} >

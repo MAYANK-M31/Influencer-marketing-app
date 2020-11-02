@@ -28,7 +28,7 @@ const BrandCategoryPage = ({ navigation }) => {
 
     const select = async (item) => {
         setcategory(item)
-        setdisable(false)
+        setdisable(false)    
     }
 
 

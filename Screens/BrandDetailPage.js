@@ -22,21 +22,33 @@ const HEIGHT = Dimensions.get("window").height
 
 const BrandDetailPage = ({ navigation, route }) => {
 
-    const [name, setname] = useState("")
-    const [age, setage] = useState("")
-    const [email, setemail] = useState("")
-    const [city, setcity] = useState("")
+    const [name, setname] = useState(null)
+    const [brandname, setbrandname] = useState(null)
+    const [email, setemail] = useState(null)
+    const [city, setcity] = useState(null)
+    const [website, setwebsite] = useState(null)
+    const [applink, setapplink] = useState(null)
+    const [brandcategory, setbrandcategory] = useState(null)
 
     const [disable, setdisable] = useState(true)
 
     const submit = () => {
-        // if (name == "" || age == "" || email == "" || city == "") {
-        //     ToastAndroid.show("Please Fill Details", ToastAndroid.SHORT)
-        //     // alert("please fill detail")
-        // }else{
-        //     navigation.navigate("ProfileFourthPage",{name:name,age:age,email:email,city:city,category:route.params.category})
-        // }
-        navigation.navigate("BrandSocialMediaPage")
+        if (name == null || brandname == null || email == null || city == null) {
+
+            ToastAndroid.show("Please Fill Details", ToastAndroid.SHORT)
+        } else {
+            if (route.params.category == "other") {
+                if (brandcategory == null) {
+                    ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
+                }else {
+                    navigation.navigate("BrandSocialMediaPage", { name: name, brandname: brandname, email: email, city: city, website: website, applink: applink, category: route.params.category == "other" ? brandcategory : route.params.category })
+                }
+            } else {
+                navigation.navigate("BrandSocialMediaPage", { name: name, brandname: brandname, email: email, city: city, website: website, applink: applink, category: route.params.category == "other" ? brandcategory : route.params.category })
+            }
+
+        }
+        // navigation.navigate("BrandSocialMediaPage")
     }
 
 
@@ -68,81 +80,102 @@ const BrandDetailPage = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                         <Ionicons color={"black"} size={28} name={"arrow-left"} />
                     </TouchableOpacity>
-                    <View style={{width:"86%",height:"100%",justifyContent:"center"}}>
-                    <Text style={{ alignSelf: "center", fontSize: 22, fontWeight: "bold", color: "#404852",alignItems:"center",top:-2 }} >Please Fill Your Detail</Text>
+                    <View style={{ width: "86%", height: "100%", justifyContent: "center" }}>
+                        <Text style={{ alignSelf: "center", fontSize: 22, fontWeight: "bold", color: "#404852", alignItems: "center", top: -2 }} >Please Fill Your Detail</Text>
                     </View>
-                  
+
                 </View>
 
                 {/* <View style={style.heading} >
                     <Text style={{ alignSelf: "center", fontSize: 32, fontWeight: "bold", color: "#404852" }} >Please Fill Your Detail</Text>
                 </View> */}
 
-                <View style={{ width: "100%", paddingHorizontal: 20, position: "absolute", top: 80 }} >
+                <ScrollView keyboardShouldPersistTaps={"handled"} contentContainerStyle={{
+                    paddingTop: route.params.category == "other" ? 10 : 40
+                    , paddingBottom: 50
+                }} style={{ width: "100%", paddingHorizontal: 20, height: HEIGHT * 0.5 }}>
+                    <View style={{ zIndex: 10 }} >
 
-                    <TextInput
-                        value={name}
-                        onChangeText={(name) => setname(name)}
-                        style={{ height: 50 }}
-                        mode={"outlined"}
-                        underlineColor={"red"}
-                        theme={theme}
-                        label="Full Name"
+                        <TextInput
+                            value={name}
+                            onChangeText={(name) => setname(name)}
+                            style={{ height: 50 }}
+                            mode={"outlined"}
+                            underlineColor={"red"}
+                            theme={theme}
+                            label="Full Name"
 
-                    />
+                        />
 
-                    <TextInput
-                        // value={age}
-                        // onChangeText={(age)=>setage(age)}
-                        style={{ height: 50, marginTop: 10 }} mode={"outlined"}
-                        underlineColor={"red"}
-                        theme={theme}
-                        label="Brand Name"
+                        <TextInput
+                            value={brandname}
+                            onChangeText={(brandname) => setbrandname(brandname)}
+                            style={{ height: 50, marginTop: 10 }} mode={"outlined"}
+                            underlineColor={"red"}
+                            theme={theme}
+                            label="Brand Name"
 
-                    />
+                        />
 
-                    <TextInput
-                        value={email}
-                        onChangeText={(email) => setemail(email)}
-                        style={{ height: 50, marginTop: 10 }} mode={"outlined"}
-                        underlineColor={"red"}
-                        theme={theme}
-                        label="Email"
+                        <TextInput
+                            value={email}
+                            onChangeText={(email) => setemail(email)}
+                            style={{ height: 50, marginTop: 10 }} mode={"outlined"}
+                            underlineColor={"red"}
+                            theme={theme}
+                            label="Email"
 
-                    />
+                        />
 
-                    <TextInput
-                        value={city}
-                        onChangeText={(city) => setcity(city)}
-                        style={{ height: 50, marginTop: 10 }} mode={"outlined"}
-                        underlineColor={"red"}
-                        theme={theme}
-                        label="City"
+                        <TextInput
+                            value={city}
+                            onChangeText={(city) => setcity(city)}
+                            style={{ height: 50, marginTop: 10 }} mode={"outlined"}
+                            underlineColor={"red"}
+                            theme={theme}
+                            label="City"
 
-                    />
+                        />
 
-                    <TextInput
+                        <TextInput
+                            value={website}
+                            onChangeText={(website) => setwebsite(website)}
+                            style={{ height: 50, marginTop: 10 }} mode={"outlined"}
+                            underlineColor={"red"}
+                            theme={theme}
+                            label="Website(Optional)"
+                            placeholder={"Eg. www.xyz.com"}
 
-                        style={{ height: 50, marginTop: 10 }} mode={"outlined"}
-                        underlineColor={"red"}
-                        theme={theme}
-                        label="Website(Optional)"
-                        placeholder={"Eg. www.xyz.com"}
+                        />
 
-                    />
+                        <TextInput
+                            value={applink}
+                            onChangeText={(applink) => setapplink(applink)}
+                            style={{ height: 50, marginTop: 10 }} mode={"outlined"}
+                            underlineColor={"red"}
+                            theme={theme}
+                            label="App Link(Optional)"
+                            placeholder={"Eg. https://play.google.com?id=com.xyz"}
 
-                    <TextInput
+                        />
+                        {route.params.category == "other" ?
+                            <TextInput
+                                value={brandcategory}
+                                onChangeText={(brandcategory) => setbrandcategory(brandcategory)}
+                                style={{ height: 50, marginTop: 10 }} mode={"outlined"}
+                                underlineColor={"red"}
+                                theme={theme}
+                                label="Brand Category"
 
-                        style={{ height: 50, marginTop: 10 }} mode={"outlined"}
-                        underlineColor={"red"}
-                        theme={theme}
-                        label="App Link(Optional)"
-                        placeholder={"Eg. https://play.google.com?id=com.xyz"}
 
-                    />
+                            />
+                            :
+                            null
+                        }
 
-                </View>
 
+                    </View>
+                </ScrollView>
 
 
                 <TouchableOpacity onPress={() => { submit() }} style={{
@@ -177,10 +210,10 @@ const style = StyleSheet.create({
         width: "100%"
     },
     header: {
-        top: 10,
-        left: 15,
-        position: "absolute",
-        flexDirection:"row"
+        height: 50,
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
     },
     heading: {
         top: 50,
