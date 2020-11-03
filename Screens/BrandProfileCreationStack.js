@@ -8,6 +8,7 @@ import BrandProfileCreateStartPage from "./BrandProfileCreateStartPage";
 import BrandDetailPage from "./BrandDetailPage";
 import BrandSocialMediaPage from "./BrandSocialMediaPage";
 import BrandPostCampaignPage from "./BrandPostCampaignPage";
+import BrandDataUpload from "./BrandDataUpload";
 
 const Stack = createStackNavigator();
 
@@ -23,7 +24,8 @@ const BrandProfileCreationStack = () => {
             <Stack.Screen name="BrandDetailPage" component={BrandDetailPage} options={{headerShown:false}} /> 
             <Stack.Screen name="BrandSocialMediaPage" component={BrandSocialMediaPage} options={{headerShown:false}} /> 
             <Stack.Screen name="BrandPostCampaignPage" component={BrandPostCampaignPage} options={{headerShown:false}} /> 
-            
+            <Stack.Screen name="BrandDataUpload" component={ BrandDataUpload} options={{headerShown:false}} /> 
+           
             {/* <Stack.Screen name="ProfileSixthPage" component={ProfileSixthtPage} options={{headerShown:false}} />  */}
         </Stack.Navigator>
         </NavigationContainer>

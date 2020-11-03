@@ -179,7 +179,9 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             city: route.params.city,
             category: route.params.category,
             youtubedata: youtubedata,
-            instadata: instadata
+            instadata: instadata,
+            website:route.params.website,
+            applink:route.params.applink
         })
     }
 
@@ -191,7 +193,9 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             city: route.params.city,
             category: route.params.category,
             youtubedata: youtubedata,
-            instadata: instadata
+            instadata: instadata,
+            website:route.params.website,
+            applink:route.params.applink
         })
     }
 

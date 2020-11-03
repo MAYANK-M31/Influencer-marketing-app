@@ -22,29 +22,44 @@ const HEIGHT = Dimensions.get("window").height
 
 const BrandDetailPage = ({ navigation, route }) => {
 
-    const [name, setname] = useState(null)
-    const [brandname, setbrandname] = useState(null)
-    const [email, setemail] = useState(null)
-    const [city, setcity] = useState(null)
-    const [website, setwebsite] = useState(null)
-    const [applink, setapplink] = useState(null)
-    const [brandcategory, setbrandcategory] = useState(null)
+    const [name, setname] = useState("")
+    const [brandname, setbrandname] = useState("")
+    const [email, setemail] = useState("")
+    const [city, setcity] = useState("")
+    const [website, setwebsite] = useState("")
+    const [applink, setapplink] = useState("")
+    const [brandcategory, setbrandcategory] = useState("")
 
     const [disable, setdisable] = useState(true)
 
     const submit = () => {
-        if (name == null || brandname == null || email == null || city == null) {
-
+        if (!/[^\s]/.test(name) == true || !/[^\s]/.test(brandname) == true || !/[^\s]/.test(email) == true || !/[^\s]/.test(city) == true) {
             ToastAndroid.show("Please Fill Details", ToastAndroid.SHORT)
         } else {
             if (route.params.category == "other") {
                 if (brandcategory == null) {
                     ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
-                }else {
-                    navigation.navigate("BrandSocialMediaPage", { name: name, brandname: brandname, email: email, city: city, website: website, applink: applink, category: route.params.category == "other" ? brandcategory : route.params.category })
+                } else {
+                    navigation.navigate("BrandSocialMediaPage", {
+                        name: name,
+                        brandname: brandname,
+                        email: email,
+                        city: city,
+                        website: website,
+                        applink: applink,
+                        category: route.params.category == "other" ? brandcategory : route.params.category
+                    })
                 }
             } else {
-                navigation.navigate("BrandSocialMediaPage", { name: name, brandname: brandname, email: email, city: city, website: website, applink: applink, category: route.params.category == "other" ? brandcategory : route.params.category })
+                navigation.navigate("BrandSocialMediaPage", {
+                    name: name,
+                    brandname: brandname,
+                    email: email,
+                    city: city,
+                    website: website,
+                    applink: applink,
+                    category: route.params.category == "other" ? brandcategory : route.params.category
+                })
             }
 
         }

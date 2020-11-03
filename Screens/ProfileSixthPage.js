@@ -117,6 +117,10 @@ const ProfileSixthPage = ({ navigation, route }) => {
                 } catch (error) {
                     console.log(error);
                     dispatch({type:"ADD_LOGGEDIN",payload:false})
+                    const myfunc =async()=>{
+                       await AsyncStorage.clear()
+                    }
+                    myfunc()
               
 
                 }

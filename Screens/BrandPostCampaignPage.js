@@ -25,8 +25,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
     const [value1, setvalue1] = useState(20)
     const [value2, setvalue2] = useState(50)
-    const [title, settitle] = useState(null)
-    const [description, setdescription] = useState(null)
+    const [title, settitle] = useState("")
+    const [description, setdescription] = useState("")
     const [paymode, setpaymode] = useState(null)
     const [platform, setplatform] = useState(null)
     const [youtubesubs, setyoutubesubs] = useState(null)
@@ -55,11 +55,120 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
 
+
+    // !/[^\s]/.test(title) == true  TO PREVENT USER FOR ENTERINGING ONLY SPACES
+
     const submit = () => {
-        if (title == null || description == null) {
-            ToastAndroid.show("Please Fill Campaign Title", ToastAndroid.SHORT)
+        if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true || platform == null || paymode == null) {
+            if (platform == null) {
+                ToastAndroid.show("Please Select Campaign Platform", ToastAndroid.SHORT)
+            } else if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true) {
+                ToastAndroid.show("Please Fill Campaign Title And Detail", ToastAndroid.SHORT)
+            } else if (paymode == null) {
+                ToastAndroid.show("Please Select Paymode", ToastAndroid.SHORT)
+            }
+
+        } else {
+            if (platform == "youtube") {
+                if (youtubesubs == null) {
+                    ToastAndroid.show("Please Select YouTube Subscriber Range", ToastAndroid.SHORT)
+                } else {
+                    navigation.navigate("BrandDataUpload", {
+                        name: route.params.name,
+                        brandname: route.params.brandname,
+                        email: route.params.email,
+                        city: route.params.city,
+                        category: route.params.category,
+                        youtubedata: route.params.youtubedata,
+                        instadata: route.params.instadata,
+                        website:route.params.website,
+                        applink:route.params.applink,
+                        campaigntitle: title,
+                        campaigndescription: description,
+                        paymode: paymode,
+                        platform: platform,
+                        youtubesubs: youtubesubs,
+                        instafollowers: instafollowers,
+                        minrange:value1,
+                        maxrange:value2
+                    })
+                }
+            } else if (platform == "instagram") {
+                if (instafollowers == null) {
+                    ToastAndroid.show("Please Select Instagram Followers Range", ToastAndroid.SHORT)
+                } else {
+                    navigation.navigate("BrandDataUpload", {
+                        name: route.params.name,
+                        brandname: route.params.brandname,
+                        email: route.params.email,
+                        city: route.params.city,
+                        category: route.params.category,
+                        youtubedata: route.params.youtubedata,
+                        instadata: route.params.instadata,
+                        website:route.params.website,
+                        applink:route.params.applink,
+                        campaigntitle: title,
+                        campaigndescription: description,
+                        paymode: paymode,
+                        platform: platform,
+                        youtubesubs: youtubesubs,
+                        instafollowers: instafollowers,
+                        minrange:value1,
+                        maxrange:value2
+                    })
+                }
+            } else if (platform == "both") {
+                if (instafollowers == null || youtubesubs == null) {
+                    ToastAndroid.show("Please Select Instagram Followers and Youtube Subscriber Range", ToastAndroid.SHORT)
+                } else {
+                    navigation.navigate("BrandDataUpload", {
+                        name: route.params.name,
+                        brandname: route.params.brandname,
+                        email: route.params.email,
+                        city: route.params.city,
+                        category: route.params.category,
+                        youtubedata: route.params.youtubedata,
+                        instadata: route.params.instadata,
+                        website:route.params.website,
+                        applink:route.params.applink,
+                        campaigntitle: title,
+                        campaigndescription: description,
+                        paymode: paymode,
+                        platform: platform,
+                        youtubesubs: youtubesubs,
+                        instafollowers: instafollowers,
+                        minrange:value1,
+                        maxrange:value2
+                    })
+                }
+
+            }
         }
-        
+        // if(platform == null){
+        //     ToastAndroid.show("Please Select Campaign Platform", ToastAndroid.SHORT)
+        // }
+
+        // if(platform == "youtube"){
+        //     if(youtubesubs == null){
+        //         ToastAndroid.show("Please Select YouTube Subscriber Range", ToastAndroid.SHORT)
+        //     } 
+        // }if(platform == "instagram"){
+        //     if(instafollowers == null){
+        //         ToastAndroid.show("Please Select Instagram Followers Range", ToastAndroid.SHORT)
+        //     }
+
+
+        // }if(platform == "both"){
+        //     if(instafollowers == null || youtubesubs == null ){
+        //         ToastAndroid.show("Please Select Instagram Followers and Youtube Subscriber Range", ToastAndroid.SHORT)
+        //     }
+
+        // }
+
+        // alert("mayank")
+
+
+
 
     }
 
@@ -103,8 +212,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
                     <TextInput
-                        value={description}
-                        onChangeText={(text) => { setdescription(text) }}
+                        value={title}
+                        onChangeText={(text) => { settitle(text) }}
                         style={{ height: 50, width: "90%", backgroundColor: "white", alignSelf: "center", fontSize: 18, marginTop: 20 }}
                         mode={"outlined"}
                         underlineColor={"grey"}
@@ -115,8 +224,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     />
 
                     <TextInput
-                        value={title}
-                        onChangeText={(text) => { settitle(text) }}
+                        value={description}
+                        onChangeText={(text) => { setdescription(text) }}
                         style={{ maxHeight: 300, width: "90%", backgroundColor: "white", alignSelf: "center", fontSize: 18, marginTop: 20 }}
                         mode={"outlined"}
                         underlineColor={"grey"}
