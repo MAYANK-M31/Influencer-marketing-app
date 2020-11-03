@@ -22,10 +22,9 @@ import { MyContext } from './AppStartStack';
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
-const BrandProfileCreateStartPage
- = ({ navigation }) => {
+const BrandProfileCreateStartPage = ({ navigation }) => {
 
-
+    
 
     const { dispatch } = useContext(MyContext)
 

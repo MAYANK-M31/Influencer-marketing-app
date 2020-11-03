@@ -22,8 +22,8 @@ const BrandProfileCreationStack = () => {
             <Stack.Screen name="BrandProfileCreateStartPage" component={BrandProfileCreateStartPage} options={{headerShown:false}} />   
             <Stack.Screen name="BrandCategoryPage" component={BrandCategoryPage} options={{headerShown:false}} />  
             <Stack.Screen name="BrandDetailPage" component={BrandDetailPage} options={{headerShown:false}} /> 
-            <Stack.Screen name="BrandSocialMediaPage" component={BrandSocialMediaPage} options={{headerShown:false}} /> 
             <Stack.Screen name="BrandPostCampaignPage" component={BrandPostCampaignPage} options={{headerShown:false}} /> 
+            <Stack.Screen name="BrandSocialMediaPage" component={BrandSocialMediaPage} options={{headerShown:false}} /> 
             <Stack.Screen name="BrandDataUpload" component={ BrandDataUpload} options={{headerShown:false}} /> 
            
             {/* <Stack.Screen name="ProfileSixthPage" component={ProfileSixthtPage} options={{headerShown:false}} />  */}

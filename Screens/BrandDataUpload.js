@@ -27,39 +27,78 @@ const HEIGHT = Dimensions.get("window").height
 
 const BrandDataUpload = ({ navigation, route }) => {
 
+    const [text, settext] = useState("Creating Your Account")
+
+
+
+
+
     useEffect(() => {
         const func = async () => {
 
             const uid = await AsyncStorage.getItem("uid")
-            const ref = await firestore().collection("brand")
+            const ref = await firestore().collection("brandaccount")
+            const ref2 = await firestore().collection("brandpost")
 
             try {
-                // ref.add({
-                //     uid:uid,
-                //     name: route.params.name,
-                //     brandname: route.params.brandname,
-                //     email: route.params.email,
-                //     city: route.params.city,
-                //     category: route.params.category,
-                //     youtubedata: route.params.youtubedata,
-                //     instadata: route.params.instadata,
-                //     website: route.params.website,
-                //     applink: route.params.applink,
-                //     campaigntitle: route.params.campaigntitle,
-                //     campaigndescription: route.params.campaigndescription,
-                //     paymode: route.params.paymode,
-                //     platform: route.params.platform,
-                //     youtubesubs: route.params.youtubesubs,
-                //     instafollowers: route.params.instafollowers,
-                //     minrange: route.params.value1,
-                //     maxrange: route.params.value2
-                // }).then(()=>{
-                //     ToastAndroid.show("Signed in successfully",ToastAndroid.SHORT)
-                // })
+                if (route.params.postcampaign == false) {
+                    ref.add({
+                        uid: uid,
+                        name: route.params.name,
+                        brandname: route.params.brandname,
+                        email: route.params.email,
+                        city: route.params.city,
+                        category: route.params.category,
+                        website: route.params.website,
+                        applink: route.params.applink,
+                        createdAt:(new Date()).toString()
+                    }).then(() => {
+                        ToastAndroid.show("Signed in successfully", ToastAndroid.SHORT)
+                    })
+                } else {
+                    ref.add({
+                        uid: uid,
+                        name: route.params.name,
+                        brandname: route.params.brandname,
+                        email: route.params.email,
+                        city: route.params.city,
+                        category: route.params.category,
+                        website: route.params.website,
+                        applink: route.params.applink,
+                        createdAt:(new Date()).toString()
+                    }).then(() => {
+                        settext("Posting Your Campaign")
+                        ToastAndroid.show("Signed in successfully", ToastAndroid.SHORT)
+                        ref2.add({
+                            uid: uid,
+                            campaigntitle: route.params.campaigntitle,
+                            campaigndescription: route.params.campaigndescription,
+                            paymode: route.params.paymode,
+                            platform: route.params.platform,
+                            youtubesubs: route.params.youtubesubs,
+                            instafollowers: route.params.instafollowers,
+                            minrange: route.params.minrange,
+                            maxrange: route.params.maxrange,
+                            minage: route.params.minage,
+                            maxage: route.params.maxage,
+                            brandpostcategory: route.params.brandpostcategory,
+                            brandotherpostcategory: route.params.brandotherpostcategory,
+                            targetaudience: route.params.targetaudience,
+                            targetregion: route.params.targetregion,
+                            website: route.params.website,
+                            applink: route.params.applink,
+                            createdAt:(new Date()).toString()
+                        })
+                    })
+
+                }
+
+
 
             } catch (error) {
                 console.log(error);
-                ToastAndroid.show("Failed to make account try again",ToastAndroid.SHORT)
+                ToastAndroid.show("Failed to make account try again", ToastAndroid.SHORT)
+                settext("Try Again")
                 dispatch({ type: "ADD_LOGGEDIN", payload: false })
                 const myfunc = async () => {
                     await AsyncStorage.clear()
@@ -104,7 +143,7 @@ const BrandDataUpload = ({ navigation, route }) => {
                     <ActivityIndicator color={"#11ece5"} size={260} style={{ top: -255 }} />
                 </View>
 
-                <Text style={{ alignSelf: "center", fontSize: 28, fontWeight: "bold", color: "#404852" }} >Creating Your Profile</Text>
+                <Text style={{ alignSelf: "center", fontSize: 28, fontWeight: "bold", color: "#404852",textTransform:"capitalize" }} >{text}</Text>
 
             </SafeAreaView>
         </>

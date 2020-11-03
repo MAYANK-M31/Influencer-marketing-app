@@ -31,6 +31,9 @@ const OTP = ({ navigation, route }) => {
     const [loading, setloading] = useState(false)
     const { dispatch } = useContext(MyContext)
     const [loading2, setloading2] = useState(false)
+    const [isExistingInfluencer, setisExistingInfluencer] = useState(null)
+    const [isExistingBrand, setisExistingBrand] = useState(null)
+
 
     const existinguser = async () => {
         setloading2(true)
@@ -41,37 +44,120 @@ const OTP = ({ navigation, route }) => {
 
 
         const ref = await firestore().collection("influencer")
+        const ref2 = await firestore().collection("brandaccount")
+
+
+
+
+        //     ref.where("uid", "==", uid).get()
+        //         .then(function (querySnapshot) {
+        //             if (querySnapshot.empty) {
+        //                 // alert("no")
+        //                 dispatch({ type: "ADD_LOGGEDIN", payload: true })
+        //                 dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
+        //                 setloading2(true)
+        //             } else {
+        //                 querySnapshot.forEach(async function (doc) {
+        //                     dispatch({ type: "ADD_LOGGEDIN", payload: true })
+        //                     dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
+        //                     // console.log(doc.data().name);
+        //                     ToastAndroid.show("Welcome Back " + doc.data().name, ToastAndroid.SHORT)
+        //                     await AsyncStorage.setItem("uid", uid)
+        //                     await AsyncStorage.setItem("datauploadeduser", "true")
+        //                     // navigation.navigate("Tabbar")
+        //                     setloading2(true)
+
+        //                 });
+        //             }
+
+
+        //         })
+        //         .catch(async function (error) {
+        //             // console.log("Error getting documents: ", error);
+        //             await AsyncStorage.setItem("loggedin", "false")
+        //             dispatch({ type: "ADD_LOGGEDIN", payload: false })
+        //             setloading2(false)
+        //         });
+
+        // }
+
         ref.where("uid", "==", uid).get()
             .then(function (querySnapshot) {
-                if (querySnapshot.empty) {
-                    // alert("no")
-                    dispatch({ type: "ADD_LOGGEDIN", payload: true })
-                    dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
-                    setloading2(true)
-                } else {
-                    querySnapshot.forEach(async function (doc) {
-                        dispatch({ type: "ADD_LOGGEDIN", payload: true })
-                        dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
-                        // console.log(doc.data().name);
-                        ToastAndroid.show("Welcome Back " + doc.data().name, ToastAndroid.SHORT)
-                        await AsyncStorage.setItem("uid", uid)
-                        await AsyncStorage.setItem("datauploadeduser", "true")
-                        // navigation.navigate("Tabbar")
-                        setloading2(true)
 
-                    });
+                if (querySnapshot.empty) {
+                    // alert("influecer no")
+                    setisExistingInfluencer(false)
+                    // dispatch({ type: "ADD_LOGGEDIN", payload: true })
+                    // dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
+                    // setloading2(true)
+                } else {
+                    // alert("influecer yes")
+                    setisExistingInfluencer(true)
                 }
 
-
+                setloading2(false)
             })
             .catch(async function (error) {
-                // console.log("Error getting documents: ", error);
+                console.log("Error getting documents: ", error);
                 await AsyncStorage.setItem("loggedin", "false")
                 dispatch({ type: "ADD_LOGGEDIN", payload: false })
                 setloading2(false)
             });
 
+        ref2.where("uid", "==", uid).get()
+            .then(function (querySnapshot) {
+
+                if (querySnapshot.empty) {
+                    // alert("brand no")
+
+                    setisExistingBrand(false)
+                    // dispatch({ type: "ADD_LOGGEDIN", payload: true })
+                    // dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
+                    // setloading2(true)
+                } else {
+                    // alert("brand yes")
+                    setisExistingBrand(true)
+                }
+
+                setloading2(false)
+            })
+            .catch(async function (error) {
+                console.log("Error getting documents: ", error);
+                await AsyncStorage.setItem("loggedin", "false")
+                dispatch({ type: "ADD_LOGGEDIN", payload: false })
+                setloading2(false)
+            });
+
+
+      
+
+
+
+
+
+
+
+
+
+
     }
+
+
+    
+
+    try {
+        if (isExistingBrand == false && isExistingInfluencer == false) {
+            // alert("nothing")
+            console.log(isExistingBrand, isExistingInfluencer);
+        }else if(isExistingBrand == true || isExistingInfluencer == true){
+            console.log("welcome");
+            
+        }
+        // console.log(isExistingBrand, isExistingInfluencer);
+    } catch (e) {
+        console.log(e);
+    }
+
 
 
     async function confirmCode() {

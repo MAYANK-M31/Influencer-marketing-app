@@ -92,7 +92,7 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
 
     // For Youtube Auth
     async function onGoogleButtonPress() {
-     
+
         // Get the users ID token
         const { idToken } = await GoogleSignin.signIn();
 
@@ -116,27 +116,27 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                         setloading(false)
                         signOut()
                         setdisable(true)
-                    }else{
+                    } else {
                         setloading(false)
                         setyoutubedata(res.data)
                         setyoutubeconnected(true)
                         setdisable(false)
                         // console.log(youtubedata);
                     }
-                  
+
                 })
-               
+
 
 
             })
-            .catch((e)=>{
-                setdisable(true)
-                setyoutubedata(null)
-                setloading(false)
-                signOut()
-                ToastAndroid.show("Try Again", ToastAndroid.LONG)
-                loading(false)
-            })
+                .catch((e) => {
+                    setdisable(true)
+                    setyoutubedata(null)
+                    setloading(false)
+                    signOut()
+                    ToastAndroid.show("Try Again", ToastAndroid.LONG)
+                    loading(false)
+                })
 
         })
     }
@@ -171,8 +171,10 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
 
 
 
+
+
     const submit = () => {
-        navigation.navigate("BrandPostCampaignPage", {
+        navigation.navigate("BrandDataUpload", {
             name: route.params.name,
             brandname: route.params.brandname,
             email: route.params.email,
@@ -180,24 +182,54 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             category: route.params.category,
             youtubedata: youtubedata,
             instadata: instadata,
-            website:route.params.website,
-            applink:route.params.applink
+            website: route.params.website,
+            applink: route.params.applink,
+            campaigntitle: route.params.title,
+            campaigndescription: route.params.description,
+            paymode: route.params.paymode,
+            platform: route.params.platform,
+            youtubesubs: route.params.youtubesubs,
+            instafollowers: route.params.instafollowers,
+            minrange: route.params.minrange,
+            maxrange: route.params.maxrange,
+            minage:route.params.minage,
+            maxage:route.params.maxage,
+            brandpostcategory:route.params.brandpostcategory,
+            brandotherpostcategory:route.params.brandotherpostcategory,
+            targetaudience:route.params.targetaudience,
+            targetregion:route.paramstargetregion
         })
     }
 
     const skip = () => {
-        navigation.navigate("BrandPostCampaignPage", {
+        navigation.navigate("BrandDataUpload", {
             name: route.params.name,
             brandname: route.params.brandname,
             email: route.params.email,
             city: route.params.city,
             category: route.params.category,
+            website: route.params.website,
+            applink: route.params.applink,
             youtubedata: youtubedata,
             instadata: instadata,
-            website:route.params.website,
-            applink:route.params.applink
+            campaigntitle: route.params.campaigntitle,
+            campaigndescription: route.params.campaigndescription,
+            paymode: route.params.paymode,
+            platform: route.params.platform,
+            youtubesubs: route.params.youtubesubs,
+            instafollowers: route.params.instafollowers,
+            minrange: route.params.minrange,
+            maxrange: route.params.maxrange,
+            minage:route.params.minage,
+            maxage:route.params.maxage,
+            brandpostcategory:route.params.brandpostcategory,
+            brandotherpostcategory:route.params.brandotherpostcategory,
+            targetaudience:route.params.targetaudience,
+            targetregion:route.params.targetregion
+
         })
     }
+
 
 
     return (
@@ -210,10 +242,10 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                         <Ionicons color={"black"} size={28} name={"arrow-left"} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{skip()}} style={{height:30,width:50,borderRadius:50,backgroundColor:"#1e87fd",justifyContent:"center",alignItems:"center",position:"absolute",right:30}}>
-                    <Text style={{color:"white",fontWeight:"bold",alignSelf:"center"}} >Skip</Text>
+                    <TouchableOpacity onPress={() => { skip() }} style={{ height: 30, width: 50, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 30 }}>
+                        <Text style={{ color: "white", fontWeight: "bold", alignSelf: "center" }} >Skip</Text>
                     </TouchableOpacity>
-                   
+
                 </View>
 
                 <View style={style.heading} >
@@ -284,8 +316,8 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
 
 
 
-                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 150, left: 20 }} >Note : It Is Recommended To Connect Your Account </Text>
-                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 132, left: 17 }} > To Both Platforms</Text>
+                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 150, left: 20 }} >Note : This Will Integrate Your Account With Your </Text>
+                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", position: "absolute", bottom: 132, left: 17 }} > Instagram Page and YouTube Account </Text>
 
 
                 <TouchableOpacity disabled={disable} onPress={() => { submit() }} style={{
@@ -296,7 +328,7 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                     <View style={{ height: 52, width: 52, borderRadius: 100, justifyContent: "center", alignItems: "center", backgroundColor: "white", left: 0, position: "absolute" }} >
                         <Ionicons name={"arrow-right"} color={"black"} size={25} />
                     </View>
-                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "white" }} >Next</Text>
+                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "white" }} >Finish</Text>
                 </TouchableOpacity>
 
                 {/* <TouchableOpacity style={{top:150}} onPress={()=>{console.log(instadata.data)}} >
@@ -319,13 +351,13 @@ const style = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
 
-        
+
     },
     header: {
         top: 10,
         left: 15,
         position: "absolute",
-        flexDirection:"row",
+        flexDirection: "row",
         width: WiDTH
     },
     heading: {

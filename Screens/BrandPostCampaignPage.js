@@ -11,9 +11,9 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Slider,
-    ToastAndroid
+    ToastAndroid,
 } from 'react-native';
-import { TextInput, DefaultTheme } from "react-native-paper"
+import { TextInput, DefaultTheme, Modal } from "react-native-paper"
 import Ionicons from "react-native-vector-icons/Feather"
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
@@ -32,6 +32,28 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
     const [youtubesubs, setyoutubesubs] = useState(null)
     const [instafollowers, setinstafollowers] = useState(null)
     const [disable, setdisable] = useState(true)
+    const [minage, setminage] = useState(18)
+    const [maxage, setmaxage] = useState(30)
+    const [category, setcategory] = useState(null)
+    const [modalvisible, setmodalvisible] = useState(false)
+    const [categorychoosen, setcategorychoosen] = useState(false)
+    const [othercategory, setothercategory] = useState("")
+    const [targetaudience, settargetaudience] = useState(null)
+    const [targetregion, settargetregion] = useState(null)
+
+    const selectcategory = async (item) => {
+        setcategory(item)
+        setcategorychoosen(true)
+    }
+
+    const selectaudience = async (item) => {
+        settargetaudience(item)
+    }
+
+    const selectregion = async (item) => {
+        settargetregion(item)
+    }
+
 
     const select = async (item) => {
         setpaymode(item)
@@ -73,103 +95,144 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                 if (youtubesubs == null) {
                     ToastAndroid.show("Please Select YouTube Subscriber Range", ToastAndroid.SHORT)
                 } else {
-                    navigation.navigate("BrandDataUpload", {
-                        name: route.params.name,
-                        brandname: route.params.brandname,
-                        email: route.params.email,
-                        city: route.params.city,
-                        category: route.params.category,
-                        youtubedata: route.params.youtubedata,
-                        instadata: route.params.instadata,
-                        website:route.params.website,
-                        applink:route.params.applink,
-                        campaigntitle: title,
-                        campaigndescription: description,
-                        paymode: paymode,
-                        platform: platform,
-                        youtubesubs: youtubesubs,
-                        instafollowers: instafollowers,
-                        minrange:value1,
-                        maxrange:value2
-                    })
+                    if (category == null) {
+                        ToastAndroid.show("Please Select Category", ToastAndroid.SHORT)
+                    } else if (targetaudience == null) {
+                        ToastAndroid.show("Please Select Target Audience", ToastAndroid.SHORT)
+                    } else if (targetregion == null) {
+                        ToastAndroid.show("Please Select Target Region", ToastAndroid.SHORT)
+                    } else if (category == "other" && !/[^\s]/.test(othercategory) == true) {
+
+                        ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
+
+                    } else {
+                        navigation.navigate("BrandSocialMediaPage", {
+                            name: route.params.name,
+                            brandname: route.params.brandname,
+                            email: route.params.email,
+                            city: route.params.city,
+                            category: route.params.category,
+                            website: route.params.website,
+                            applink: route.params.applink,
+                            campaigntitle: title,
+                            campaigndescription: description,
+                            paymode: paymode,
+                            platform: platform,
+                            youtubesubs: youtubesubs,
+                            instafollowers: instafollowers,
+                            minrange: value1,
+                            maxrange: value2,
+                            minage:minage,
+                            maxage:maxage,
+                            brandpostcategory:category,
+                            brandotherpostcategory:category == "other" ? othercategory : null,
+                            targetaudience:targetaudience,
+                            targetregion:targetregion
+                        })
+                    }
+
                 }
             } else if (platform == "instagram") {
                 if (instafollowers == null) {
                     ToastAndroid.show("Please Select Instagram Followers Range", ToastAndroid.SHORT)
                 } else {
-                    navigation.navigate("BrandDataUpload", {
-                        name: route.params.name,
-                        brandname: route.params.brandname,
-                        email: route.params.email,
-                        city: route.params.city,
-                        category: route.params.category,
-                        youtubedata: route.params.youtubedata,
-                        instadata: route.params.instadata,
-                        website:route.params.website,
-                        applink:route.params.applink,
-                        campaigntitle: title,
-                        campaigndescription: description,
-                        paymode: paymode,
-                        platform: platform,
-                        youtubesubs: youtubesubs,
-                        instafollowers: instafollowers,
-                        minrange:value1,
-                        maxrange:value2
-                    })
+                    if (category == null) {
+
+                        ToastAndroid.show("Please Select Category", ToastAndroid.SHORT)
+                    } else if (targetaudience == null) {
+                        ToastAndroid.show("Please Select Target Audience", ToastAndroid.SHORT)
+                    } else if (targetregion == null) {
+                        ToastAndroid.show("Please Select Target Region", ToastAndroid.SHORT)
+                    }else if (category == "other" && !/[^\s]/.test(othercategory) == true) {
+
+                        ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
+
+                    } else {
+                        navigation.navigate("BrandSocialMediaPage", {
+                            name: route.params.name,
+                            brandname: route.params.brandname,
+                            email: route.params.email,
+                            city: route.params.city,
+                            category: route.params.category,
+                            website: route.params.website,
+                            applink: route.params.applink,
+                            campaigntitle: title,
+                            campaigndescription: description,
+                            paymode: paymode,
+                            platform: platform,
+                            youtubesubs: youtubesubs,
+                            instafollowers: instafollowers,
+                            minrange: value1,
+                            maxrange: value2,
+                            minage:minage,
+                            maxage:maxage,
+                            brandpostcategory:category,
+                            brandotherpostcategory:category == "other" ? othercategory : null,
+                            targetaudience:targetaudience,
+                            targetregion:targetregion
+                        })
+                    }
                 }
             } else if (platform == "both") {
                 if (instafollowers == null || youtubesubs == null) {
                     ToastAndroid.show("Please Select Instagram Followers and Youtube Subscriber Range", ToastAndroid.SHORT)
                 } else {
-                    navigation.navigate("BrandDataUpload", {
-                        name: route.params.name,
-                        brandname: route.params.brandname,
-                        email: route.params.email,
-                        city: route.params.city,
-                        category: route.params.category,
-                        youtubedata: route.params.youtubedata,
-                        instadata: route.params.instadata,
-                        website:route.params.website,
-                        applink:route.params.applink,
-                        campaigntitle: title,
-                        campaigndescription: description,
-                        paymode: paymode,
-                        platform: platform,
-                        youtubesubs: youtubesubs,
-                        instafollowers: instafollowers,
-                        minrange:value1,
-                        maxrange:value2
-                    })
+                    if (category == null) {
+                        ToastAndroid.show("Please Select Category", ToastAndroid.SHORT)
+                    } else if (targetaudience == null) {
+                        ToastAndroid.show("Please Select Target Audience", ToastAndroid.SHORT)
+                    } else if (targetregion == null) {
+                        ToastAndroid.show("Please Select Target Region", ToastAndroid.SHORT)
+                    }else if (category == "other" && !/[^\s]/.test(othercategory) == true) {
+
+                        ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
+
+                    } else {
+                        navigation.navigate("BrandSocialMediaPage", {
+                            name: route.params.name,
+                            brandname: route.params.brandname,
+                            email: route.params.email,
+                            city: route.params.city,
+                            category: route.params.category,
+                            website: route.params.website,
+                            applink: route.params.applink,
+                            campaigntitle: title,
+                            campaigndescription: description,
+                            paymode: paymode,
+                            platform: platform,
+                            youtubesubs: youtubesubs,
+                            instafollowers: instafollowers,
+                            minrange: value1,
+                            maxrange: value2,
+                            minage:minage,
+                            maxage:maxage,
+                            brandpostcategory:category,
+                            brandotherpostcategory:category == "other" ? othercategory : null,
+                            targetaudience:targetaudience,
+                            targetregion:targetregion
+                        })
+                    }
                 }
 
             }
         }
-        // if(platform == null){
-        //     ToastAndroid.show("Please Select Campaign Platform", ToastAndroid.SHORT)
-        // }
-
-        // if(platform == "youtube"){
-        //     if(youtubesubs == null){
-        //         ToastAndroid.show("Please Select YouTube Subscriber Range", ToastAndroid.SHORT)
-        //     } 
-        // }if(platform == "instagram"){
-        //     if(instafollowers == null){
-        //         ToastAndroid.show("Please Select Instagram Followers Range", ToastAndroid.SHORT)
-        //     }
-
-
-        // }if(platform == "both"){
-        //     if(instafollowers == null || youtubesubs == null ){
-        //         ToastAndroid.show("Please Select Instagram Followers and Youtube Subscriber Range", ToastAndroid.SHORT)
-        //     }
-
-        // }
-
-        // alert("mayank")
 
 
 
+    }
 
+    // ___________________Skip Posting Data___________________
+    const later = () => {
+        navigation.navigate("BrandDataUpload", {
+            name: route.params.name,
+            brandname: route.params.brandname,
+            email: route.params.email,
+            city: route.params.city,
+            category: route.params.category,
+            website: route.params.website,
+            applink: route.params.applink,
+            postcampaign: false
+        })
     }
 
 
@@ -198,13 +261,13 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                         <Ionicons color={"black"} size={28} name={"arrow-left"} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { navigation.navigate("BrandPostCampaignPage") }} style={{ height: 30, width: 60, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 10 }}>
+                    <TouchableOpacity onPress={() => { later() }} style={{ height: 30, width: 60, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 10 }}>
                         <Text style={{ color: "white", fontWeight: "100", alignSelf: "center" }} >Later</Text>
                     </TouchableOpacity>
 
                 </View>
 
-                <ScrollView style={{ width: "100%", height: HEIGHT }} contentContainerStyle={{ paddingBottom: 50 }} >
+                <ScrollView style={{ width: "100%", height: HEIGHT }} contentContainerStyle={{ paddingBottom: 160 }} >
                     <View style={style.heading} >
                         <Text style={{ alignSelf: "flex-start", fontSize: 35, fontWeight: "bold", color: "#404852" }} >Post about your brand</Text>
                         <Text style={{ alignSelf: "flex-start", fontSize: 35, fontWeight: "bold", color: "#404852", top: -8 }} >Campaign</Text>
@@ -670,7 +733,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
                         <TouchableOpacity activeOpacity={1} onPress={() => select("both")} style={{
-                            height: 55, width: "92%", backgroundColor: "#1e87fd"
+                            height: 55, width: "94%", backgroundColor: "#1e87fd"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10,
                         }} >
@@ -690,7 +753,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     </View>
 
 
-                    <View style={{ width: "90%", minHeight: 100, alignSelf: "center" }} >
+                    <View style={{ width: "90%", minHeight: 100, alignSelf: "center", marginBottom: 30 }} >
                         <Text style={{ alignSelf: "flex-start", fontSize: 28, fontWeight: "bold", color: "#404852" }} >Budget Range</Text>
                         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                             <View>
@@ -728,27 +791,327 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     </View>
 
 
+                    <View style={{ height: 2, width: "60%", backgroundColor: "#f2f2f2", alignSelf: "center", marginVertical: 20 }} >
+
+                    </View>
 
 
-                    <TouchableOpacity disabled={disable} onPress={() => { submit() }} style={{
-                        height: 55, width: "85%", backgroundColor: disable ? "#1e87fdCC" : "#1e87fd"
-                        , alignItems: "center", flexDirection: "row", justifyContent: "center",
-                        borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, alignSelf: "center", marginTop: 60
-                    }} >
-                        <View style={{ height: 52, width: 52, borderRadius: 100, justifyContent: "center", alignItems: "center", backgroundColor: "white", left: 0, position: "absolute" }} >
-                            <Ionicons name={"arrow-right"} color={"black"} size={25} />
+                    <View style={{ width: "90%", minHeight: 100, alignSelf: "center" }} >
+                        <Text style={{ alignSelf: "flex-start", fontSize: 28, fontWeight: "bold", color: "#404852" }} >Influencer Age</Text>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                            <View>
+                                <View style={{ height: 60, width: 60, borderColor: "#1e87fd", borderWidth: 1.5, alignItems: "center", justifyContent: "center", borderRadius: 50, top: 25 }} >
+                                    <Text style={{ color: "#1e87fd", fontWeight: "bold" }} >{minage}yr</Text>
+                                </View>
+                                <Text style={{ color: "#9e9e9e", fontWeight: "100", top: 30, alignSelf: "center" }} >Min</Text>
+                            </View>
+
+                            <View style={{ height: 60, width: "60%", borderColor: "#1e87fd", borderWidth: 1.5, alignItems: "center", justifyContent: "center", borderRadius: 10, top: 25 }} >
+                                {/* <Slider thumbTintColor={"#1e87fd"} minimumTrackTintColor={"#1e87fd"} style={{ width: "100%" }} /> */}
+                                <MultiSlider
+                                    values={[minage, maxage]}
+                                    onValuesChange={([minage, maxage]) => { setminage(minage), setmaxage(maxage) }}
+
+                                    allowOverlap={false}
+                                    sliderLength={WiDTH - 220}
+                                    selectedStyle={{ backgroundColor: "#1e87fd" }}
+                                    markerStyle={{ backgroundColor: "#1e87fd" }}
+                                    min={1}
+                                    max={60}
+                                    step={1}
+                                />
+                            </View>
+
+
+                            <View>
+                                <View style={{ height: 60, width: 60, borderColor: "#1e87fd", borderWidth: 1.5, alignItems: "center", justifyContent: "center", borderRadius: 50, top: 25 }} >
+                                    <Text style={{ color: "#1e87fd", fontWeight: "bold" }} >{maxage}yr</Text>
+                                </View>
+                                <Text style={{ color: "#9e9e9e", fontWeight: "100", top: 30, alignSelf: "center" }} >Max</Text>
+                            </View>
                         </View>
-                        <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "white" }} >Finish</Text>
-                    </TouchableOpacity>
+
+                    </View>
+
+                    <View style={{ height: 2, width: "60%", backgroundColor: "#f2f2f2", alignSelf: "center", marginVertical: 20, marginTop: 50 }} >
+
+                    </View>
+
+                    <View  >
+                        <Text style={{ alignSelf: "flex-start", fontSize: 28, fontWeight: "bold", color: "#404852", left: 20 }} >Brand Category</Text>
+                        <TouchableOpacity onPress={() => setmodalvisible(true)} style={{
+                            height: 55, width: "94%", backgroundColor: categorychoosen ? "#1e87fd" : "white"
+                            , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, marginTop: 20
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 17, fontWeight: "bold", color: categorychoosen ? "white" : "#1e87fd", textTransform: "capitalize" }} >{categorychoosen ? `${category}` : "Choose Brand Category"}</Text>
+                            {categorychoosen ?
+                                <Ionicons style={{ right: 15, position: "absolute" }} name={'check'} color={"white"} size={20} />
+                                : null
+                            }
+                        </TouchableOpacity>
+                        {category == "other" ?
+                            <TextInput
+                                value={othercategory}
+                                onChangeText={(text) => { setothercategory(text) }}
+                                style={{ height: 50, width: "90%", backgroundColor: "white", alignSelf: "center", fontSize: 18, marginTop: 20 }}
+                                mode={"outlined"}
+                                underlineColor={"grey"}
+                                theme={theme}
+                                label="Other Category"
 
 
-                    {/* <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "100", color: "#1e87fd", bottom: 140, left: 25 }} >Note : You Can Also Change Your Range Later Too. </Text> */}
+                            />
+                            :
+                            null
+                        }
+
+                    </View>
+
+
+                    <View style={{ height: 2, width: "60%", backgroundColor: "#f2f2f2", alignSelf: "center", marginVertical: 20, marginTop: 30 }} ></View>
+
+                    {/*__________________ Traget Audience ___________________________*/}
+
+                    <View style={{ maxHeight: 170 }} >
+                        <Text style={{ alignSelf: "flex-start", fontSize: 28, fontWeight: "bold", color: "#404852", left: 20 }} >Target Audience</Text>
+
+                        <View style={{ flexWrap: "wrap", width: "100%", flexDirection: "row", alignItems: "center", height: "100%", padding: 5, paddingLeft: 20, marginTop: 10 }} >
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { selectaudience("14-18") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetaudience == "14-18" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetaudience == "14-18" ? "white" : "#1e87fd" }} >14-18 years</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { selectaudience("18-24") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetaudience == "18-24" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetaudience == "18-24" ? "white" : "#1e87fd" }} >18-24 years</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { selectaudience("24-35") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetaudience == "24-35" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetaudience == "24-35" ? "white" : "#1e87fd" }} >24-35 years</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { selectaudience("35+") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetaudience == "35+" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetaudience == "35+" ? "white" : "#1e87fd" }} >35 years+</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+                    <View style={{ height: 2, width: "60%", backgroundColor: "#f2f2f2", alignSelf: "center", marginVertical: 20 }} ></View>
+
+                    {/*__________________ Traget Audience ___________________________*/}
+
+                    <View style={{ height: 220 }} >
+                        <Text style={{ alignSelf: "flex-start", fontSize: 28, fontWeight: "bold", color: "#404852", left: 20 }} >Target Region</Text>
+
+                        <View style={{ flexWrap: "wrap", width: "100%", flexDirection: "row", alignItems: "center", height: "100%", padding: 5, paddingLeft: 20, marginTop: 10 }} >
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { settargetregion("north india") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetregion == "north india" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetregion == "north india" ? "white" : "#1e87fd" }} >North India</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { settargetregion("west india") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetregion == "west india" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetregion == "west india" ? "white" : "#1e87fd" }} >West India</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { settargetregion("east india") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetregion == "east india" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetregion == "east india" ? "white" : "#1e87fd" }} >East India</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { settargetregion("south india") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetregion == "south india" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetregion == "south india" ? "white" : "#1e87fd" }} >South India</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity activeOpacity={1} onPress={() => { settargetregion("all india") }} style={{
+                                height: 45, width: "45%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: targetregion == "all india" ? "#1e87fd" : "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: targetregion == "all india" ? "white" : "#1e87fd" }} >All India</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+
+
+
+
+
                 </ScrollView>
 
-
+                <TouchableOpacity activeOpacity={1} disabled={disable} onPress={() => { submit() }} style={{
+                    height: 55, width: "85%", backgroundColor: disable ? "#b3d6fe" : "#1e87fd"
+                    , alignItems: "center", flexDirection: "row", justifyContent: "center",
+                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, alignSelf: "center", position: "absolute", zIndex: 1, top: HEIGHT * 0.90
+                }} >
+                    <View style={{ height: 52, width: 52, borderRadius: 100, justifyContent: "center", alignItems: "center", backgroundColor: "white", left: 0, position: "absolute" }} >
+                        <Ionicons name={"arrow-right"} color={"black"} size={25} />
+                    </View>
+                    <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "white" }} >Next</Text>
+                </TouchableOpacity>
 
 
             </SafeAreaView>
+
+            <Modal visible={modalvisible} onDismiss={() => setmodalvisible(false)} dismissable={true}   >
+                <View style={{ backgroundColor: "white", width: WiDTH * 0.8, height: HEIGHT * 0.44, borderRadius: 10, alignSelf: "center" }}>
+                    <View style={{ flexWrap: "wrap", width: "100%", flexDirection: "row", alignItems: "center", height: "100%", padding: 5 }} >
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("entertainment"), setmodalvisible(false) }} style={{
+                            height: 35, width: "35%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                            backgroundColor: category == "entertainment" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "entertainment" ? "white" : "#1e87fd" }} >Entertainment</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("shopping"), setmodalvisible(false) }} style={{
+                            height: 35, width: "25%"
+                            , alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                            backgroundColor: category == "shopping" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "shopping" ? "white" : "#1e87fd" }} >Shopping</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("finance"), setmodalvisible(false) }} style={{
+                            height: 35, width: "30%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                            backgroundColor: category == "finance" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "finance" ? "white" : "#1e87fd" }} >Finance</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("food & beverages"), setmodalvisible(false) }} style={{
+                            height: 35, width: "50%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "food" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "food" ? "white" : "#1e87fd" }} >Food & Beverages</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("beauty & fashion"), setmodalvisible(false) }} style={{
+                            height: 35, width: "43%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "beauty" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "beauty" ? "white" : "#1e87fd" }} >Beauty & Fashion</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("fitness"), setmodalvisible(false) }} style={{
+                            height: 35, width: "30%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "fitness" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "fitness" ? "white" : "#1e87fd" }} >Fitness</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("apps"), setmodalvisible(false) }} style={{
+                            height: 35, width: "20%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "apps" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "apps" ? "white" : "#1e87fd" }} >Apps</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("hospitality"), setmodalvisible(false) }} style={{
+                            height: 35, width: "39%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "hospitality" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "hospitality" ? "white" : "#1e87fd" }} >Hospitality</Text>
+                        </TouchableOpacity>
+
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("education"), setmodalvisible(false) }} style={{
+                            height: 35, width: "50%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "education" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "education" ? "white" : "#1e87fd" }} >Education</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("business"), setmodalvisible(false) }} style={{
+                            height: 35, width: "42%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "business" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "business" ? "white" : "#1e87fd" }} >Business</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("travel"), setmodalvisible(false) }} style={{
+                            height: 35, width: "43%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "travel" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "travel" ? "white" : "#1e87fd" }} >Travel</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("technology"), setmodalvisible(false) }} style={{
+                            height: 35, width: "50%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 52, margin: 5,
+                            backgroundColor: category == "technology" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "technology" ? "white" : "#1e87fd" }} >Technology</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("consumer goods"), setmodalvisible(false) }} style={{
+                            height: 35, width: "52%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                            backgroundColor: category == "consumer goods" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "consumer goods" ? "white" : "#1e87fd" }} >Consumer Goods</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("service"), setmodalvisible(false) }} style={{
+                            height: 35, width: "40%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                            backgroundColor: category == "service" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "service" ? "white" : "#1e87fd" }} >Service</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("other"), setmodalvisible(false) }} style={{
+                            height: 35, width: "97%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                            borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 5,
+                            backgroundColor: category == "other" ? "#1e87fd" : "white"
+                        }} >
+                            <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "bold", color: category == "other" ? "white" : "#1e87fd" }} >Other</Text>
+                        </TouchableOpacity>
+
+
+                    </View>
+                </View>
+            </Modal>
         </>
 
     )

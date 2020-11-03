@@ -26,8 +26,8 @@ const BrandDetailPage = ({ navigation, route }) => {
     const [brandname, setbrandname] = useState("")
     const [email, setemail] = useState("")
     const [city, setcity] = useState("")
-    const [website, setwebsite] = useState("")
-    const [applink, setapplink] = useState("")
+    const [website, setwebsite] = useState(null)
+    const [applink, setapplink] = useState(null)
     const [brandcategory, setbrandcategory] = useState("")
 
     const [disable, setdisable] = useState(true)
@@ -40,7 +40,7 @@ const BrandDetailPage = ({ navigation, route }) => {
                 if (brandcategory == null) {
                     ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
                 } else {
-                    navigation.navigate("BrandSocialMediaPage", {
+                    navigation.navigate("BrandPostCampaignPage", {
                         name: name,
                         brandname: brandname,
                         email: email,
@@ -51,7 +51,7 @@ const BrandDetailPage = ({ navigation, route }) => {
                     })
                 }
             } else {
-                navigation.navigate("BrandSocialMediaPage", {
+                navigation.navigate("BrandPostCampaignPage", {
                     name: name,
                     brandname: brandname,
                     email: email,
