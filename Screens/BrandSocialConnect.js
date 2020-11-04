@@ -189,6 +189,8 @@ const BrandSocialConnect = ({ navigation, route }) => {
             brandotherpostcategory:route.params.brandotherpostcategory,
             targetaudience:route.params.targetaudience,
             targetregion:route.paramstargetregion,
+            campaignStartDate:route.params.campaignStartDate,
+            campaignEndDate:route.params.campaignEndDate,
             youtubedata: youtubedata,
             instadata: instadata,
         })
@@ -211,6 +213,8 @@ const BrandSocialConnect = ({ navigation, route }) => {
             brandotherpostcategory:route.params.brandotherpostcategory,
             targetaudience:route.params.targetaudience,
             targetregion:route.params.targetregion,
+            campaignStartDate:route.params.campaignStartDate,
+            campaignEndDate:route.params.campaignEndDate,
             youtubedata: youtubedata,
             instadata: instadata,
 

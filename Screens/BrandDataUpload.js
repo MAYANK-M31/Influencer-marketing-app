@@ -30,7 +30,7 @@ const BrandDataUpload = ({ navigation, route }) => {
     const [text, settext] = useState("Creating Your Account")
 
 
-
+    const {  dispatch } = useContext(MyContext)
 
 
     useEffect(() => {
@@ -54,6 +54,7 @@ const BrandDataUpload = ({ navigation, route }) => {
                         createdAt:(new Date()).toString()
                     }).then(() => {
                         ToastAndroid.show("Signed in successfully", ToastAndroid.SHORT)
+                        dispatch({type:"ADD_UPLOADEDUSER",payload:true})
                     })
                 } else {
                     ref.add({
@@ -69,7 +70,7 @@ const BrandDataUpload = ({ navigation, route }) => {
                     }).then(() => {
                         settext("Posting Your Campaign")
                         ToastAndroid.show("Signed in successfully", ToastAndroid.SHORT)
-                        ref2.add({
+                        const datamodal = {
                             uid: uid,
                             campaigntitle: route.params.campaigntitle,
                             campaigndescription: route.params.campaigndescription,
@@ -87,7 +88,13 @@ const BrandDataUpload = ({ navigation, route }) => {
                             targetregion: route.params.targetregion,
                             website: route.params.website,
                             applink: route.params.applink,
+                            campaignStartDate:route.params.campaignStartDate,
+                            campaignEndDate:route.params.campaignEndDate,
                             createdAt:(new Date()).toString()
+                        }
+                        ref2.add(datamodal).then(()=>{
+                            dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: datamodal })
+                            dispatch({type:"ADD_UPLOADEDUSER",payload:true})
                         })
                     })
 
@@ -111,7 +118,8 @@ const BrandDataUpload = ({ navigation, route }) => {
     }, [])
 
 
-    const { dispatch } = useContext(MyContext)
+ 
+
 
     const useridfunc = async () => {
         const { currentUser } = auth()
@@ -124,13 +132,7 @@ const BrandDataUpload = ({ navigation, route }) => {
     }
     useridfunc()
 
-    const logout = async () => {
-
-        dispatch({ type: "ADD_LOGGEDIN", payload: false })
-        dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
-        await AsyncStorage.clear()
-    }
-
+  
 
     return (
         <>

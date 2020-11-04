@@ -16,6 +16,7 @@ import {
 import { TextInput, DefaultTheme, Modal } from "react-native-paper"
 import Ionicons from "react-native-vector-icons/Feather"
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
@@ -40,6 +41,43 @@ const BrandPostCampDetail = ({ navigation, route }) => {
     const [othercategory, setothercategory] = useState("")
     const [targetaudience, settargetaudience] = useState(null)
     const [targetregion, settargetregion] = useState(null)
+
+
+
+    const [date, setDate] = useState(new Date());
+    const [date2, setDate2] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
+    const [datechanged, setdatechanged] = useState(false)
+    const [date2changed, setdate2changed] = useState(false)
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+        if (event.type == "set") {
+            setdatechanged(true)
+        }
+
+    };
+
+    const onChange2 = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow2(Platform.OS === 'ios');
+        setDate2(currentDate);
+        if (event.type == "set") {
+            setdate2changed(true)
+        }
+
+
+
+    };
+
+
+
+
+
 
     const selectcategory = async (item) => {
         setcategory(item)
@@ -81,13 +119,15 @@ const BrandPostCampDetail = ({ navigation, route }) => {
     // !/[^\s]/.test(title) == true  TO PREVENT USER FOR ENTERINGING ONLY SPACES
 
     const submit = () => {
-        if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true || platform == null || paymode == null) {
+        if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true || platform == null || paymode == null || datechanged == false || date2changed == false) {
             if (platform == null) {
                 ToastAndroid.show("Please Select Campaign Platform", ToastAndroid.SHORT)
             } else if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true) {
                 ToastAndroid.show("Please Fill Campaign Title And Detail", ToastAndroid.SHORT)
             } else if (paymode == null) {
                 ToastAndroid.show("Please Select Paymode", ToastAndroid.SHORT)
+            }else if ( datechanged == false || date2changed == false){
+                ToastAndroid.show("Please Select Campaign Date", ToastAndroid.SHORT)
             }
 
         } else {
@@ -115,12 +155,14 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                             instafollowers: instafollowers,
                             minrange: value1,
                             maxrange: value2,
-                            minage:minage,
-                            maxage:maxage,
-                            brandpostcategory:category,
-                            brandotherpostcategory:category == "other" ? othercategory : null,
-                            targetaudience:targetaudience,
-                            targetregion:targetregion
+                            minage: minage,
+                            maxage: maxage,
+                            brandpostcategory: category,
+                            brandotherpostcategory: category == "other" ? othercategory : null,
+                            targetaudience: targetaudience,
+                            targetregion: targetregion,
+                            campaignStartDate:date.toDateString(),
+                            campaignEndDate:date2.toDateString()
                         })
                     }
 
@@ -136,13 +178,13 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                         ToastAndroid.show("Please Select Target Audience", ToastAndroid.SHORT)
                     } else if (targetregion == null) {
                         ToastAndroid.show("Please Select Target Region", ToastAndroid.SHORT)
-                    }else if (category == "other" && !/[^\s]/.test(othercategory) == true) {
+                    } else if (category == "other" && !/[^\s]/.test(othercategory) == true) {
 
                         ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
 
                     } else {
                         navigation.navigate("BrandSocialConnect", {
-                           
+
                             campaigntitle: title,
                             campaigndescription: description,
                             paymode: paymode,
@@ -151,12 +193,14 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                             instafollowers: instafollowers,
                             minrange: value1,
                             maxrange: value2,
-                            minage:minage,
-                            maxage:maxage,
-                            brandpostcategory:category,
-                            brandotherpostcategory:category == "other" ? othercategory : null,
-                            targetaudience:targetaudience,
-                            targetregion:targetregion
+                            minage: minage,
+                            maxage: maxage,
+                            brandpostcategory: category,
+                            brandotherpostcategory: category == "other" ? othercategory : null,
+                            targetaudience: targetaudience,
+                            targetregion: targetregion,
+                            campaignStartDate:date.toDateString(),
+                            campaignEndDate:date2.toDateString()
                         })
                     }
                 }
@@ -170,13 +214,13 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                         ToastAndroid.show("Please Select Target Audience", ToastAndroid.SHORT)
                     } else if (targetregion == null) {
                         ToastAndroid.show("Please Select Target Region", ToastAndroid.SHORT)
-                    }else if (category == "other" && !/[^\s]/.test(othercategory) == true) {
+                    } else if (category == "other" && !/[^\s]/.test(othercategory) == true) {
 
                         ToastAndroid.show("Please Fill Brand Category", ToastAndroid.SHORT)
 
                     } else {
                         navigation.navigate("BrandSocialConnect", {
-                        
+
                             campaigntitle: title,
                             campaigndescription: description,
                             paymode: paymode,
@@ -185,12 +229,14 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                             instafollowers: instafollowers,
                             minrange: value1,
                             maxrange: value2,
-                            minage:minage,
-                            maxage:maxage,
-                            brandpostcategory:category,
-                            brandotherpostcategory:category == "other" ? othercategory : null,
-                            targetaudience:targetaudience,
-                            targetregion:targetregion
+                            minage: minage,
+                            maxage: maxage,
+                            brandpostcategory: category,
+                            brandotherpostcategory: category == "other" ? othercategory : null,
+                            targetaudience: targetaudience,
+                            targetregion: targetregion,
+                            campaignStartDate:date.toDateString(),
+                            campaignEndDate:date2.toDateString()
                         })
                     }
                 }
@@ -203,7 +249,7 @@ const BrandPostCampDetail = ({ navigation, route }) => {
     }
 
     // ___________________Skip Posting Data___________________
-   
+
 
 
     const theme = {
@@ -349,21 +395,21 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                                 }} >
                                     <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity activeOpacity={1} onPress={() => select3("shopping")} style={{
-                                    height: 45, width: "30%"
-                                    , alignItems: "center", flexDirection: "row", justifyContent: "center",
-                                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
-                                    backgroundColor: youtubesubs == "shopping" ? "#1e87fd" : "white"
-                                }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
-                                </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("50K-100K")} style={{
                                     height: 45, width: "30%"
                                     , alignItems: "center", flexDirection: "row", justifyContent: "center",
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: youtubesubs == "50K-100K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity activeOpacity={1} onPress={() => select3("100K-500K")} style={{
+                                    height: 45, width: "30%"
+                                    , alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                    backgroundColor: youtubesubs == "100K-500K" ? "#1e87fd" : "white"
+                                }} >
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "100K-500K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select3("500K-1M")} style={{
                                     height: 45, width: "30%"
@@ -436,21 +482,21 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                                 }} >
                                     <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity activeOpacity={1} onPress={() => select4("shopping")} style={{
-                                    height: 45, width: "30%"
-                                    , alignItems: "center", flexDirection: "row", justifyContent: "center",
-                                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
-                                    backgroundColor: instafollowers == "shopping" ? "#1e87fd" : "white"
-                                }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
-                                </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("50K-100K")} style={{
                                     height: 45, width: "30%"
                                     , alignItems: "center", flexDirection: "row", justifyContent: "center",
                                     borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                     backgroundColor: instafollowers == "50K-100K" ? "#1e87fd" : "white"
                                 }} >
-                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity activeOpacity={1} onPress={() => select4("100K-500K")} style={{
+                                    height: 45, width: "30%"
+                                    , alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                    backgroundColor: instafollowers == "100K-500K" ? "#1e87fd" : "white"
+                                }} >
+                                    <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "100K-500K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity activeOpacity={1} onPress={() => select4("500K-1M")} style={{
                                     height: 45, width: "30%"
@@ -523,21 +569,21 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                                     }} >
                                         <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={1} onPress={() => select4("shopping")} style={{
-                                        height: 45, width: "30%"
-                                        , alignItems: "center", flexDirection: "row", justifyContent: "center",
-                                        borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
-                                        backgroundColor: instafollowers == "shopping" ? "#1e87fd" : "white"
-                                    }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
-                                    </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("50K-100K")} style={{
                                         height: 45, width: "30%"
                                         , alignItems: "center", flexDirection: "row", justifyContent: "center",
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: instafollowers == "50K-100K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "50K-100K" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={1} onPress={() => select4("100K-500K")} style={{
+                                        height: 45, width: "30%"
+                                        , alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                        borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                        backgroundColor: instafollowers == "100K-500K" ? "#1e87fd" : "white"
+                                    }} >
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: instafollowers == "100K-500K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select4("500K-1M")} style={{
                                         height: 45, width: "30%"
@@ -604,21 +650,21 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                                     }} >
                                         <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "10K-50K" ? "white" : "#1e87fd" }} >10K-50K</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={1} onPress={() => select3("shopping")} style={{
-                                        height: 45, width: "30%"
-                                        , alignItems: "center", flexDirection: "row", justifyContent: "center",
-                                        borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
-                                        backgroundColor: youtubesubs == "shopping" ? "#1e87fd" : "white"
-                                    }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "shopping" ? "white" : "#1e87fd" }} >50K-100K</Text>
-                                    </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("50K-100K")} style={{
                                         height: 45, width: "30%"
                                         , alignItems: "center", flexDirection: "row", justifyContent: "center",
                                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                         backgroundColor: youtubesubs == "50K-100K" ? "#1e87fd" : "white"
                                     }} >
-                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >100K-500K</Text>
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "50K-100K" ? "white" : "#1e87fd" }} >50K-100K</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity activeOpacity={1} onPress={() => select3("100K-500K")} style={{
+                                        height: 45, width: "30%"
+                                        , alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                        borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                        backgroundColor: youtubesubs == "100K-500K" ? "#1e87fd" : "white"
+                                    }} >
+                                        <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: youtubesubs == "100K-500K" ? "white" : "#1e87fd" }} >100K-500K</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={1} onPress={() => select3("500K-1M")} style={{
                                         height: 45, width: "30%"
@@ -932,13 +978,69 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                         </View>
                     </View>
 
+                    <View style={{ height: 2, width: "60%", backgroundColor: "#f2f2f2", alignSelf: "center", marginVertical: 20 }} ></View>
+
+                    {/*__________________ Campaign Date ___________________________*/}
+
+                    <View style={{ minHeight: 50 }} >
+                        <Text style={{ alignSelf: "flex-start", fontSize: 28, fontWeight: "bold", color: "#404852", left: 20 }} >Campaign Date</Text>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-evenly", paddingHorizontal: 10, marginTop: 15 }}>
+                            <TouchableOpacity activeOpacity={1} onPress={() => { setShow(true) }} style={{
+                                height: 45, width: "38%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: "#1e87fd" }} >{datechanged ? date.toDateString().split(" ")[2] + "th" + " " + date.toDateString().split(" ")[1] + " " + date.toDateString().split(" ")[3] : "Start Date"}</Text>
+                            </TouchableOpacity>
+
+                            <View style={{ width: "10%", height: 2, backgroundColor: "#1e87fd44", borderRadius: 100 }} ></View>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { setShow2(true) }} style={{
+                                height: 45, width: "38%", alignItems: "center", flexDirection: "row", justifyContent: "center",
+                                borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
+                                backgroundColor: "white"
+                            }} >
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: "#1e87fd" }} >{date2changed ? date2.toDateString().split(" ")[2] + "th" + " " + date.toDateString().split(" ")[1] + " " + date2.toDateString().split(" ")[3] : "End Date"}</Text>
+                            </TouchableOpacity>
+                        </View>
+                        {show ?
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode={mode}
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChange}
+                                minimumDate={new Date()}
+                            />
+                            :
+                            null
+                        }
+
+                        {show2 ?
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date2}
+                                mode={mode}
+                                is24Hour={true}
+                                display="default"
+                                onChange={onChange2}
+                                minimumDate={date}
+                            />
+                            :
+                            null
+                        }
+
+                    </View>
+
 
 
 
 
                 </ScrollView>
 
-        
+
 
             </SafeAreaView>
 

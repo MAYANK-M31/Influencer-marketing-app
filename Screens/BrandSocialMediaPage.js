@@ -197,7 +197,9 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             brandpostcategory:route.params.brandpostcategory,
             brandotherpostcategory:route.params.brandotherpostcategory,
             targetaudience:route.params.targetaudience,
-            targetregion:route.paramstargetregion
+            targetregion:route.paramstargetregion,
+            campaignStartDate:route.params.campaignStartDate,
+            campaignEndDate:route.params.campaignEndDate,
         })
     }
 
@@ -225,7 +227,9 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             brandpostcategory:route.params.brandpostcategory,
             brandotherpostcategory:route.params.brandotherpostcategory,
             targetaudience:route.params.targetaudience,
-            targetregion:route.params.targetregion
+            targetregion:route.params.targetregion,
+            campaignStartDate:route.params.campaignStartDate,
+            campaignEndDate:route.params.campaignEndDate,
 
         })
     }
