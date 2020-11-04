@@ -27,6 +27,15 @@ const Home = ({ navigation }) => {
 
 
     const { state, dispatch } = useContext(MyContext)
+    const {type} = state ;
+
+    const func = async()=>{
+        const type = await AsyncStorage.getItem("type")
+        dispatch({ type: "ADD_TYPE", payload: type })
+        
+    }
+   func()
+    
 
     // const func = async () => {
     //     await firestore().collection("chats").doc("RDFPR0AodjGrjTwQoHWm")
@@ -55,17 +64,15 @@ const Home = ({ navigation }) => {
 
                 <View style={style.header} >
                     <View style={style.back} >
-                        <Text style={style.headingtext} >Explore
-                        
-                        </Text>
+                        <Text style={style.headingtext} >Explore</Text>
                     </View>
 
                     <View style={style.chat} >
-                        <View style={{ width: 40, height: 40, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 15 }} >
-                            <Ionicons color={"black"} size={25} name={"bell"} />
+                        <View style={{ width: 35, height: 35, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 15,elevation:1 }} >
+                            <Ionicons color={"black"} size={22} name={"bell"} />
                         </View>
-                        <View style={{ width: 40, height: 40, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 6 }} >
-                            <Ionicons color={"black"} size={25} name={"message-circle"} />
+                        <View style={{ width: 35, height: 35, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 6,elevation:1 }} >
+                            <Ionicons color={"black"} size={22} name={"message-circle"} />
                         </View>
                     </View>
                 </View>
@@ -78,7 +85,7 @@ const Home = ({ navigation }) => {
 
                 <View style={style.container2} >
                     <View>
-                        <Text style={style.headingtext2}>Browse</Text>
+                       <Text style={style.headingtext2}>Browse {type == "brand" ? "Influencers" : "Brands"}</Text>
                     </View>
 
                     <View style={{ flexWrap: "wrap", flexDirection: "row", marginTop: 10 }} >
@@ -117,6 +124,12 @@ const Home = ({ navigation }) => {
                     <TouchableOpacity onPress={async () => { await AsyncStorage.clear(), dispatch({ type: "ADD_LOGGEDIN", payload: false }) }} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
+
+                    {type == "influencer" ?
+                    <Text>Welcome influencer</Text>
+                     : 
+                     <Text>Welcome Brand</Text>
+                    }
 
                 </View>
 

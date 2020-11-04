@@ -9,13 +9,13 @@ import {
   StatusBar,
   Dimensions,
   TouchableOpacity,
-  Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, Modal
+  Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage,
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
 import axios from "axios"
 import firestore from '@react-native-firebase/firestore';
-import { TouchableRipple } from 'react-native-paper';
+import { TouchableRipple, Modal } from 'react-native-paper';
 import { MyContext } from "../Screens/AppStartStack"
 
 var abbreviate = require('number-abbreviate')
@@ -781,7 +781,7 @@ const Profile = ({ route, navigation }) => {
 
         <View style={{ width: WiDTH, height: HEIGHT, backgroundColor: "white", justifyContent: "center", alignItems: "center" }} >
           <ActivityIndicator size={50} color={"#007bff"} />
-          <Text style={{ fontSize: 13, color: "#414d57", marginTop: 5, marginLeft: 5 }}>Loading...</Text>
+          {/* <Text style={{ fontSize: 13, color: "#414d57", marginTop: 5, marginLeft: 5 }}>Loading...</Text> */}
         </View>
       </Modal>
     </>

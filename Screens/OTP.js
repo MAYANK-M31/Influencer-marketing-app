@@ -29,10 +29,17 @@ const OTP = ({ navigation, route }) => {
     const [confirm, setConfirm] = useState(route.params.data);
     const [code, setCode] = useState('');
     const [loading, setloading] = useState(false)
-    const { dispatch } = useContext(MyContext)
     const [loading2, setloading2] = useState(false)
-    const [isExistingInfluencer, setisExistingInfluencer] = useState(null)
-    const [isExistingBrand, setisExistingBrand] = useState(null)
+
+
+    const {dispatch} = useContext(MyContext)
+
+
+    //To Change App Interface for Influencer or brand respectively
+   const  SetType=async(item)=>{      
+    await AsyncStorage.setItem("type",item)
+    dispatch({ type: "ADD_TYPE", payload: item })
+   }
 
 
     const existinguser = async () => {
@@ -48,92 +55,78 @@ const OTP = ({ navigation, route }) => {
 
 
 
-
-        //     ref.where("uid", "==", uid).get()
-        //         .then(function (querySnapshot) {
-        //             if (querySnapshot.empty) {
-        //                 // alert("no")
-        //                 dispatch({ type: "ADD_LOGGEDIN", payload: true })
-        //                 dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
-        //                 setloading2(true)
-        //             } else {
-        //                 querySnapshot.forEach(async function (doc) {
-        //                     dispatch({ type: "ADD_LOGGEDIN", payload: true })
-        //                     dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
-        //                     // console.log(doc.data().name);
-        //                     ToastAndroid.show("Welcome Back " + doc.data().name, ToastAndroid.SHORT)
-        //                     await AsyncStorage.setItem("uid", uid)
-        //                     await AsyncStorage.setItem("datauploadeduser", "true")
-        //                     // navigation.navigate("Tabbar")
-        //                     setloading2(true)
-
-        //                 });
-        //             }
-
-
-        //         })
-        //         .catch(async function (error) {
-        //             // console.log("Error getting documents: ", error);
-        //             await AsyncStorage.setItem("loggedin", "false")
-        //             dispatch({ type: "ADD_LOGGEDIN", payload: false })
-        //             setloading2(false)
-        //         });
-
-        // }
-
+        // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓__________To Check Influencer exist or not if not then check brand________↓↓↓↓↓↓↓↓↓↓↓↓↓
         ref.where("uid", "==", uid).get()
             .then(function (querySnapshot) {
-
                 if (querySnapshot.empty) {
-                    // alert("influecer no")
-                    setisExistingInfluencer(false)
-                    // dispatch({ type: "ADD_LOGGEDIN", payload: true })
-                    // dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
-                    // setloading2(true)
+
+                    //↓↓↓ Means Influencer Does not exist Now Step 2 to Check If It is Brand ↓↓
+
+
+                    // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓________To Check Brand exist or not_________↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                    ref2.where("uid", "==", uid).get()
+                        .then(function (querySnapshot) {
+
+                            if (querySnapshot.empty) {
+                                //↓↓↓ Means Brand Does not exist ↓↓
+
+                                dispatch({ type: "ADD_LOGGEDIN", payload: true })
+                                dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
+                                setloading2(true)
+                            } else {
+
+                                //↓↓↓ Means Brand exist ↓↓
+
+                                querySnapshot.forEach(async function (doc) {
+                                    dispatch({ type: "ADD_LOGGEDIN", payload: true })
+                                    dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
+                                    // console.log(doc.data().name);
+                                    ToastAndroid.show("Welcome Back " + doc.data().name, ToastAndroid.SHORT)
+                                    await AsyncStorage.setItem("uid", uid)
+                                    await AsyncStorage.setItem("datauploadeduser", "true")
+                                    SetType("brand")
+                                    // navigation.navigate("Tabbar")
+                                    setloading2(true)
+
+                                });
+
+                            }
+
+                            setloading2(false)
+                        })
+                        .catch(async function (error) {
+                            console.log("Error getting documents: ", error);
+                            await AsyncStorage.setItem("loggedin", "false")
+                            dispatch({ type: "ADD_LOGGEDIN", payload: false })
+                            setloading2(false)
+                        });
+
                 } else {
-                    // alert("influecer yes")
-                    setisExistingInfluencer(true)
+
+                    //↓↓↓ Means Influencer exist ↓↓
+
+                    querySnapshot.forEach(async function (doc) {
+                        dispatch({ type: "ADD_LOGGEDIN", payload: true })
+                        dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
+                        // console.log(doc.data().name);
+                        ToastAndroid.show("Welcome Back " + doc.data().name, ToastAndroid.SHORT)
+                        await AsyncStorage.setItem("uid", uid)
+                        await AsyncStorage.setItem("datauploadeduser", "true")
+                        SetType("influencer")
+                        // navigation.navigate("Tabbar")
+                        setloading2(true)
+
+                    });
                 }
 
-                setloading2(false)
+
             })
             .catch(async function (error) {
-                console.log("Error getting documents: ", error);
+                // console.log("Error getting documents: ", error);
                 await AsyncStorage.setItem("loggedin", "false")
                 dispatch({ type: "ADD_LOGGEDIN", payload: false })
                 setloading2(false)
             });
-
-        ref2.where("uid", "==", uid).get()
-            .then(function (querySnapshot) {
-
-                if (querySnapshot.empty) {
-                    // alert("brand no")
-
-                    setisExistingBrand(false)
-                    // dispatch({ type: "ADD_LOGGEDIN", payload: true })
-                    // dispatch({ type: "ADD_UPLOADEDUSER", payload: false })
-                    // setloading2(true)
-                } else {
-                    // alert("brand yes")
-                    setisExistingBrand(true)
-                }
-
-                setloading2(false)
-            })
-            .catch(async function (error) {
-                console.log("Error getting documents: ", error);
-                await AsyncStorage.setItem("loggedin", "false")
-                dispatch({ type: "ADD_LOGGEDIN", payload: false })
-                setloading2(false)
-            });
-
-
-      
-
-
-
-
 
 
 
@@ -143,20 +136,8 @@ const OTP = ({ navigation, route }) => {
     }
 
 
-    
 
-    try {
-        if (isExistingBrand == false && isExistingInfluencer == false) {
-            // alert("nothing")
-            console.log(isExistingBrand, isExistingInfluencer);
-        }else if(isExistingBrand == true || isExistingInfluencer == true){
-            console.log("welcome");
-            
-        }
-        // console.log(isExistingBrand, isExistingInfluencer);
-    } catch (e) {
-        console.log(e);
-    }
+
 
 
 

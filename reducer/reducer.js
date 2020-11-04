@@ -18,7 +18,11 @@ export const initState = {
     uploadeduser: null,
     profileimage: null,
     backgroundimage: null,
-    type: null     // wheater user is brand or influencer
+    type: null,    // wheater user is brand or influencer
+    brandname: null,
+    email: null,
+    applink: null,
+    website: null
 
 }
 
@@ -131,6 +135,26 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 type: action.payload
+            }
+        case "ADD_BRANDNAME":
+            return {
+                ...state,
+                brandname: action.payload
+            }
+        case "ADD_EMAIL":
+            return {
+                ...state,
+                email: action.payload
+            }
+        case "ADD_APPLINK":
+            return {
+                ...state,
+                applink: action.payload
+            }
+        case "ADD_WEBSITE":
+            return {
+                ...state,
+                website: action.payload
             }
 
 
