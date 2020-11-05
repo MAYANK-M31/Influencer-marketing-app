@@ -13,7 +13,7 @@ import {
     Slider,
     ToastAndroid,
 } from 'react-native';
-import { TextInput, DefaultTheme, Modal } from "react-native-paper"
+import { TextInput, DefaultTheme, Modal, TouchableRipple } from "react-native-paper"
 import Ionicons from "react-native-vector-icons/Feather"
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -126,7 +126,7 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                 ToastAndroid.show("Please Fill Campaign Title And Detail", ToastAndroid.SHORT)
             } else if (paymode == null) {
                 ToastAndroid.show("Please Select Paymode", ToastAndroid.SHORT)
-            }else if ( datechanged == false || date2changed == false){
+            } else if (datechanged == false || date2changed == false) {
                 ToastAndroid.show("Please Select Campaign Date", ToastAndroid.SHORT)
             }
 
@@ -161,8 +161,8 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                             brandotherpostcategory: category == "other" ? othercategory : null,
                             targetaudience: targetaudience,
                             targetregion: targetregion,
-                            campaignStartDate:date.toDateString(),
-                            campaignEndDate:date2.toDateString()
+                            campaignStartDate: date.toDateString(),
+                            campaignEndDate: date2.toDateString()
                         })
                     }
 
@@ -199,8 +199,8 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                             brandotherpostcategory: category == "other" ? othercategory : null,
                             targetaudience: targetaudience,
                             targetregion: targetregion,
-                            campaignStartDate:date.toDateString(),
-                            campaignEndDate:date2.toDateString()
+                            campaignStartDate: date.toDateString(),
+                            campaignEndDate: date2.toDateString()
                         })
                     }
                 }
@@ -235,8 +235,8 @@ const BrandPostCampDetail = ({ navigation, route }) => {
                             brandotherpostcategory: category == "other" ? othercategory : null,
                             targetaudience: targetaudience,
                             targetregion: targetregion,
-                            campaignStartDate:date.toDateString(),
-                            campaignEndDate:date2.toDateString()
+                            campaignStartDate: date.toDateString(),
+                            campaignEndDate: date2.toDateString()
                         })
                     }
                 }
@@ -274,10 +274,12 @@ const BrandPostCampDetail = ({ navigation, route }) => {
 
 
                 <View style={style.header} >
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
-                        <Ionicons color={"black"} size={28} name={"arrow-left"} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { submit() }} style={{ height: 30, width: 60, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 10 }}>
+                    <View style={style.back} >
+                        <TouchableRipple onPress={() => navigation.goBack()} borderless={true} rippleColor={"rbg(0,0,0,0.32)"} style={{ width: 35, height: 35, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                            <Ionicons color={"black"} size={28} name={"chevron-left"} />
+                        </TouchableRipple>
+                    </View>
+                    <TouchableOpacity onPress={() => { submit() }} style={{ height: 30, width: 60, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 15 }}>
                         <Text style={{ color: "white", fontWeight: "100", alignSelf: "center" }} >Next</Text>
                     </TouchableOpacity>
 
@@ -1197,7 +1199,7 @@ const style = StyleSheet.create({
 
     },
     back: {
-        left: 15,
+        left: 8,
     },
     heading: {
         width: WiDTH,

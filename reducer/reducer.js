@@ -24,7 +24,7 @@ export const initState = {
     applink: null,
     website: null,
     campaignposts: [],
-    campaignposted:false
+    campaignpostedagain: false
 
 }
 
@@ -163,11 +163,11 @@ export const reducer = (state, action) => {
                 ...state,
                 campaignposts: action.payload
             }
-            case "ADD_CAMPAIGNPOSTED":
-                return {
-                    ...state,
-                    campaignposted: action.payload
-                }
+        case "ADD_CAMPAIGNPOSTEDAGAIN":
+            return {
+                ...state,
+                campaignpostedagain: action.payload
+            }
 
 
 

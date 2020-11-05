@@ -21,7 +21,7 @@ import InstagramLogin from 'react-native-instagram-login';
 import CookieManager from '@react-native-community/cookies';
 
 import axios from "axios";
-import { Button } from 'react-native-paper';
+import { Button, TouchableRipple } from 'react-native-paper';
 
 
 GoogleSignin.configure({
@@ -230,9 +230,11 @@ const BrandSocialConnect = ({ navigation, route }) => {
 
 
                 <View style={style.header} >
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
-                        <Ionicons color={"black"} size={28} name={"arrow-left"} />
-                    </TouchableOpacity>
+                <View style={style.back} >
+                        <TouchableRipple onPress={() => navigation.goBack()} borderless={true} rippleColor={"rbg(0,0,0,0.32)"} style={{ width: 35, height: 35, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                            <Ionicons color={"black"} size={28} name={"chevron-left"} />
+                        </TouchableRipple>
+                    </View>
                     <TouchableOpacity onPress={() => { skip() }} style={{ height: 30, width: 50, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 30 }}>
                         <Text style={{ color: "white", fontWeight: "bold", alignSelf: "center" }} >Skip</Text>
                     </TouchableOpacity>
@@ -346,7 +348,7 @@ const style = StyleSheet.create({
     },
     header: {
         top: 10,
-        left: 15,
+        left: 8,
         position: "absolute",
         flexDirection: "row",
         width: WiDTH

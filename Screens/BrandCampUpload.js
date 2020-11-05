@@ -29,7 +29,8 @@ const BrandCampUpload = ({ navigation, route }) => {
 
     const [text, settext] = useState("Posting Your Campaign")
 
-    const {  dispatch } = useContext(MyContext)
+    const {  state,dispatch } = useContext(MyContext)
+    const { campaignposts, campaignpostedagain } = state;
 
 
 
@@ -41,7 +42,7 @@ const BrandCampUpload = ({ navigation, route }) => {
 
             try {
                 settext("Posting Your Campaign")
-                ToastAndroid.show("Campaign Posted Successfully", ToastAndroid.SHORT)
+          
                 const datamodal = {
                     uid: uid,
                     campaigntitle: route.params.campaigntitle,
@@ -65,7 +66,11 @@ const BrandCampUpload = ({ navigation, route }) => {
                     createdAt: (new Date()).toString()
                 }
                 ref.add(datamodal).then(()=>{
-                    dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: datamodal })
+                    campaignposts.push(datamodal)
+                    dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: false })
+                    dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: campaignposts })
+                    dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: true })
+                    ToastAndroid.show("Campaign Posted Successfully", ToastAndroid.SHORT)
                 })
 
 
