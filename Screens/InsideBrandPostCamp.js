@@ -6,6 +6,7 @@ import BrandSocialConnect from "./BrandSocialConnect";
 import BrandCampUpload from "./BrandCampUpload";
 import { MyContext } from "./AppStartStack";
 import BrandPostedCamp from "./BrandPostedCamp";
+import ImageReviewScroll from "./ImageReviewScroll";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const InsideBrandPostCamp = () => {
             <Stack.Screen name="BrandPostCampDetail" component={BrandPostCampDetail} options={{ headerShown: false }} />
             <Stack.Screen name="BrandSocialConnect" component={BrandSocialConnect} options={{ headerShown: false }} />
             <Stack.Screen name="BrandCampUpload" component={BrandCampUpload} options={{ headerShown: false }} />
+            <Stack.Screen name="ImageReviewScroll" component={ImageReviewScroll} options={{ headerShown: false }} />
 
 
 

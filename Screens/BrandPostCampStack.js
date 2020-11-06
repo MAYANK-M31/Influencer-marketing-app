@@ -10,6 +10,8 @@ import InsideBrandPostCamp from "./InsideBrandPostCamp";
 import Loading from "./Loading";
 import firestore from "@react-native-firebase/firestore"
 import { AsyncStorage } from "react-native";
+import ImageReview from "./ImageReview";
+import ImageReviewScroll from "./ImageReviewScroll";
 
 const Stack = createStackNavigator();
 
@@ -67,6 +69,7 @@ const BrandPostCampStack = () => {
                         <Stack.Screen name="BrandPostCampDetail" component={BrandPostCampDetail} options={{ headerShown: false }} />
                         <Stack.Screen name="BrandSocialConnect" component={BrandSocialConnect} options={{ headerShown: false }} />
                         <Stack.Screen name="BrandCampUpload" component={BrandCampUpload} options={{ headerShown: false }} />
+                        <Stack.Screen name="ImageReviewScroll" component={ImageReviewScroll} options={{ headerShown: false }} />
                     </>
                     :
                     <>

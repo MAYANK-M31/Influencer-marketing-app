@@ -173,6 +173,7 @@ const BrandSocialConnect = ({ navigation, route }) => {
 
 
 
+
     const submit = () => {
         navigation.navigate("BrandCampUpload", {
             campaigntitle: route.params.title,
@@ -183,22 +184,25 @@ const BrandSocialConnect = ({ navigation, route }) => {
             instafollowers: route.params.instafollowers,
             minrange: route.params.minrange,
             maxrange: route.params.maxrange,
-            minage:route.params.minage,
-            maxage:route.params.maxage,
-            brandpostcategory:route.params.brandpostcategory,
-            brandotherpostcategory:route.params.brandotherpostcategory,
-            targetaudience:route.params.targetaudience,
-            targetregion:route.paramstargetregion,
-            campaignStartDate:route.params.campaignStartDate,
-            campaignEndDate:route.params.campaignEndDate,
+            minage: route.params.minage,
+            maxage: route.params.maxage,
+            brandpostcategory: route.params.brandpostcategory,
+            brandotherpostcategory: route.params.brandotherpostcategory,
+            targetaudience: route.params.targetaudience,
+            targetregion: route.paramstargetregion,
+            campaignStartDate: route.params.campaignStartDate,
+            campaignEndDate: route.params.campaignEndDate,
             youtubedata: youtubedata,
             instadata: instadata,
+            profileimage: route.params.profileimage,
+            backgroundimage: route.params.backgroundimage,
+            extraimages:route.params.extraimages
         })
     }
 
     const skip = () => {
         navigation.navigate("BrandCampUpload", {
-          
+
             campaigntitle: route.params.campaigntitle,
             campaigndescription: route.params.campaigndescription,
             paymode: route.params.paymode,
@@ -207,16 +211,19 @@ const BrandSocialConnect = ({ navigation, route }) => {
             instafollowers: route.params.instafollowers,
             minrange: route.params.minrange,
             maxrange: route.params.maxrange,
-            minage:route.params.minage,
-            maxage:route.params.maxage,
-            brandpostcategory:route.params.brandpostcategory,
-            brandotherpostcategory:route.params.brandotherpostcategory,
-            targetaudience:route.params.targetaudience,
-            targetregion:route.params.targetregion,
-            campaignStartDate:route.params.campaignStartDate,
-            campaignEndDate:route.params.campaignEndDate,
+            minage: route.params.minage,
+            maxage: route.params.maxage,
+            brandpostcategory: route.params.brandpostcategory,
+            brandotherpostcategory: route.params.brandotherpostcategory,
+            targetaudience: route.params.targetaudience,
+            targetregion: route.params.targetregion,
+            campaignStartDate: route.params.campaignStartDate,
+            campaignEndDate: route.params.campaignEndDate,
             youtubedata: youtubedata,
             instadata: instadata,
+            profileimage: route.params.profileimage,
+            backgroundimage: route.params.backgroundimage,
+            extraimages:route.params.extraimages
 
         })
     }
@@ -230,7 +237,7 @@ const BrandSocialConnect = ({ navigation, route }) => {
 
 
                 <View style={style.header} >
-                <View style={style.back} >
+                    <View style={style.back} >
                         <TouchableRipple onPress={() => navigation.goBack()} borderless={true} rippleColor={"rbg(0,0,0,0.32)"} style={{ width: 35, height: 35, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
                             <Ionicons color={"black"} size={28} name={"chevron-left"} />
                         </TouchableRipple>

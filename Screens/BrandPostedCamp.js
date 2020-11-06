@@ -55,9 +55,9 @@ const BrandPostedCamp = ({ navigation, route }) => {
                     </View>
 
                     <View style={{ width: "25%", alignItems: "center" }}>
-                        <TouchableOpacity onPress={() => { skip() }} style={{ height: 30, width: 50, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", right: -5 }}>
+                        {/* <TouchableOpacity onPress={() => { skip() }} style={{ height: 30, width: 50, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", right: -5 }}>
                             <Text style={{ color: "white", fontWeight: "bold", alignSelf: "center" }} >Add</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
 
@@ -71,6 +71,7 @@ const BrandPostedCamp = ({ navigation, route }) => {
                         <>
                             <FlatList
                                 data={campaignposts}
+                                contentContainerStyle={{paddingBottom:50}}
                                 keyExtractor={(item,index) => index}
                                 renderItem={({ item,index}) => (
 
