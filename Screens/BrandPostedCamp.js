@@ -38,6 +38,7 @@ const BrandPostedCamp = ({ navigation, route }) => {
 
 
 
+
     return (
         <>
             <StatusBar barStyle={"dark-content"} backgroundColor={"white"} />
@@ -80,7 +81,7 @@ const BrandPostedCamp = ({ navigation, route }) => {
                                             <View style={style.insidecard} >
                                                 <View style={style.cardleft} >
                                                     <View style={{ borderRadius: 120 / 2, height: 100, width: 100, overflow: "hidden", elevation: 5, backgroundColor: "#cffcfa" }}>
-                                                        <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: "https://media-exp1.licdn.com/dms/image/C560BAQGgarC7a_EY3g/company-logo_200_200/0?e=2159024400&v=beta&t=-EXDJkxAruj-KdC-iQeRTtdn1M4TdxqL_TIDi4-plK8" }} />
+                                                        <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: item.profileimage ? item.profileimage  : "https://media-exp1.licdn.com/dms/image/C560BAQGgarC7a_EY3g/company-logo_200_200/0?e=2159024400&v=beta&t=-EXDJkxAruj-KdC-iQeRTtdn1M4TdxqL_TIDi4-plK8" }} />
                                                     </View>
                                                 </View>
                                                 <View style={style.cardright} >
@@ -90,7 +91,7 @@ const BrandPostedCamp = ({ navigation, route }) => {
                                                                 <Text style={style.name} >{item.campaigntitle}</Text>
                                                                 <Text style={style.category} >{item.brandpostcategory}</Text>
                                                             </View>
-                                                            <Switch
+                                                            {/* <Switch
                                                                 trackColor={{ false: "#f0f2f5", true: "#2989ff" }}
                                                                 thumbColor={isEnabled ? "white" : "white"}
                                                                 ios_backgroundColor="#3e3e3e"
@@ -99,7 +100,8 @@ const BrandPostedCamp = ({ navigation, route }) => {
                                                                 style={{ position: "absolute", right: 0 }}
 
 
-                                                            />
+                                                            /> */}
+                                                            <Ionicons style={{ position: "absolute", right: 5 }} color={"grey"} size={18} name={"more-vertical"} />
                                                         </View>
 
 

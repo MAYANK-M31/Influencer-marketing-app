@@ -28,163 +28,28 @@ const HEIGHT = Dimensions.get("window").height
 const BrandCampUpload = ({ navigation, route }) => {
 
     const [text, settext] = useState("Posting Your Campaign")
+
+
     const [extraimagesarray, setextraimagesarray] = useState([])
-    const [profileimage, setprofileimage] = useState(null)
-    const [backgroundimage, setbackgroundimage] = useState(null)
+    const [profileimage, setprofileimage] = useState(route.params.profileimage)
+    const [backgroundimage, setbackgroundimage] = useState(route.params.backgroundimage)
     const [uploaded, setuploaded] = useState(null)
     const [num, setnum] = useState(0)
     const [imageloader, setimageloader] = useState(true)
+    const [uploaddatas,setuploaddatas]  = useState(false)
 
     const [profileup, setprofileup] = useState(null)
     const [backgdup, setbackgdup] = useState(null)
-    const [extraimgup, setextraimgup] = useState(null)
+
 
 
     const { state, dispatch } = useContext(MyContext)
     const { campaignposts, campaignpostedagain } = state;
 
 
-    const uploadimages = async () => {
-        
-        setextraimgup(false)
-        setimageloader(true)
-        settext("Uploading Images")
-        var x = 0
-        if (route.params.extraimages.length > 0) {
-            route.params.extraimages.map((item, index) => {
-                // console.log(item);
-                const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
-                reference.putFile(item.uri)
-                    .then((res) => {
-                        // console.log(res);
-                        // console.log(res.state);
+    
 
-
-                        x += 1
-                        // console.log(x);
-
-
-
-                        if (res.state == "success") {
-                            settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
-                            setuploaded((x / route.params.extraimages.length) * 100)
-                        } else if (res.state == "running") {
-                            settext("please wait Uploading Images ")
-                        } else if (res.state == "error") {
-                            settext("Failed to upload image")
-
-                        }
-
-                        const imageref = storage().ref(res.metadata.fullPath)
-                        imageref
-                            .getDownloadURL()
-                            .then((url) => {
-                                // console.log(url);
-                                extraimagesarray.push(url)
-                                setextraimagesarray(extraimagesarray)
-                                setextraimgup(true)
-
-                            })
-
-                    })
-                    .catch((e) => {
-                        console.log("error to uplaod", e);
-                    })
-
-            })
-        }
-
-        if (route.params.profileimage) {
-            uploadprofile()
-        }
-        if (route.params.backgroundimage) {
-            uploadbackground()
-        }
-
-    }
-
-
-    const uploadprofile = async () => {
-        setprofileup(false)
-        setimageloader(true)
-        settext("Uploading Images")
-        var x = 0
-        const reference = storage().ref(`/images/brandscampaigns/${route.params.profileimage.filename}`)
-        reference.putFile(route.params.profileimage.uri)
-            .then((res) => {
-                // console.log(res);
-                // console.log(res.state);
-
-
-                x += 1
-                // console.log(x);
-
-
-
-                if (res.state == "success") {
-                    settext("Uploading Profile Image" + " " + x + "/" + "1")
-                    setuploaded((x / 1) * 100)
-                } else if (res.state == "running") {
-                    settext("please wait Uploading Image ")
-                } else if (res.state == "error") {
-                    settext("Failed to upload image")
-
-                }
-
-                const imageref = storage().ref(res.metadata.fullPath)
-                imageref
-                    .getDownloadURL()
-                    .then((url) => {
-                        // console.log(url);
-                        setprofileimage(url)
-                        setprofileup(true)
-                    })
-
-            })
-            .catch((e) => {
-                settext("Failed to upload profile image")
-            })
-    }
-
-    const uploadbackground = async () => {
-        setbackgdup(false)
-        setimageloader(true)
-        settext("Uploading Images")
-        var x = 0
-        const reference = storage().ref(`/images/brandscampaigns/${route.params.backgroundimage.filename}`)
-        reference.putFile(route.params.backgroundimage.uri)
-            .then((res) => {
-                // console.log(res);
-                // console.log(res.state);
-
-
-                x += 1
-
-                if (res.state == "success") {
-                    settext("Uploading Background Image" + " " + x + "/" + "1")
-                    setuploaded((x / 1) * 100)
-                } else if (res.state == "running") {
-                    settext("please wait Uploading Image ")
-                } else if (res.state == "error") {
-                    settext("Failed to upload image")
-
-                }
-
-                const imageref = storage().ref(res.metadata.fullPath)
-                imageref
-                    .getDownloadURL()
-                    .then((url) => {
-                        // console.log(url);
-                        setprofileimage(url)
-                        setbackgdup(true)
-                    })
-
-
-            })
-            .catch((e) => {
-                settext("Failed to upload background image")
-            })
-    }
+   
 
 
     useEffect(() => {
@@ -192,15 +57,395 @@ const BrandCampUpload = ({ navigation, route }) => {
 
         const func = async () => {
 
-          await uploadimages()
 
-
-
-            const uid = await AsyncStorage.getItem("uid")
-            const ref = await firestore().collection("brandpost")
-
-
-
+            if (profileimage) {
+                console.log("profile stack");
+    
+    
+                setimageloader(true)
+                settext("Please Wait")
+                var x = 0
+                const reference = storage().ref(`/images/brandscampaigns/${profileimage.filename}`)
+                reference.putFile(profileimage.uri)
+                    .then((res) => {
+    
+                        x += 1
+    
+                        if (res.state == "success") {
+                            settext("Uploading Profile Image")
+                            setuploaded((x / 1) * 100)
+                        } else if (res.state == "running") {
+                            settext("please wait Uploading Image ")
+                        } else if (res.state == "error") {
+                            settext("Failed to upload image")
+    
+                        }
+    
+                        const imageref = storage().ref(res.metadata.fullPath)
+                        imageref
+                            .getDownloadURL()
+                            .then((profileurl) => {
+                                // console.log(url);
+                              
+                                  
+                                 
+                                
+    
+                                setimageloader(false)
+                                if (backgroundimage) {
+                                    console.log("yes background + profile");
+    
+                                    setbackgdup(false)
+                                    setimageloader(true)
+                                    settext("Uploading Images")
+                                    setimageloader(true)
+                                    var x = 0
+                                    const reference = storage().ref(`/images/brandscampaigns/${backgroundimage.filename}`)
+                                    reference.putFile(backgroundimage.uri)
+                                        .then((res) => {
+    
+                                            x += 1
+    
+                                            if (res.state == "success") {
+                                                settext("Uploading Background Image")
+                                                setuploaded((x / 1) * 100)
+                                            } else if (res.state == "running") {
+                                                settext("please wait Uploading Image ")
+                                            } else if (res.state == "error") {
+                                                settext("Failed to upload image")
+    
+                                            }
+    
+                                            const imageref = storage().ref(res.metadata.fullPath)
+                                            imageref
+                                                .getDownloadURL()
+                                                .then((backgroundurl) => {
+                                                    // console.log(url);
+                                              
+    
+                                                    setimageloader(false)
+                                                    if (route.params.extraimages.length > 0) {
+                                                        console.log("yes extra + profile + back");
+    
+    
+    
+                                                        setimageloader(true)
+                                                        settext("Please Wait")
+                                                        var x = 0
+    
+                                                        route.params.extraimages.map((item, index) => {
+                                                            // console.log(item);
+                                                            const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
+                                                            reference.putFile(item.uri)
+                                                                .then((res) => {
+    
+                                                                    x += 1
+    
+    
+                                                                    if (res.state == "success") {
+                                                                        settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
+                                                                        setuploaded((x / route.params.extraimages.length) * 100)
+                                                                    } else if (res.state == "running") {
+                                                                        settext("please wait Uploading Images ")
+                                                                    } else if (res.state == "error") {
+                                                                        settext("Failed to upload image")
+    
+                                                                    }
+    
+                                                                    const imageref = storage().ref(res.metadata.fullPath)
+                                                                    imageref
+                                                                        .getDownloadURL()
+                                                                        .then((extraimgurl) => {
+                                                                            // console.log(url);
+                                                                            extraimagesarray.push(extraimgurl)
+                                                                            setextraimagesarray(extraimagesarray)
+    
+                                                                            setimageloader(false)
+    
+                                                                            if (extraimagesarray.length == route.params.extraimages.length) {
+                                                                                uploaddata({profileimage:profileurl,backgroundimage:backgroundurl,extraimages:extraimgurl})
+                                                                            }
+    
+                                                                        })
+    
+                                                                })
+                                                                .catch((e) => {
+                                                                    console.log("error to uplaod", e);
+                                                                })
+    
+                                                        })
+    
+    
+    
+                                                    } else {
+                                                        console.log("only profile + back");
+    
+                                                        uploaddata({profileimage:profileurl,backgroundimage:backgroundurl,extraimages:null})
+    
+                                                    }
+    
+                                                })
+    
+    
+                                        })
+                                        .catch((e) => {
+                                            settext("Failed to upload background image")
+                                        })
+    
+    
+                                } else {
+                                    setimageloader(false)
+                                    if (route.params.extraimages.length > 0) {
+                                        console.log("yes extra + profile");
+    
+    
+    
+                                        setimageloader(true)
+                                        settext("Uploading Images")
+                                        var x = 0
+                                        if (route.params.extraimages.length > 0) {
+                                            route.params.extraimages.map((item, index) => {
+                                                console.log(item);
+                                                const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
+                                                reference.putFile(item.uri)
+                                                    .then((res) => {
+                                                        console.log(res);
+                                                        console.log(res.state);
+    
+    
+                                                        x += 1
+                                                        // console.log(x);
+    
+    
+    
+                                                        if (res.state == "success") {
+                                                            settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
+                                                            setuploaded((x / route.params.extraimages.length) * 100)
+                                                        } else if (res.state == "running") {
+                                                            settext("please wait Uploading Images ")
+                                                        } else if (res.state == "error") {
+                                                            settext("Failed to upload image")
+    
+                                                        }
+    
+                                                        const imageref = storage().ref(res.metadata.fullPath)
+                                                        imageref
+                                                            .getDownloadURL()
+                                                            .then((extraimgurl) => {
+                                                                // console.log(url);
+                                                                extraimagesarray.push(extraimgurl)
+                                                                setextraimagesarray(extraimagesarray)
+                                                                setimageloader(false)
+    
+                                                                if (extraimagesarray.length == route.params.extraimages.length) {
+                                                                    uploaddata({profileimage:profileurl,backgroundimage:null,extraimages:extraimgurl})
+                                                                }
+    
+                                                            })
+    
+                                                    })
+                                                    .catch((e) => {
+                                                        console.log("error to uplaod", e);
+                                                    })
+    
+                                            })
+                                        }
+    
+                                    } else {
+                                        
+                                        console.log("only only profile");
+                                        setimageloader(false)
+                                        uploaddata({profileimage:profileurl,backgroundimage:null,extraimages:null})
+                                    }
+    
+                                }
+                            })
+    
+                    })
+                    .catch((e) => {
+                        settext("Failed to upload profile image")
+                        setimageloader(false)
+                    })
+    
+    
+            } else if (backgroundimage) {
+                console.log("background stack");
+                setimageloader(false)
+    
+                setimageloader(true)
+                settext("Please Wait")
+                var x = 0
+                const reference = storage().ref(`/images/brandscampaigns/${backgroundimage.filename}`)
+                reference.putFile(backgroundimage.uri)
+                    .then((res) => {
+    
+                        x += 1
+    
+                        if (res.state == "success") {
+                            settext("Uploading Background Image")
+                            setuploaded((x / 1) * 100)
+                        } else if (res.state == "running") {
+                            settext("please wait Uploading Image ")
+                        } else if (res.state == "error") {
+                            settext("Failed to upload image")
+    
+                        }
+    
+                        const imageref = storage().ref(res.metadata.fullPath)
+                        imageref
+                            .getDownloadURL()
+                            .then((backgroundurl) => {
+                                // console.log(url);
+                            
+    
+                                setimageloader(false)
+                                if (route.params.extraimages.length > 0) {
+                                    console.log("yes extra + back");
+    
+    
+                                    setimageloader(true)
+                                    settext("Uploading Images")
+                                    var x = 0
+    
+                                    route.params.extraimages.map((item, index) => {
+                                        // console.log(item);
+                                        const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
+                                        reference.putFile(item.uri)
+                                            .then((res) => {
+                                                // console.log(res);
+                                                // console.log(res.state);
+    
+    
+                                                x += 1
+                                                // console.log(x);
+    
+    
+    
+                                                if (res.state == "success") {
+                                                    settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
+                                                    setuploaded((x / route.params.extraimages.length) * 100)
+                                                } else if (res.state == "running") {
+                                                    settext("please wait Uploading Images ")
+                                                } else if (res.state == "error") {
+                                                    settext("Failed to upload image")
+    
+                                                }
+    
+                                                const imageref = storage().ref(res.metadata.fullPath)
+                                                imageref
+                                                    .getDownloadURL()
+                                                    .then((extraimgurl) => {
+                                                        // console.log(url);
+                                                        extraimagesarray.push(extraimgurl)
+                                                        setextraimagesarray(extraimagesarray)
+    
+                                                        setimageloader(false)
+    
+                                                        if (extraimagesarray.length == route.params.extraimages.length) {
+                                                            uploaddata({profileimage:null,backgroundimage:backgroundurl,extraimages:extraimgurl})
+                                                        }
+    
+                                                    })
+    
+                                            })
+                                            .catch((e) => {
+                                                settext("failed to upload image")
+                                                console.log("error to uplaod", e);
+                                            })
+    
+                                    })
+    
+    
+    
+                                } else {
+                                    console.log("only back");
+                                    setimageloader(false)
+                                    uploaddata({profileimage:null,backgroundimage:backgroundurl,extraimages:null})
+    
+                                }
+    
+                            })
+    
+    
+                    })
+                    .catch((e) => {
+                        settext("Failed to upload background image")
+                    })
+    
+    
+    
+    
+            } else if (route.params.extraimages.length > 0) {
+                setimageloader(false)
+                console.log("ony extra iamges");
+    
+    
+                setimageloader(true)
+                settext("Uploading Images")
+                var x = 0
+    
+                route.params.extraimages.map((item, index) => {
+                    // console.log(item);
+                    const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
+                    reference.putFile(item.uri)
+                        .then((res) => {
+                            // console.log(res);
+                            // console.log(res.state);
+    
+    
+                            x += 1
+                            // console.log(x);
+    
+    
+    
+                            if (res.state == "success") {
+                                settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
+                                setuploaded((x / route.params.extraimages.length) * 100)
+                            } else if (res.state == "running") {
+                                settext("please wait Uploading Images ")
+                            } else if (res.state == "error") {
+                                settext("Failed to upload image")
+    
+                            }
+    
+                            const imageref = storage().ref(res.metadata.fullPath)
+                            imageref
+                                .getDownloadURL()
+                                .then((extraimgurl) => {
+                                    // console.log(url);
+                                    extraimagesarray.push(extraimgurl)
+                                    setextraimagesarray(extraimagesarray)
+    
+    
+    
+                                    if (extraimagesarray.length == route.params.extraimages.length) {
+                                        uploaddata({profileimage:null,backgroundimage:null,extraimages:extraimgurl})
+                                    }
+    
+                                })
+    
+                        })
+                        .catch((e) => {
+                            settext("Failed to upload image")
+                            console.log("error to uplaod", e);
+                        })
+    
+                })
+    
+    
+    
+            } else {
+                console.log("nothing");
+                setimageloader(false)
+                setimageloader(true)
+                setuploaded(10)
+                setuploaded(50)
+    
+                uploaddata({profileimage:null,backgroundimage:null,extraimages:null})
+    
+    
+    
+            }
         }
 
 
@@ -209,59 +454,66 @@ const BrandCampUpload = ({ navigation, route }) => {
 
     }, [])
 
-    useEffect(()=>{
-        console.log(profileup);
-        
-    },[profileup])
 
 
-    // try {
-    //     settext("Posting Your Campaign")
+    const uploaddata = async (item) => {
+        const uid = await AsyncStorage.getItem("uid")
+        const ref = await firestore().collection("brandpost")
+        setuploaded(60)
+        try {
+            settext("Posting Your Campaign")
+console.log(item);
 
-    //     const datamodal = {
-    //         uid: uid,
-    //         campaigntitle: route.params.campaigntitle,
-    //         campaigndescription: route.params.campaigndescription,
-    //         paymode: route.params.paymode,
-    //         platform: route.params.platform,
-    //         youtubesubs: route.params.youtubesubs,
-    //         instafollowers: route.params.instafollowers,
-    //         minrange: route.params.minrange,
-    //         maxrange: route.params.maxrange,
-    //         minage: route.params.minage,
-    //         maxage: route.params.maxage,
-    //         brandpostcategory: route.params.brandpostcategory,
-    //         brandotherpostcategory: route.params.brandotherpostcategory,
-    //         targetaudience: route.params.targetaudience,
-    //         targetregion: route.params.targetregion,
-    //         campaignStartDate: route.params.campaignStartDate,
-    //         campaignEndDate: route.params.campaignEndDate,
-    //         website: route.params.website,
-    //         applink: route.params.applink,
-    //         profileimage: profileimage,
-    //         backgroundimage: backgroundimage,
-    //         extraimages: extraimagesarray,
-    //         createdAt: (new Date()).toString()
-    //     }
-    //     ref.add(datamodal).then(() => {
-    //         campaignposts.push(datamodal)
-    //         dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: false })
-    //         dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: campaignposts })
-    //         dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: true })
-    //         ToastAndroid.show("Campaign Posted Successfully", ToastAndroid.SHORT)
-    //     })
+            const datamodal = {
+                uid: uid,
+                campaigntitle: route.params.campaigntitle,
+                campaigndescription: route.params.campaigndescription,
+                paymode: route.params.paymode,
+                platform: route.params.platform,
+                youtubesubs: route.params.youtubesubs,
+                instafollowers: route.params.instafollowers,
+                minrange: route.params.minrange,
+                maxrange: route.params.maxrange,
+                minage: route.params.minage,
+                maxage: route.params.maxage,
+                brandpostcategory: route.params.brandpostcategory,
+                brandotherpostcategory: route.params.brandotherpostcategory,
+                targetaudience: route.params.targetaudience,
+                targetregion: route.params.targetregion,
+                campaignStartDate: route.params.campaignStartDate,
+                campaignEndDate: route.params.campaignEndDate,
+                website: route.params.website,
+                applink: route.params.applink,
+                profileimage: item.profileimage,
+                backgroundimage: item.backgroundimage,
+                extraimages:  extraimagesarray.length == 0 ? null : extraimagesarray,
+                createdAt: (new Date()).toString()
+            }
+            setuploaded(85)
+            ref.add(datamodal).then(() => {
+                setuploaded(100)
+                settext("Campaign Posted Successfully")
+               
+                campaignposts.push(datamodal)
+                dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: false })
+                dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: campaignposts })
+                dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: true })
+
+                ToastAndroid.show("Campaign Posted Successfully", ToastAndroid.SHORT)
+            })
 
 
 
 
 
-    // } catch (error) {
-    //     console.log(error);
-    //     ToastAndroid.show("Failed to post campaign try again", ToastAndroid.SHORT)
-    //     settext("Try Again")
-    //     navigation.goBack()
+        } catch (error) {
+            console.log(error);
+            ToastAndroid.show("Failed to post campaign try again", ToastAndroid.SHORT)
+            settext("Try Again")
+            navigation.goBack()
 
-    // }
+        }
+    }
 
 
 

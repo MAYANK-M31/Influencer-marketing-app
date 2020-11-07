@@ -200,6 +200,9 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             targetregion:route.paramstargetregion,
             campaignStartDate:route.params.campaignStartDate,
             campaignEndDate:route.params.campaignEndDate,
+            profileimage: route.params.profileimage,
+            backgroundimage: route.params.backgroundimage,
+            extraimages:route.params.extraimages
         })
     }
 
@@ -230,6 +233,9 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             targetregion:route.params.targetregion,
             campaignStartDate:route.params.campaignStartDate,
             campaignEndDate:route.params.campaignEndDate,
+            profileimage: route.params.profileimage,
+            backgroundimage: route.params.backgroundimage,
+            extraimages:route.params.extraimages
 
         })
     }

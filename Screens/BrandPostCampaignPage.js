@@ -11,18 +11,42 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Slider,
-    ToastAndroid,
+    ToastAndroid,ImageBackground,Keyboard
 } from 'react-native';
-import { TextInput, DefaultTheme, Modal } from "react-native-paper"
-import Ionicons from "react-native-vector-icons/Feather"
+
+import { TextInput, DefaultTheme, Modal, TouchableRipple, Dialog, Paragraph, ActivityIndicator, Button } from "react-native-paper"
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Ionicons from "react-native-vector-icons/Feather"
+import Icons from "react-native-vector-icons/FontAwesome5"
+import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import { FlatList } from 'react-native-gesture-handler';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
-const BrandPostCampaignPage = ({ navigation, route }) => {
 
+var _ = require('underscore');
+
+
+const options = {
+    title: 'Select Image',
+    storageOptions: {
+        skipBackup: true,
+        path: 'images',
+
+    },
+    quality: 0.6,
+};
+
+const images = [
+    "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg",
+    "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg"
+]
+
+
+const BrandPostCampaignPage = ({ navigation, route }) => {
 
     const [value1, setvalue1] = useState(20)
     const [value2, setvalue2] = useState(50)
@@ -41,6 +65,16 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
     const [othercategory, setothercategory] = useState("")
     const [targetaudience, settargetaudience] = useState(null)
     const [targetregion, settargetregion] = useState(null)
+    const [source, setsource] = useState([])
+    const [filename, setfilename] = useState("")
+    const [loading, setloading] = useState(null)
+    const [visible, setvisible] = useState(false)
+    const [visibleselectimage, setvisibleselectimage] = useState(false)
+    const [profilesource, setprofilesource] = useState(null)
+    const [backgroundsource, setbackgroundsource] = useState(null)
+    const [forprofile, setforprofile] = useState(false)
+    const [visibleselectimagelogo, setvisibleselectimagelogo] = useState(false)
+    const [sourceupdated, setsourceupdated] = useState(false)
 
 
     const [date, setDate] = useState(new Date());
@@ -49,7 +83,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
     const [datechanged, setdatechanged] = useState(false)
-    const [date2changed, setdate2changed] = useState(false)
+    const [date2changed, setdate2changed] = useState(null)
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -74,36 +108,170 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
     };
 
 
+    //_____________ For profile picture and background(START)________________-
+
+    const launchgallerylogo = () => {
+        ImagePicker.launchImageLibrary(options, (response) => {
+            // console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                // alert(response.fileSize)
+                if (forprofile == true) {
+                    setvisibleselectimagelogo(false)
+                    setprofilesource({ uri: response.uri, filename: response.fileName })
+                } else if (forprofile == false) {
+                    setvisibleselectimagelogo(false)
+                    setbackgroundsource({ uri: response.uri, filename: response.fileName })
+                }
+
+            }
+        });
+    }
+
+ 
+    
+
+    const launchcameralogo = () => {
+        ImagePicker.launchCamera(options, (response) => {
+            // console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                if (forprofile == true) {
+                    setvisibleselectimagelogo(false)
+                    setprofilesource({ uri: response.uri, filename: response.fileName })
+                } else if (forprofile == false) {
+                    setvisibleselectimagelogo(false)
+                    setbackgroundsource({ uri: response.uri, filename: response.fileName })
+                }
+            }
+        });
+    }
+
+    //+_________________ For Profile Logo and Background (END)_______________
+
+
+    // _________For Extra picture upload(START)____________
+
+    const launchgallery = () => {
+        ImagePicker.launchImageLibrary(options, (response) => {
+            // console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                // alert(response.fileSize)
+
+                setvisibleselectimage(false)
+                source.push({ uri: response.uri, filename: response.fileName })
+
+                // const source = response.uri;
+
+                // You can also display the image using data:
+                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+                setsourceupdated(false)
+                setsource(source)
+                setsourceupdated(true)
+                // console.log(source);
+                // alert(response.fileName)
+            }
+        });
+    }
+
+
+
+
+
+    const launchcamera = () => {
+        ImagePicker.launchCamera(options, (response) => {
+            // console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                // alert(response.fileSize)
+                setvisibleselectimage(false)
+                source.push({ uri: response.uri, filename: response.fileName })
+                // const source = response.uri;
+
+                // You can also display the image using data:
+                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+                setsourceupdated(false)
+                setsource(source)
+                setsourceupdated(true)
+                // console.log(source);
+
+                // console.log(source);
+                // alert(response.fileName)
+            }
+        });
+    }
+
+    // ___________________For Extra picture upload (END)______________
+
+    const removeimage = (item) => {
+        var newArray = _.without(source, _.findWhere(source, item));
+        setsource(newArray)
+    }
+
+
+
     const selectcategory = async (item) => {
+        Keyboard.dismiss()
         setcategory(item)
         setcategorychoosen(true)
     }
 
     const selectaudience = async (item) => {
+        Keyboard.dismiss()
         settargetaudience(item)
     }
 
     const selectregion = async (item) => {
+        Keyboard.dismiss()
         settargetregion(item)
     }
 
 
     const select = async (item) => {
+        Keyboard.dismiss()
         setpaymode(item)
         setdisable(false)
     }
 
     const select2 = async (item) => {
+        Keyboard.dismiss()
         setplatform(item)
         setdisable(false)
     }
 
     const select3 = async (item) => {
+        Keyboard.dismiss()
         setyoutubesubs(item)
         setdisable(false)
     }
 
     const select4 = async (item) => {
+        Keyboard.dismiss()
         setinstafollowers(item)
         setdisable(false)
     }
@@ -114,14 +282,14 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
     // !/[^\s]/.test(title) == true  TO PREVENT USER FOR ENTERINGING ONLY SPACES
 
     const submit = () => {
-        if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true || platform == null || paymode == null|| datechanged == false || date2changed == false) {
+        if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true || platform == null || paymode == null || datechanged == false || date2changed == false) {
             if (platform == null) {
                 ToastAndroid.show("Please Select Campaign Platform", ToastAndroid.SHORT)
             } else if (!/[^\s]/.test(title) == true || !/[^\s]/.test(description) == true) {
                 ToastAndroid.show("Please Fill Campaign Title And Detail", ToastAndroid.SHORT)
             } else if (paymode == null) {
                 ToastAndroid.show("Please Select Paymode", ToastAndroid.SHORT)
-            }else if ( datechanged == false || date2changed == false){
+            } else if (datechanged == false || date2changed == false) {
                 ToastAndroid.show("Please Select Campaign Date", ToastAndroid.SHORT)
             }
 
@@ -163,8 +331,11 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                             brandotherpostcategory: category == "other" ? othercategory : null,
                             targetaudience: targetaudience,
                             targetregion: targetregion,
-                            campaignStartDate:date.toDateString(),
-                            campaignEndDate:date2.toDateString()
+                            campaignStartDate: date.toDateString(),
+                            campaignEndDate: date2.toDateString(),
+                            profileimage: profilesource,
+                            backgroundimage: backgroundsource,
+                            extraimages: source
                         })
                     }
 
@@ -207,8 +378,11 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                             brandotherpostcategory: category == "other" ? othercategory : null,
                             targetaudience: targetaudience,
                             targetregion: targetregion,
-                            campaignStartDate:date.toDateString(),
-                            campaignEndDate:date2.toDateString()
+                            campaignStartDate: date.toDateString(),
+                            campaignEndDate: date2.toDateString(),
+                            profileimage: profilesource,
+                            backgroundimage: backgroundsource,
+                            extraimages: source
                         })
                     }
                 }
@@ -249,8 +423,11 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                             brandotherpostcategory: category == "other" ? othercategory : null,
                             targetaudience: targetaudience,
                             targetregion: targetregion,
-                            campaignStartDate:date.toDateString(),
-                            campaignEndDate:date2.toDateString()
+                            campaignStartDate: date.toDateString(),
+                            campaignEndDate: date2.toDateString(),
+                            profileimage: profilesource,
+                            backgroundimage: backgroundsource,
+                            extraimages: source
                         })
                     }
                 }
@@ -260,10 +437,13 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
 
+
+
     }
 
-    // ___________________Skip Posting Data___________________
-    const later = () => {
+
+
+    const skip=()=>{
         navigation.navigate("BrandDataUpload", {
             name: route.params.name,
             brandname: route.params.brandname,
@@ -272,9 +452,14 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
             category: route.params.category,
             website: route.params.website,
             applink: route.params.applink,
-            postcampaign: false
+            postcampaign:false
+          
         })
     }
+
+
+    // ___________________Skip Posting Data___________________
+
 
 
     const theme = {
@@ -299,21 +484,52 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
                 <View style={style.header} >
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
-                        <Ionicons color={"black"} size={28} name={"arrow-left"} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { later() }} style={{ height: 30, width: 60, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 10 }}>
-                        <Text style={{ color: "white", fontWeight: "100", alignSelf: "center" }} >Later</Text>
+                    <View style={style.back} >
+                        <TouchableRipple onPress={() => navigation.goBack()} borderless={true} rippleColor={"rbg(0,0,0,0.32)"} style={{ width: 35, height: 35, borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                            <Ionicons color={"black"} size={28} name={"chevron-left"} />
+                        </TouchableRipple>
+                    </View>
+                    <TouchableOpacity onPress={() => { skip() }} style={{ height: 30, width: 60, borderRadius: 50, backgroundColor: "#1e87fd", justifyContent: "center", alignItems: "center", position: "absolute", right: 15 }}>
+                        <Text style={{ color: "white", fontWeight: "100", alignSelf: "center" }} >Skip</Text>
                     </TouchableOpacity>
 
                 </View>
 
-                <ScrollView style={{ width: "100%", height: HEIGHT }} contentContainerStyle={{ paddingBottom: 160 }} >
+                <ScrollView keyboardShouldPersistTaps={"always"} style={{ width: "100%", height: HEIGHT }} contentContainerStyle={{ paddingBottom: 160 }} >
                     <View style={style.heading} >
                         <Text style={{ alignSelf: "flex-start", fontSize: 35, fontWeight: "bold", color: "#404852" }} >Post about your brand</Text>
                         <Text style={{ alignSelf: "flex-start", fontSize: 35, fontWeight: "bold", color: "#404852", top: -8 }} >Campaign</Text>
                     </View>
 
+                    <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(false), Keyboard.dismiss() }} activeOpacity={1}>
+                        <ImageBackground style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#f0f2f5", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }} source={{ uri: backgroundsource ? backgroundsource.uri : images[1] }}  >
+
+                            <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(false), Keyboard.dismiss() }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
+                                <Ionicons color={"white"} size={22} name={"plus-circle"} />
+                            </TouchableOpacity>
+                        </ImageBackground>
+                    </TouchableOpacity>
+
+                    <View style={style.topprofile} >
+                        <View style={{ borderRadius: 30, height: 150, width: 150, overflow: "hidden", elevation: 5, zIndex: 10, borderWidth: 3, borderColor: profilesource ? "white" : "#007bff" }}>
+                            <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(true), Keyboard.dismiss() }} activeOpacity={1}>
+
+                                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#f0f2f5", alignItems: "flex-end", justifyContent: "flex-end" }} source={{ uri: profilesource ? profilesource.uri : images[0] }} >
+                                    {profilesource ?
+                                        null
+                                        :
+                                        <View style={{ width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.32)", position: "absolute", justifyContent: "center", alignItems: "center" }}>
+                                            <Text style={{ color: "white", fontWeight: "bold", fontSize: 40, alignSelf: "center" }}>Logo</Text>
+                                        </View>
+                                    }
+                                    <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(true), Keyboard.dismiss() }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
+                                        <Ionicons color={"white"} size={22} name={"plus-circle"} />
+                                    </TouchableOpacity>
+
+                                </ImageBackground>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
 
                     <TextInput
                         value={title}
@@ -396,8 +612,6 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
                     </View>
 
-
-                    {/* _____________________YOUTUBE SUBSCRIBER RANGE SELECTOR ____________________*/}
 
                     {/* _____________________YOUTUBE SUBSCRIBER RANGE SELECTOR ____________________*/}
 
@@ -1040,6 +1254,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                 display="default"
                                 onChange={onChange}
                                 minimumDate={new Date()}
+                                maximumDate={date2changed ? date2 : new Date(2100,12)}
                             />
                             :
                             null
@@ -1062,21 +1277,111 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     </View>
 
 
+                    {/* Image upload for campaign */}
+
+                    <View style={{ minHeight: 100, width: "95%", marginTop: 20, justifyContent: "center", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, paddingVertical: 10 }} >
+                        <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginLeft: 15, marginBottom: 10 }}>Upload Campaign Images</Text>
+
+                        <View style={{ flexWrap: "wrap", flexDirection: "row", width: "100%", minHeight: 50, paddingHorizontal: 6 }}>
+
+
+                            {source.length > 0 ?
+                                <>
+                                    {sourceupdated ?
+                                    <>
+                                        {
+                                            source.map((item) =>
+                                                <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate("ImageReviewScroll", { items: source,item:item }) }} style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
+                                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { removeimage(item) }} style={{ width: 40, height: 40, position: "absolute", zIndex: 1, right: -20, top: -20, justifyContent: "center", alignItems: "center" }} >
+                                                        <View style={{ width: 20, height: 20, elevation: 1, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
+                                                            <Ionicons style={{ borderRadius: 100, backgroundColor: "white" }} color={"#1e87fd"} size={20} name={"x-circle"} />
+                                                        </View>
+                                                    </TouchableOpacity>
+
+
+                                                    <ImageBackground style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{ uri: item.uri }} >
+                                                        <View style={{ backgroundColor: "rgba(0, 0, 0, .32)", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                                                            <Ionicons name={"eye"} color={"white"} size={25} />
+                                                        </View>
+
+                                                    </ImageBackground>
+
+
+
+
+                                                </TouchableOpacity>
+                                            )
+                                        }
+                                        </>
+                                        :
+                                        <>
+                                        {
+                                            source.map((item) =>
+                                                <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate("ImageReviewScroll", { items: source,item:item }) }} style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
+                                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { removeimage(item) }} style={{ width: 40, height: 40, position: "absolute", zIndex: 1, right: -20, top: -20, justifyContent: "center", alignItems: "center" }} >
+                                                        <View style={{ width: 20, height: 20, elevation: 1, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
+                                                            <Ionicons style={{ borderRadius: 100, backgroundColor: "white" }} color={"#1e87fd"} size={20} name={"x-circle"} />
+                                                        </View>
+                                                    </TouchableOpacity>
+
+
+                                                    <ImageBackground style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{ uri: item.uri }} >
+                                                        <View style={{ backgroundColor: "rgba(0, 0, 0, .32)", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                                                            <Ionicons name={"eye"} color={"white"} size={25} />
+                                                        </View>
+
+                                                    </ImageBackground>
+
+
+
+
+                                                </TouchableOpacity>
+                                            )
+                                        }
+                                        </>
+                                    }
+
+
+                                    <View style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
+
+                                        <TouchableRipple borderless={true} onPress={() => { setvisibleselectimage(true) }} rippleColor="rgba(0, 0, 0, .32)" style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center", overflow: "hidden" }} >
+                                            <Ionicons name={"image"} size={50} style={{ alignSelf: "center" }} color={"#1e87fdCC"} />
+                                        </TouchableRipple>
+                                    </View>
+                                </>
+                                :
+                                <View style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center", overflow: "hidden" }}>
+                                    <TouchableRipple borderless={true} onPress={() => { setvisibleselectimage(true) }} rippleColor="rgba(0, 0, 0, .32)" style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center", overflow: "hidden" }} >
+                                        <Ionicons name={"image"} size={50} style={{ alignSelf: "center" }} color={"#1e87fdCC"} />
+                                    </TouchableRipple>
+                                </View>
+                            }
+
+
+
+
+
+
+
+
+                        </View>
+
+                    </View>
+
+
 
 
                 </ScrollView>
 
-                <TouchableOpacity activeOpacity={1} disabled={disable} onPress={() => { submit() }} style={{
-                    height: 55, width: "85%", backgroundColor: disable ? "#b3d6fe" : "#1e87fd"
-                    , alignItems: "center", flexDirection: "row", justifyContent: "center",
-                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, alignSelf: "center", position: "absolute", zIndex: 1, top: HEIGHT * 0.90
+                <TouchableOpacity activeOpacity={0.9} onPress={() => {submit() }} style={{
+                    height: 55, width: "85%", backgroundColor: "#1e87fd"
+                    , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
+                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10,position:"absolute",top:HEIGHT*0.90,elevation:1
                 }} >
-                    <View style={{ height: 52, width: 52, borderRadius: 100, justifyContent: "center", alignItems: "center", backgroundColor: "white", left: 0, position: "absolute" }} >
-                        <Ionicons name={"arrow-right"} color={"black"} size={25} />
-                    </View>
                     <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "white" }} >Next</Text>
+                  
+                   
                 </TouchableOpacity>
-
 
             </SafeAreaView>
 
@@ -1210,6 +1515,129 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     </View>
                 </View>
             </Modal>
+
+
+            <Modal visible={visibleselectimage} dismissable={true} onDismiss={() => setvisibleselectimage(false)}>
+                <View style={{ width: WiDTH, height: HEIGHT }}>
+                    <TouchableOpacity onPress={() => setvisibleselectimage(false)} style={{ width: WiDTH, height: HEIGHT * 3 / 4 }}>
+
+                    </TouchableOpacity>
+                    <View style={{ width: WiDTH, height: HEIGHT / 4, backgroundColor: "white", position: "absolute", bottom: -25, borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
+                        <View style={{ width: "100%", height: "35%", justifyContent: "center" }}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2a3659", marginLeft: 20 }} >Choose Given options</Text>
+                        </View>
+                        <View style={{ width: "100%", height: "55%", justifyContent: "flex-start", flexDirection: "row" }}>
+
+
+
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { launchgallery() }} >
+                                <View style={{ height: 45, width: 45, backgroundColor: "#00ca95", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
+                                    <Icons size={20} color={"white"} name={"image"} />
+                                </View>
+
+                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5, left: -2.5 }}>
+                                    <Text style={{ fontSize: 14, color: "grey" }}>Gallery</Text>
+                                    {/* <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text> */}
+                                </View>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { launchcamera() }}>
+                                <View style={{ height: 45, width: 45, backgroundColor: "#4285f4", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
+                                    <Icons size={20} color={"white"} name={"camera"} />
+                                </View>
+
+                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5, left: -2.5 }}>
+                                    <Text style={{ fontSize: 14, color: "grey" }}>Camera</Text>
+                                    {/* <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text> */}
+                                </View>
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal visible={visibleselectimagelogo} dismissable={true} onDismiss={() => setvisibleselectimagelogo(false)}>
+                <View style={{ width: WiDTH, height: HEIGHT }}>
+                    <TouchableOpacity onPress={() => setvisibleselectimagelogo(false)} style={{ width: WiDTH, height: HEIGHT * 3 / 4 }}>
+
+                    </TouchableOpacity>
+                    <View style={{ width: WiDTH, height: HEIGHT / 4, backgroundColor: "white", position: "absolute", bottom: -25, borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
+                        <View style={{ width: "100%", height: "35%", justifyContent: "center" }}>
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2a3659", marginLeft: 20 }} >{forprofile ? "Profile Logo" : "Background Image"}</Text>
+                        </View>
+                        <View style={{ width: "100%", height: "55%", justifyContent: "flex-start", flexDirection: "row" }}>
+
+
+
+                            <>
+                                {backgroundsource != null && forprofile == false ?
+
+                                    <TouchableOpacity activeOpacity={1} onPress={() => { setbackgroundsource(null), setvisibleselectimagelogo(false) }}>
+                                        <View style={{ height: 45, width: 45, backgroundColor: "#e7164c", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
+                                            <Icons size={18} color={"white"} name={"trash"} />
+                                        </View>
+
+                                        <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5 }}>
+                                            <Text style={{ fontSize: 14, color: "grey" }}>Remove</Text>
+                                            <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    :
+                                    null
+                                }
+                            </>
+
+                            <>
+                                {profilesource != null && forprofile == true ?
+
+                                    <TouchableOpacity activeOpacity={1} onPress={() => { setprofilesource(null), setvisibleselectimagelogo(false) }}>
+                                        <View style={{ height: 45, width: 45, backgroundColor: "#e7164c", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
+                                            <Icons size={18} color={"white"} name={"trash"} />
+                                        </View>
+
+                                        <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5 }}>
+                                            <Text style={{ fontSize: 14, color: "grey" }}>Remove</Text>
+                                            <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    :
+                                    null
+                                }
+                            </>
+
+
+
+
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { launchgallerylogo() }} >
+                                <View style={{ height: 45, width: 45, backgroundColor: "#00ca95", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
+                                    <Icons size={20} color={"white"} name={"image"} />
+                                </View>
+
+                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5, left: -2.5 }}>
+                                    <Text style={{ fontSize: 14, color: "grey" }}>Gallery</Text>
+                                    {/* <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text> */}
+                                </View>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity activeOpacity={1} onPress={() => { launchcameralogo() }}>
+                                <View style={{ height: 45, width: 45, backgroundColor: "#4285f4", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
+                                    <Icons size={20} color={"white"} name={"camera"} />
+                                </View>
+
+                                <View style={{ marginLeft: 25, height: 45, width: 60, alignItems: "center", marginTop: 5, left: -2.5 }}>
+                                    <Text style={{ fontSize: 14, color: "grey" }}>Camera</Text>
+                                    {/* <Text style={{ fontSize: 14, color: "grey", top: -4 }}>photo</Text> */}
+                                </View>
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
         </>
 
     )
@@ -1233,14 +1661,21 @@ const style = StyleSheet.create({
 
     },
     back: {
-        left: 15,
+        left: 8,
     },
     heading: {
         width: WiDTH,
         justifyContent: "center",
         paddingLeft: 15,
 
-    }
+    },
+    topprofile: {
+        width: WiDTH,
+        height: 180,
+        marginTop: -250 / 3,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 
 
 

@@ -14,6 +14,7 @@ import { MyContext } from './AppStartStack';
 import BrandProfile from './BrandProfile';
 import BrandPostCampaignPage from './BrandPostCampaignPage';
 import BrandPostCampStack from './BrandPostCampStack';
+import BrandProfileStack from './BrandProfileStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -74,7 +75,7 @@ const Tabbar = () => {
             type == "influencer" ?
                 <Tab.Screen name="Profile" component={MyProfileStack} />
                 :
-                <Tab.Screen name="Profile" component={BrandProfile} />
+                <Tab.Screen name="Profile" component={BrandProfileStack} />
             }
 
         </Tab.Navigator>

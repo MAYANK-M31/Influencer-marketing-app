@@ -24,7 +24,8 @@ export const initState = {
     applink: null,
     website: null,
     campaignposts: [],
-    campaignpostedagain: false
+    campaignpostedagain: false,
+    brandprofileimage: null
 
 }
 
@@ -169,6 +170,11 @@ export const reducer = (state, action) => {
                 campaignpostedagain: action.payload
             }
 
+        case "ADD_BRANDPROFILEIMAGE":
+            return {
+                ...state,
+                brandprofileimage: action.payload
+            }
 
 
         default:
