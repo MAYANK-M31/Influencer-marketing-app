@@ -34,16 +34,16 @@ const BrandPostCampStack = () => {
             ref.where("uid", "==", uid).get()
                 .then(function (querySnapshot) {
                     querySnapshot.forEach(function (doc) {
-                    
-                            array.push(doc.data())
-                            setloading(false)
-                     
-                       
+
+                        array.push(doc.data())
+                        setloading(false)
+
+
 
 
                     });
-setloading(false)
-                   
+                    setloading(false)
+
                     // console.log(array[1].instadata.data[0].username)
 
                     dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: array })
