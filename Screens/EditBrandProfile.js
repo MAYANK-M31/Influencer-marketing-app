@@ -9,13 +9,13 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, ToastAndroid, TextInput
+    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, ToastAndroid, TextInput, Keyboard
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
 import axios from "axios"
 import firestore from '@react-native-firebase/firestore';
-import { TouchableRipple, Modal } from 'react-native-paper';
+import { TouchableRipple, Modal, Dialog, Button, Paragraph } from 'react-native-paper';
 import { MyContext } from "../Screens/AppStartStack"
 
 var abbreviate = require('number-abbreviate')
@@ -31,24 +31,28 @@ const HEIGHT = Dimensions.get("window").height
 var abbreviate = require('number-abbreviate')
 
 const EditBrandProfile = ({ route, navigation }) => {
-    const [followers, setfollowers] = useState(null)
-    const [instaposts, setinstaposts] = useState(null)
-    const [subs, setsubs] = useState(null)
-    const [views, setviews] = useState(null)
-    const [channelid, setchannelid] = useState(null)
-    const [imagedata, setimagedata] = useState(images)
-    const [instagram, setinstagram] = useState(true)
-    const [loading, setloading] = useState(true)
-    const [number, setnumber] = useState(null)
-    const [switchtype, setswitchtype] = useState("instagram")
-    const [see, setsee] = useState(null)
-    const [achievesee, setachievesee] = useState(null)
-    const [InitLoading, setInitLoading] = useState(false)
-
-
 
     const { state, dispatch } = useContext(MyContext)
-    const { name, brandname, city, category, email, website, applink, profileimage, backgroundimage } = state
+    const { name, brandname, city, category, email, website, applink } = state
+
+    const [nametext, setnametext] = useState(name)
+    const [brandnametext, setbrandnametext] = useState(brandname)
+    const [citytext, setcitytext] = useState(city)
+    const [categorytext, setcategorytext] = useState(category)
+    const [emailtext, setemailtext] = useState(email)
+    const [websitetext, setwebsitetext] = useState(website)
+    const [applinktext, setapplinktext] = useState(applink)
+    const [disable, setdisable] = useState(true)
+    const [visible, setvisible] = useState(false)
+
+    const [change, setchange] = useState(null)
+
+
+    const [loading, setloading] = useState(false)
+
+
+
+
 
 
 
@@ -74,9 +78,46 @@ const EditBrandProfile = ({ route, navigation }) => {
 
 
 
+    const save = async () => {
+        if (!/[^\s]/.test(nametext) == true || !/[^\s]/.test(brandnametext) == true || !/[^\s]/.test(emailtext) == true || !/[^\s]/.test(citytext) == true || !/[^\s]/.test(categorytext) == true ) {
+            ToastAndroid.show("Please Fill Details", ToastAndroid.SHORT)
+        } else {
+Keyboard.dismiss()
+            const DocId = await AsyncStorage.getItem("DocId")
+            const ref = await firestore().collection("brandaccount").doc(DocId)
+            setloading(true)
+            ref.update({
+                name:nametext.toLowerCase(),
+                brandname:brandnametext.toLowerCase(),
+                email:emailtext.toLowerCase(),
+                city:citytext.toLowerCase(),
+                category:categorytext.toLowerCase(),
+                website:websitetext,
+                applink:applinktext
+            }).then(async()=>{
+                setloading(false)
+                ToastAndroid.show("Updated",ToastAndroid.SHORT)
+                dispatch({ type: "ADD_NAME", payload: nametext })
+                dispatch({ type: "ADD_BRANDNAME", payload: brandnametext })
+                dispatch({ type: "ADD_EMAIL", payload: emailtext })
+                dispatch({ type: "ADD_CITY", payload: citytext })
+                dispatch({ type: "ADD_CATEGORY", payload: categorytext })
+                dispatch({ type: "ADD_WEBSITE", payload: websitetext })
+                dispatch({ type: "ADD_APPLINK", payload: applinktext })
+                navigation.goBack()
+            })
+            .catch((err)=>{
+                setloading(false)
+                ToastAndroid.show("Failed To Update",ToastAndroid.SHORT)
+            })
+            
+
+          
 
 
+        }
 
+    }
 
 
     return (
@@ -91,9 +132,17 @@ const EditBrandProfile = ({ route, navigation }) => {
                     <View style={style.heading} >
                         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852" }} >Edit Profile</Text>
                     </View>
-                    <TouchableOpacity onPress={() => { navigation.navigate("Settings") }} style={style.chat} >
-                        <Ionicons color={"#404852"} size={22} name={"settings"} />
-                    </TouchableOpacity>
+                    <View style={style.chat}>
+                        {disable ?
+                            null
+                            :
+                            <TouchableOpacity onPress={() => { save() }} >
+                                <View style={{ width: 50, height: 25, borderRadius: 5, justifyContent: "center", alignItems: "center", backgroundColor: "#007bff", right: 12 }}>
+                                    <Text style={{ color: "white" }} >Save</Text>
+                                </View>
+                            </TouchableOpacity>
+                        }
+                    </View>
                 </View>
 
 
@@ -114,7 +163,27 @@ const EditBrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"user"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%" }} >
-                                <TextInput placeholder={"Full Name"} style={{ width: "100%", height: "100%" }} />
+                                <TextInput placeholder={"Full Name"} value={nametext} onChangeText={(text) => { setnametext(text), setdisable(false) }} style={{ width: "100%", height: "100%" }} />
+                                {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
+                            </View>
+                        </View>
+
+                    </View>
+
+                    {/* __________-BrandName_____________ */}
+                    <View style={{ minHeight: 100, width: "90%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 20, paddingTop: 15, paddingBottom: 20 }} >
+
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
+                            <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >brand name</Text>
+                            <Ionicons name={"edit-2"} size={18} color={"#007bff"} />
+                        </View>
+
+                        <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
+                            <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff00", alignItems: "center", justifyContent: "center" }} >
+                                <Ionicons name={"user"} size={25} color={"#007bff"} />
+                            </View>
+                            <View style={{ width: "85%" }} >
+                                <TextInput placeholder={"Brand Name"} value={brandnametext} onChangeText={(text) => { setbrandnametext(text), setdisable(false) }} style={{ width: "100%", height: "100%" }} />
                                 {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
                             </View>
                         </View>
@@ -132,10 +201,10 @@ const EditBrandProfile = ({ route, navigation }) => {
 
                         <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
                             <View style={{ height: 35, width: 35, borderRadius: 50, backgroundColor: "#e6f1ff00", alignItems: "center", justifyContent: "center" }} >
-                                <Ionicons name={"map-pin"} size={25} color={"#007bff"} />
+                                <Text style={{ color: "#007bff", fontSize: 25, top: -5 }}>@</Text>
                             </View>
                             <View style={{ width: "85%" }} >
-                                <TextInput placeholder={"Full Name"} style={{ width: "100%", height: "100%" }} />
+                                <TextInput placeholder={"Email"} value={emailtext} onChangeText={(text) => { setemailtext(text), setdisable(false) }} style={{ width: "100%", height: "100%" }} />
                                 {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
                             </View>
                         </View>
@@ -144,7 +213,7 @@ const EditBrandProfile = ({ route, navigation }) => {
 
                     {/* _____________phonenumber___________________ */}
 
-                    <View style={{ minHeight: 100, width: "90%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15, paddingBottom: 20 }} >
+                    {/* <View style={{ minHeight: 100, width: "90%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, paddingTop: 15, paddingBottom: 20 }} >
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >phone number</Text>
@@ -156,12 +225,12 @@ const EditBrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"phone"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%" }} >
-                                <TextInput placeholder={"Full Name"} style={{ width: "100%", height: "100%" }} />
-                                {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
+                                <TextInput placeholder={"Full Name"} value={phonetext} onChangeText={(text)=>{setnametext(text)}} style={{ width: "100%", height: "100%" }} />
+                             
                             </View>
                         </View>
 
-                    </View>
+                    </View> */}
 
 
 
@@ -178,7 +247,7 @@ const EditBrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"map-pin"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%" }} >
-                                <TextInput placeholder={"Full Name"} style={{ width: "100%", height: "100%" }} />
+                                <TextInput placeholder={"e.g Mumbai"} value={citytext} onChangeText={(text) => { setcitytext(text), setdisable(false) }} style={{ width: "100%", height: "100%" }} />
                                 {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
                             </View>
                         </View>
@@ -198,7 +267,7 @@ const EditBrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"grid"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%" }} >
-                                <TextInput placeholder={"Full Name"} style={{ width: "100%", height: "100%" }} />
+                                <TextInput placeholder={"e.g apps"} value={categorytext} onChangeText={(text) => { setcategorytext(text), setdisable(false) }} style={{ width: "100%", height: "100%" }} />
                                 {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
                             </View>
                         </View>
@@ -219,7 +288,7 @@ const EditBrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"globe"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%" }} >
-                                <TextInput placeholder={"e.g www.abc.com"} style={{ width: "100%", height: "100%" }} />
+                                <TextInput placeholder={"e.g www.abc.com"} value={websitetext} onChangeText={(text) => { setwebsitetext(text), setdisable(false) }} style={{ width: "100%", height: "100%" }} />
                                 {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
                             </View>
                         </View>
@@ -240,7 +309,7 @@ const EditBrandProfile = ({ route, navigation }) => {
                             </View>
 
                             <View style={{ width: "85%" }} >
-                                <TextInput placeholder={"App Link"} style={{ width: "100%", height: "100%" }} />
+                                <TextInput placeholder={"App Link"} value={applinktext} onChangeText={(text) => { setapplinktext(text), setdisable(false) }} style={{ width: "100%", height: "100%" }} />
                                 {/* <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >mayank malhotra</Text> */}
                             </View>
 
@@ -249,25 +318,25 @@ const EditBrandProfile = ({ route, navigation }) => {
                     </View>
 
 
-
-
-
-
-
-
-
-
                 </ScrollView>
+
+                <Dialog dismissable={false} visible={loading} >
+                    <Dialog.Content>
+                        <View style={{ flexDirection: "row" }} >
+                            <ActivityIndicator color={"#409cff"} size={20} style={{ marginRight: 20 }} />
+                            <Paragraph>Updating...</Paragraph>
+                        </View>
+                    </Dialog.Content>
+                </Dialog>
 
 
             </SafeAreaView>
-            <Modal visible={InitLoading}   >
 
-                <View style={{ width: WiDTH, height: HEIGHT, backgroundColor: "white", justifyContent: "center", alignItems: "center" }} >
-                    <ActivityIndicator size={50} color={"#007bff"} />
-                    {/* <Text style={{ fontSize: 13, color: "#414d57", marginTop: 5, marginLeft: 5 }}>Loading...</Text> */}
-                </View>
-            </Modal>
+
+
+
+
+
         </>
 
     )
