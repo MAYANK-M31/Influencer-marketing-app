@@ -16,13 +16,14 @@ import Ionicons from "react-native-vector-icons/Feather"
 
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-community/google-signin';
-
+import {Modal} from "react-native-paper"
 import InstagramLogin from 'react-native-instagram-login';
 import CookieManager from '@react-native-community/cookies';
 
 import axios from "axios";
 import firestore from "@react-native-firebase/firestore"
 import { MyContext } from './AppStartStack';
+import WebView from 'react-native-webview';
 
 
 GoogleSignin.configure({
@@ -44,7 +45,10 @@ const EditSocialMedia = ({ navigation, route }) => {
     const [disable2, setdisable2] = useState(null)
 
     const { state, dispatch } = useContext(MyContext)
-    const { instaconnected,youtubeconnected } = state
+    const { instaconnected, youtubeconnected } = state
+
+  
+    const [instamodal, setinstamodal ] = useState(false)
 
 
     // For YouTube Auth
@@ -61,7 +65,9 @@ const EditSocialMedia = ({ navigation, route }) => {
     const [result, setresult] = useState(false)
     const [loading2, setloading2] = useState(false)
 
-  
+// useEffect(()=>{
+//     CookieManager.clearAll(true)
+// },[])
 
 
     // For Youtube Auth
@@ -123,32 +129,73 @@ const EditSocialMedia = ({ navigation, route }) => {
 
     // For Instagram auth
 
-    const setIgToken = async (datas) => {
-        setloading2(true)
-        setresult(false)
-        setinstatoken(datas.access_token)
+
+
+        const urlcodefinder = async (data) => {
+            // console.log(data.url);
+
+            var str = data.url
+            // console.log(str);
+            
+            var x = str.search("https://www.google.com/\\?code=")
+            // console.log(x);
+            
+            if (x !== -1) {
+                setinstamodal(false)
+                setloading2(true)
+                setresult(false)
+                // console.log("got it",data.url);
+                var Oauth_code = data.url.split("=")[1].replace("#_", "")
+                // console.log("outh",Oauth_code);
+               
+                    var bodyFormData = new FormData();
+                    bodyFormData.append('client_id', '441868563443736');
+                    bodyFormData.append('client_secret', 'a04a79f825f35458456f049b802c7f3b');
+                    bodyFormData.append('code', Oauth_code);
+                    bodyFormData.append('grant_type', 'authorization_code');
+                    bodyFormData.append('redirect_uri', 'https://www.google.com/');
+                    await axios({
+                        method: "post",
+                        url: "https://api.instagram.com/oauth/access_token?",
+                        data: bodyFormData,
+        
+                    })
+                        .then(async(res) => {
+                            console.log(res.data);
+                            var access_token = res.data.access_token
+                            setinstatoken(access_token)
+                            await axios.get("https://graph.instagram.com/me/media?fields=id,media_type,media_url,username,timestamp&access_token=" + `${access_token}`)
+                                .then((res) => {
+                                    setloading2(false)
+                                    ToastAndroid.show("Connected to Instagram", ToastAndroid.SHORT)
+                                    setinstadata(res.data)
+                                    // console.log(instadata.data);
+                                    setinstaconnectedTemp(true)
+                                    setresult(true)
+                                    setdisable2(true)
+            
+                                })
+            
+                            settoken(access_token)
+                        })
+                        .catch((e) => {
+                            // console.log("err", e);
+                            setloading(false)
+                            ToastAndroid.show("Failed to connect try again", ToastAndroid.SHORT)
+        
+                        })
+                
+                
+               
+
+
+            }
+
+        }
 
 
 
-        await axios.get("https://graph.instagram.com/me/media?fields=id,media_type,media_url,username,timestamp&access_token=" + `${datas.access_token}`)
-            .then((res) => {
-                setloading2(false)
-                ToastAndroid.show("Connected to Instagram", ToastAndroid.SHORT)
-                setinstadata(res.data)
-                // console.log(instadata.data);
-                setinstaconnectedTemp(true)
-                setresult(true)
-                setdisable2(true)
-
-
-
-
-            })
-
-
-
-        settoken(datas.access_token)
-    }
+    
     // console.log('data', instadata)
 
     const onClear = () => {
@@ -160,6 +207,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                 ToastAndroid.show("Instagram Signed out", ToastAndroid.SHORT)
             });
     }
+
 
 
     const save = () => {
@@ -178,10 +226,10 @@ const EditSocialMedia = ({ navigation, route }) => {
                         instadata: instadata
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
-                        dispatch({type:"ADD_INSTACONNECTED",payload:true})
+                        dispatch({ type: "ADD_INSTACONNECTED", payload: true })
                         navigation.goBack()
 
-                 
+
                     })
 
 
@@ -193,7 +241,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                         youtubedata: youtubedata
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
-                        dispatch({type:"ADD_YOUTUBECONNECTED",payload:true})
+                        dispatch({ type: "ADD_YOUTUBECONNECTED", payload: true })
                         navigation.goBack()
                     })
 
@@ -208,7 +256,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                         instadata: firestore.FieldValue.delete()
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
-                        dispatch({type:"ADD_INSTACONNECTED",payload:false})
+                        dispatch({ type: "ADD_INSTACONNECTED", payload: false })
                         navigation.goBack()
                     })
                 } else if (youtubeconnectedTemp == false) {
@@ -217,7 +265,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                     }).then(async () => {
                         ToastAndroid.show("Updated", ToastAndroid.SHORT)
                         navigation.goBack()
-                        dispatch({type:"ADD_YOUTUBECONNECTED",payload:false})
+                        dispatch({ type: "ADD_YOUTUBECONNECTED", payload: false })
                     })
                 }
 
@@ -240,6 +288,9 @@ const EditSocialMedia = ({ navigation, route }) => {
 
         }
     }
+
+
+
 
 
     return (
@@ -278,7 +329,7 @@ const EditSocialMedia = ({ navigation, route }) => {
                     </View>
 
                     <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "#f0f2f5", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
-                        <TouchableOpacity disabled={instaconnectedTemp} onPress={() => instagramLogin.show()} style={{
+                        <TouchableOpacity disabled={instaconnectedTemp} onPress={() => setinstamodal(true)} style={{
                             height: 55, width: "100%", backgroundColor: instaconnectedTemp ? "#1e87fd" : "white"
                             , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                             borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50,
@@ -297,17 +348,17 @@ const EditSocialMedia = ({ navigation, route }) => {
                         </TouchableOpacity>
 
 
-                        <InstagramLogin
+                        {/* <InstagramLogin
                             ref={ref => (instagramLogin = ref)}
                             appId="441868563443736"
                             appSecret='a04a79f825f35458456f049b802c7f3b'
                             redirectUrl='https://www.google.com/'
                             scopes={['user_profile', 'user_media']}
                             onLoginSuccess={setIgToken}
-                            onLoginFailure={(data) => console.log(data)}
-                        />
+                            onLoginFailure={(data) => console.log("err", data)}
+                        /> */}
                     </View>
-
+                    {/* https://www.instagram.com/oauth/authorize?client_id=441868563443736&redirect_uri=https://www.instagram.com/&scope=user_profile,user_media&response_type=code */}
 
                 </View>
 
@@ -365,6 +416,20 @@ const EditSocialMedia = ({ navigation, route }) => {
 
 
             </SafeAreaView>
+            
+            <Modal visible={instamodal} dismissable={true} onDismiss={() => { setinstamodal(false), CookieManager.clearAll(true) }} >
+                <View style={{ width:WiDTH*0.85,height:HEIGHT*0.80,alignSelf:"center",borderRadius:10,overflow:"hidden"}}>
+
+                    <WebView
+                    style={{ width:WiDTH*0.85,height:HEIGHT*0.80,alignSelf:"center",borderRadius:10,overflow:"hidden"}}
+                        source={{ uri: "https://www.instagram.com/oauth/authorize?client_id=441868563443736&redirect_uri=https://www.google.com/&scope=user_profile,user_media&response_type=code" }}
+                        onNavigationStateChange={(data) => urlcodefinder(data)}
+                        javaScriptEnabled={true}
+                        
+                    />
+
+                </View>
+            </Modal>
         </>
 
     )

@@ -9,7 +9,7 @@ import firestore from '@react-native-firebase/firestore';
 import Tabbar from './Screens/Tabbar';
 import AppStartStack from './Screens/AppStartStack';
 
-LogBox.ignoreLogs(['VirtualizedLists should never']); // Ignore log notification by message
+LogBox.ignoreLogs(['VirtualizedLists should never','Each child','AsyncStorage has been extracted']); // Ignore log notification by message
 
 const firebaseConfig = {
   apiKey: "AIzaSyDOd0TZn_R17bX9NFECVbsrtCREiebp6dc",

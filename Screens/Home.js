@@ -9,7 +9,7 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Button, BackHandler, Alert, AsyncStorage
+    Button, BackHandler, Alert, AsyncStorage,Modal
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -18,6 +18,8 @@ import auth from '@react-native-firebase/auth';
 import axios from "axios"
 import firestore from "@react-native-firebase/firestore"
 import { MyContext } from './AppStartStack';
+import WebView from 'react-native-webview';
+import CookieManager from '@react-native-community/cookies';
 
 
 const WiDTH = Dimensions.get("window").width
@@ -27,15 +29,43 @@ const Home = ({ navigation }) => {
 
 
     const { state, dispatch } = useContext(MyContext)
-    const {type} = state ;
+    const { type } = state;
 
-    const func = async()=>{
+   
+
+    const func = async () => {
         const type = await AsyncStorage.getItem("type")
         dispatch({ type: "ADD_TYPE", payload: type })
-        
+
     }
-   func()
-    
+    func()
+
+
+    // useEffect(() => {
+        // const my = async () => {
+        //     var bodyFormData = new FormData();
+        //     bodyFormData.append('client_id', '441868563443736');
+        //     bodyFormData.append('client_secret', 'a04a79f825f35458456f049b802c7f3b');
+        //     bodyFormData.append('code', 'AQBEYAgfAypbH_tk8_9Uy4TZ4rYsgHyTJLiHZquwMLFM5wiptEfgIzmDtO5paDSMhlSwtzPYIYY1N5Gt9yu1VEAUTbYC4vh8Yy1cM_4ZXPRckff4PpCmEUBg2is7ThOCJrR3D5LafWvInZDzi3NQ8qs8tDcxKjaJy_k5EP6Dt2hLohnk6kVmSjDtkhWLIdHyUJhvQcnhUlDJRRZVmT0e7TMdP_2ukvVDW-c-_185hTSyGg');
+        //     bodyFormData.append('grant_type', 'authorization_code');
+        //     bodyFormData.append('redirect_uri', 'https://www.google.com/');
+        //     await axios({
+        //         method: "post",
+        //         url: "https://api.instagram.com/oauth/access_token?",
+        //         data: bodyFormData,
+
+        //     })
+        //         .then((res) => {
+        //             console.log(res.data);
+        //         })
+        //         .catch((e) => {
+        //             console.log("err", e);
+
+        //         })
+        // }
+    //     my()
+    // }, {})
+
 
     // const func = async () => {
     //     await firestore().collection("chats").doc("RDFPR0AodjGrjTwQoHWm")
@@ -54,6 +84,38 @@ const Home = ({ navigation }) => {
 
     // },[])
 
+    // useEffect(()=>{
+    //     // CookieManager.clearAll(true)
+    //     // console.log(data.url);
+        
+    //     var str = "https://www.google.com/?code=AQASEYleKhX1Z6r8RRB-xnDkKCyx88CnoO4NUbPV2-4uKDORmGjGL8SrB79u-thpatD7jd5OsMzHutwm90OUdWYU9-Wv8Nivy-gAR20uYTNmTfHpsMAwmKSl3ojKZ5cFWt9evM4DvsxWzuPx2yvBYJT3H-b3YvzpRrDQUMw7KQfZ21qajUvfett5uhPs4hZJ0vUBdwPwwY1srD1-l8aeVAIB-yjEdxYlubeCa3R_Ax9Fow#_"
+        
+       
+    //     if(x !== -1){
+        
+        
+    //         console.log("got it");
+            
+    //     }
+    // },[])
+
+    const urlcodefinder =async(data)=>{
+        // console.log(data.url);
+        
+        var str = data.url
+        var x = str.search("/?code=")
+        if(x !== -1){
+        
+            // console.log("got it",data.url);
+            var y = data.url.split("=")[1].replace("#_","")
+            console.log(y);
+            
+            
+        }
+       
+    }
+
+  
 
 
 
@@ -68,10 +130,10 @@ const Home = ({ navigation }) => {
                     </View>
 
                     <View style={style.chat} >
-                        <View style={{ width: 35, height: 35, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 15,elevation:1 }} >
+                        <View style={{ width: 35, height: 35, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 15, elevation: 1 }} >
                             <Ionicons color={"black"} size={22} name={"bell"} />
                         </View>
-                        <View style={{ width: 35, height: 35, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 6,elevation:1 }} >
+                        <View style={{ width: 35, height: 35, backgroundColor: "#f0f2f5", justifyContent: "center", alignItems: "center", borderRadius: 50, right: 6, elevation: 1 }} >
                             <Ionicons color={"black"} size={22} name={"message-circle"} />
                         </View>
                     </View>
@@ -85,7 +147,7 @@ const Home = ({ navigation }) => {
 
                 <View style={style.container2} >
                     <View>
-                       <Text style={style.headingtext2}>Browse {type == "brand" ? "Influencers" : "Brands"}</Text>
+                        <Text style={style.headingtext2}>Browse {type == "brand" ? "Influencers" : "Brands"}</Text>
                     </View>
 
                     <View style={{ flexWrap: "wrap", flexDirection: "row", marginTop: 10 }} >
@@ -126,17 +188,27 @@ const Home = ({ navigation }) => {
                     </TouchableOpacity>
 
                     {type == "influencer" ?
-                    <Text>Welcome influencer</Text>
-                     : 
-                     <Text>Welcome Brand</Text>
+                        <Text>Welcome influencer</Text>
+                        :
+                        <Text>Welcome Brand</Text>
                     }
 
                 </View>
 
-
-
-
             </SafeAreaView>
+
+            {/* <Modal visible={true} onDismiss={()=>{CookieManager.clearAll(true)}} >
+                <View style={{ flex: 1 }}>
+                
+                <WebView
+                    style={{height:150,width:"100%"}}
+                        source={{ uri: "https://www.instagram.com/oauth/authorize?client_id=441868563443736&redirect_uri=https://www.google.com/&scope=user_profile,user_media&response_type=code" }}
+                        onNavigationStateChange={(data)=>urlcodefinder(data)}
+                    />
+
+                </View>
+            </Modal> */}
+
         </>
 
     )

@@ -18,7 +18,10 @@ import { MyContext } from './AppStartStack';
 import { FlatList } from 'react-native-gesture-handler';
 import WebView from 'react-native-webview';
 
-
+const images = [
+    "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg",
+    "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg"
+]
 
 
 
@@ -36,9 +39,14 @@ const CampDetailPage = ({ navigation, route }) => {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const { state, dispatch } = useContext(MyContext)
     const { campaignposts, campaignpostedagain } = state;
+    const { switchtype, setswitchtype } = useState(null)
+    const { instagram, setinstagram } = useState(null)
 
+    const data = route.params.data
 
-
+    const switchfunc = (item) => {
+        setswitchtype(item)
+    }
 
     return (
         <>
@@ -67,7 +75,7 @@ const CampDetailPage = ({ navigation, route }) => {
                 <ScrollView contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }} >
 
                     <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(false), Keyboard.dismiss() }} activeOpacity={1}>
-                        <ImageBackground style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#f0f2f5", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }}  >
+                        <ImageBackground source={{ uri: data.backgroundimage ? data.backgroundimage : images[1] }} style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#f0f2f5", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }}  >
 
                             <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(false), Keyboard.dismiss() }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                                 <Ionicons color={"white"} size={22} name={"plus-circle"} />
@@ -79,7 +87,7 @@ const CampDetailPage = ({ navigation, route }) => {
                         <View style={{ borderRadius: 30, height: 150, width: 150, overflow: "hidden", elevation: 5, zIndex: 10, borderWidth: 3, borderColor: "white" }}>
                             <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(true), Keyboard.dismiss() }} activeOpacity={1}>
 
-                                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#f0f2f5", alignItems: "flex-end", justifyContent: "flex-end" }}  >
+                                <ImageBackground source={{ uri: data.profileimage ? data.profileimage : images[1] }} style={{ width: "100%", height: "100%", backgroundColor: "#f0f2f5", alignItems: "flex-end", justifyContent: "flex-end" }}  >
 
                                     <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(true), Keyboard.dismiss() }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                                         <Ionicons color={"white"} size={22} name={"plus-circle"} />
@@ -93,10 +101,10 @@ const CampDetailPage = ({ navigation, route }) => {
 
                     <View style={style.cardbottom} >
                         <View style={{ width: WiDTH, minHeight: 10, alignSelf: "center", justifyContent: "center", alignItems: "center" }} >
-                            <Text numberOfLines={2} style={style.name} >RENTLY app promotion</Text>
+                            <Text numberOfLines={2} style={style.name} >{data.campaigntitle}</Text>
                         </View>
                         <Text style={style.category} ><Text style={{ textTransform: "lowercase" }} >by</Text> Rently</Text>
-                        <Text style={style.category} >Apps</Text>
+                        <Text style={style.category} >{data.brandpostcategory}</Text>
                     </View>
 
 
@@ -113,44 +121,54 @@ const CampDetailPage = ({ navigation, route }) => {
 
                     <View style={style.container3} >
 
-                        <>
-                            <View style={style.left1} >
+                        {data.instafollowers ?
+                            <>
+                                <View style={style.left1} >
 
-                                <Text style={{ fontSize: 17, fontWeight: "bold", color: "#007bff", textTransform: "uppercase" }} > 2K-50K</Text>
+                                    <Text style={{ fontSize: 17, fontWeight: "bold", color: "#007bff", textTransform: "uppercase" }} > 2K-50K</Text>
 
-                                {/* <Text style={{ fontSize: 18, fontWeight: "bold", color: "#007bff", textTransform: "uppercase" }} >i</Text> */}
-
-
-                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
-                                    <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/instagram.png")} />
-                                    <Text style={{ fontSize: 14, fontWeight: "normal", color: "#9bb0bf" }} >Followers</Text>
-                                </View>
-                            </View>
-
-                        </>
+                                    {/* <Text style={{ fontSize: 18, fontWeight: "bold", color: "#007bff", textTransform: "uppercase" }} >i</Text> */}
 
 
-
-
-                        <View style={{ height: 25, width: 1, backgroundColor: "silver" }} >
-
-                        </View>
-
-
-
-
-                        <>
-                            <View style={style.middle2} >
-                                <Text style={{ fontSize: 17, fontWeight: "bold", color: "#007bff", textTransform: "uppercase" }} >50K-100K</Text>
-                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
-                                    <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/youtube.png")} />
-                                    <Text style={{ fontSize: 14, fontWeight: "normal", color: "#9bb0bf" }} >Subscribers</Text>
+                                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
+                                        <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/instagram.png")} />
+                                        <Text style={{ fontSize: 14, fontWeight: "normal", color: "#9bb0bf" }} >Followers</Text>
+                                    </View>
                                 </View>
 
+                            </>
+                            :
+                            null
+                        }
 
-                            </View>
 
-                        </>
+                        {
+                            data.platform == "both" ?
+
+
+                                <View style={{ height: 25, width: 1, backgroundColor: "silver" }} >
+
+                                </View>
+                                :
+                                null
+                        }
+
+
+
+                        {data.youtubesubs ?
+                            <>
+                                <View style={style.middle2} >
+                                    <Text style={{ fontSize: 17, fontWeight: "bold", color: "#007bff", textTransform: "uppercase" }} >50K-100K</Text>
+                                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
+                                        <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/youtube.png")} />
+                                        <Text style={{ fontSize: 14, fontWeight: "normal", color: "#9bb0bf" }} >Subscribers</Text>
+                                    </View>
+                                </View>
+
+                            </>
+                            :
+                            null
+                        }
 
 
                     </View>
@@ -158,34 +176,62 @@ const CampDetailPage = ({ navigation, route }) => {
 
                     <View style={style.about} >
                         <View style={style.aboutdiv}>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "uppercase" }}>1K-20K</Text>
+                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "uppercase" }}>{data.minrange}K-{data.maxrange}K</Text>
                             <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Budget</Text>
                         </View>
                         <View style={style.aboutdiv}>
                             <View style={{ flexDirection: "row" }} >
-                                <Image style={{ width: 20, height: 20 }} source={require("../Icons/instagram.png")} />
-                                <Text> & </Text>
-                                <Image style={{ width: 20, height: 20 }} source={require("../Icons/youtube.png")} />
+                                {data.instafollowers ?
+                                    <Image style={{ width: 20, height: 20 }} source={require("../Icons/instagram.png")} />
+                                    :
+                                    null
+                                }
+                                {data.platform == "both" ?
+                                    <Text> & </Text>
+                                    :
+                                    null
+                                }
+                                {data.youtubesubs ?
+                                    <Image style={{ width: 20, height: 20 }} source={require("../Icons/youtube.png")} />
+                                    :
+                                    null
+                                }
+
                             </View>
 
                             <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Platform</Text>
                         </View>
                         <View style={style.aboutdiv}>
+                            {data.paymode == "both" ?
+                                <>
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>Barter</Text>
+                                    <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>/Pay</Text>
+                                </>
+                                :
+                                null
+                            }
 
-                            <>
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>Barter</Text>
-                                <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>/Pay</Text>
-                            </>
-                            {/* 
-                            <>
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize", textTransform: "capitalize" }}>cash</Text>
-                                <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Paymode</Text>
-                            </> */}
+                            {data.paymode == "barter" ?
+                                <>
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize", textTransform: "capitalize" }}>barter</Text>
+                                    <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Paymode</Text>
+                                </>
+                                : null
+                            }
+
+                            {data.paymode == "pay" ?
+                                <>
+                                    <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize", textTransform: "capitalize" }}>pay</Text>
+                                    <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Paymode</Text>
+                                </>
+                                : null
+                            }
+
 
 
                         </View>
                         <View style={style.aboutdiv}>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>20-30</Text>
+                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{data.minage}-{data.maxage}</Text>
                             <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Age</Text>
                         </View>
                     </View>
@@ -196,29 +242,39 @@ const CampDetailPage = ({ navigation, route }) => {
                             <View style={{ backgroundColor: "white", height: 35, width: 35, borderRadius: 50, justifyContent: "center", alignItems: "center", marginRight: 15 }} >
                                 <Ionicons name={"map-pin"} size={20} color={"#f759a8"} />
                             </View>
-                            <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >Target Region is west india</Text>
+                            <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >Target Region is {data.targetregion}</Text>
                         </View>
 
                         <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 5, alignItems: "center" }} >
                             <View style={{ backgroundColor: "white", height: 35, width: 35, borderRadius: 50, justifyContent: "center", alignItems: "center", marginRight: 15 }} >
                                 <Ionicons name={"user"} size={20} color={"#00ca95"} />
                             </View>
-                            <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >Target Audience age between 20-30 years</Text>
+                            <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >Target Audience age between {data.targetaudience} years</Text>
                         </View>
 
-                        <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 5, alignItems: "center" }} >
-                            <View style={{ backgroundColor: "white", height: 35, width: 35, borderRadius: 50, justifyContent: "center", alignItems: "center", marginRight: 15 }} >
-                                <Ionicons name={"globe"} size={20} color={"#007bff"} />
-                            </View>
-                            <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >www.rently.com</Text>
-                        </View>
 
-                        <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 5, alignItems: "center" }} >
-                            <View style={{ backgroundColor: "white", height: 35, width: 35, borderRadius: 50, justifyContent: "center", alignItems: "center", marginRight: 15 }} >
-                                <Ionicons name={"smartphone"} size={20} color={"#e7164c"} />
+                        {data.website ?
+                            <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 5, alignItems: "center" }} >
+                                <View style={{ backgroundColor: "white", height: 35, width: 35, borderRadius: 50, justifyContent: "center", alignItems: "center", marginRight: 15 }} >
+                                    <Ionicons name={"globe"} size={20} color={"#007bff"} />
+                                </View>
+                                <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >{data.website}</Text>
                             </View>
-                            <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >google/playstore.Vxbus/2C/com.rently</Text>
-                        </View>
+                            :
+                            null
+                        }
+
+                        {data.applink ?
+
+                            <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 5, alignItems: "center" }} >
+                                <View style={{ backgroundColor: "white", height: 35, width: 35, borderRadius: 50, justifyContent: "center", alignItems: "center", marginRight: 15 }} >
+                                    <Ionicons name={"smartphone"} size={20} color={"#e7164c"} />
+                                </View>
+                                <Text style={{ color: "#2a3659", fontWeight: "bold", fontSize: 14, textTransform: "none" }} >{data.applink}</Text>
+                            </View>
+                            :
+                            null
+                        }
 
                     </View>
 
@@ -228,7 +284,7 @@ const CampDetailPage = ({ navigation, route }) => {
                         <View style={[style.container2]} >
 
                             <View style={style.left} >
-                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#007bff", textTransform: "capitalize" }} > 20 nov 2020</Text>
+                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#007bff", textTransform: "capitalize" }} >{data.campaignStartDate.split(" ")[2] + " " + data.campaignStartDate.split(" ")[1] + " " + data.campaignStartDate.split(" ")[3]}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
                                     <Text style={{ fontSize: 12, fontWeight: "normal", color: "#9bb0bf" }} >Start Date</Text>
                                 </View>
@@ -241,7 +297,7 @@ const CampDetailPage = ({ navigation, route }) => {
                             </View>
 
                             <View style={style.middle} >
-                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#007bff", textTransform: "capitalize" }} > 30 nov 2020</Text>
+                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#007bff", textTransform: "capitalize" }} >{data.campaignEndDate.split(" ")[2] + " " + data.campaignEndDate.split(" ")[1] + " " + data.campaignEndDate.split(" ")[3]}</Text>
                                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%" }} >
                                     <Text style={{ fontSize: 12, fontWeight: "normal", color: "#9bb0bf" }} >End Date</Text>
                                 </View>
@@ -254,50 +310,63 @@ const CampDetailPage = ({ navigation, route }) => {
 
                     <View style={{ minHeight: 10, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
                         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >About Campaign</Text>
-                        <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>We are looking for very creative influencer to promote our app to many platform as soon as possible we request you</Text>
+                        <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>{data.campaigndescription}</Text>
                     </View>
 
 
                     <View style={style.gallery} >
-                   
+                        {data.instadata ?
                             <TouchableRipple rippleColor="rgb(0,0,0,0.32)" activeOpacity={1} onPress={() => { setinstagram(true), switchfunc("instagram") }} style={style.galleryleft} >
-                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }}  size={25} name={"instagram"} />
+                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} size={25} name={"instagram"} />
                             </TouchableRipple>
-                         
+                            :
+                            null
+                        }
+                        {data.youtubedata ?
                             <TouchableRipple rippleColor="rgb(0,0,0,0.32)" activeOpacity={1} onPress={() => { setinstagram(false), switchfunc("youtube") }} style={style.galleryright}>
                                 <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} size={25} name={"youtube"} />
                             </TouchableRipple>
-                            
-                        
+                            :
+                            null
+                        }
+
+
                     </View>
 
-                 
-                        {/* <FlatList
-                            data={instaimages}
-                            style={{ left: -4 / 6 }}
-                            renderItem={({ item }) => (
+                    {data.instadata ?
 
-                                <TouchableOpacity onPress={() => navigation.navigate("Gallery", { image: JSON.stringify(instaimages), uri: item.media_url })}
-                                    style={{
-                                        height: WiDTH / 3,
-                                        width: WiDTH / 3,
-                                        flexDirection: 'column',
-                                        margin: 1,
-                                        backgroundColor: "#d9d9d9"
-                                    }}>
+                        instagram ?
+                            <FlatList
+                                data={instaimages}
+                                style={{ left: -4 / 6 }}
+                                renderItem={({ item }) => (
 
-                                    <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.media_url }} />
+                                    <TouchableOpacity onPress={() => navigation.navigate("Gallery", { image: JSON.stringify(instaimages), uri: item.media_url })}
+                                        style={{
+                                            height: WiDTH / 3,
+                                            width: WiDTH / 3,
+                                            flexDirection: 'column',
+                                            margin: 1,
+                                            backgroundColor: "#d9d9d9"
+                                        }}>
 
-                                </TouchableOpacity>
-                            )}
-                            //Setting the number of column
-                            numColumns={3}
-                            keyExtractor={(item, index) => index.toString()}
-                        /> */}
-                      
-                        <View  >
+                                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.media_url }} />
 
-                         
+                                    </TouchableOpacity>
+                                )}
+                                //Setting the number of column
+                                numColumns={3}
+                                keyExtractor={(item, index) => index.toString()}
+                            />
+                            :
+                            null
+                        :
+                        null
+                    }
+
+                    {data.youtubedata ?
+                        !instagram ?
+                            <View  >
                                 <View style={{
                                     width: "100%", paddingHorizontal: 10, justifyContent: "center", alignItems: "center", marginBottom: 10, overflow: "hidden"
                                 }} >
@@ -315,14 +384,17 @@ const CampDetailPage = ({ navigation, route }) => {
                                     </View>
 
                                 </View>
-                         
+
+                            </View>
+                            :
+                            null
+                        :
+                        null
+                    }
 
 
-                        </View>
 
 
-
-                    
 
 
 

@@ -76,7 +76,7 @@ const BrandPostedCamp = ({ navigation, route }) => {
                                 keyExtractor={(item,index) => index}
                                 renderItem={({ item,index}) => (
 
-                                    <TouchableRipple onPress={() => { navigation.navigate("CampDetailPage")}} rippleColor={"rgb(0,0,0,0.32)"} >
+                                    <TouchableRipple onPress={() => { navigation.navigate("CampDetailPage",{data:item})}} rippleColor={"rgb(0,0,0,0.32)"} >
                                         <View style={style.card} >
                                             <View style={style.insidecard} >
                                                 <View style={style.cardleft} >
