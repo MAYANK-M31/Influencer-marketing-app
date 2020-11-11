@@ -1242,7 +1242,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                 borderColor: "#1e87fd", borderWidth: 1, borderRadius: 45, margin: 5,
                                 backgroundColor: "white"
                             }} >
-                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: "#1e87fd" }} >{date2changed ? date2.toDateString().split(" ")[2] + "th" + " " + date.toDateString().split(" ")[1] + " " + date2.toDateString().split(" ")[3] : "End Date"}</Text>
+                                <Text style={{ alignSelf: "center", fontSize: 15, fontWeight: "bold", color: "#1e87fd" }} >{date2changed ? date2.toDateString().split(" ")[2] + "th" + " " + date2.toDateString().split(" ")[1] + " " + date2.toDateString().split(" ")[3] : "End Date"}</Text>
                             </TouchableOpacity>
                         </View>
                         {show ?

@@ -65,9 +65,9 @@ const EditSocialMedia = ({ navigation, route }) => {
     const [result, setresult] = useState(false)
     const [loading2, setloading2] = useState(false)
 
-// useEffect(()=>{
-//     CookieManager.clearAll(true)
-// },[])
+useEffect(()=>{
+    CookieManager.clearAll(true)
+},[])
 
 
     // For Youtube Auth

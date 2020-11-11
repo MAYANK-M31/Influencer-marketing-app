@@ -21,7 +21,8 @@ import InstagramLogin from 'react-native-instagram-login';
 import CookieManager from '@react-native-community/cookies';
 
 import axios from "axios";
-import { Button } from 'react-native-paper';
+import { Button, Modal } from 'react-native-paper';
+import WebView from 'react-native-webview';
 
 
 GoogleSignin.configure({
@@ -48,6 +49,8 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
     const [instatoken, setinstatoken] = useState(null)
     const [youtubetoken, setyoutubetoken] = useState(null)
     const [loading, setloading] = useState(false)
+
+    const [instamodal, setinstamodal] = useState(false)
 
     // for Instagram auth
     const [token, settoken] = useState()
@@ -146,26 +149,66 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
 
     // For Instagram auth
 
-    const setIgToken = async (datas) => {
-        setloading2(true)
-        setresult(false)
-        setinstatoken(datas.access_token)
+    const urlcodefinder = async (data) => {
+        // console.log(data.url);
 
+        var str = data.url
+        // console.log(str);
 
+        var x = str.search("https://www.google.com/\\?code=")
+        // console.log(x);
 
-        await axios.get("https://graph.instagram.com/me/media?fields=id,media_type,media_url,username,timestamp&access_token=" + `${datas.access_token}`)
-            .then((res) => {
-                setloading2(false)
-                ToastAndroid.show("Connected to Instagram", ToastAndroid.SHORT)
-                setinstadata(res.data)
-                // console.log(instadata.data);
-                setinstaconnected(true)
-                setresult(true)
-                setdisable(false)
+        if (x !== -1) {
+            setinstamodal(false)
+            setloading2(true)
+            setresult(false)
+            // console.log("got it",data.url);
+            var Oauth_code = data.url.split("=")[1].replace("#_", "")
+            // console.log("outh",Oauth_code);
+
+            var bodyFormData = new FormData();
+            bodyFormData.append('client_id', '441868563443736');
+            bodyFormData.append('client_secret', 'a04a79f825f35458456f049b802c7f3b');
+            bodyFormData.append('code', Oauth_code);
+            bodyFormData.append('grant_type', 'authorization_code');
+            bodyFormData.append('redirect_uri', 'https://www.google.com/');
+            await axios({
+                method: "post",
+                url: "https://api.instagram.com/oauth/access_token?",
+                data: bodyFormData,
 
             })
+                .then(async (res) => {
+                    console.log(res.data);
+                    var access_token = res.data.access_token
+                    setinstatoken(access_token)
+                    await axios.get("https://graph.instagram.com/me/media?fields=id,media_type,media_url,username,timestamp&access_token=" + `${access_token}`)
+                        .then((res) => {
+                            setloading2(false)
+                            ToastAndroid.show("Connected to Instagram", ToastAndroid.SHORT)
+                            setinstadata(res.data)
+                            // console.log(instadata.data);
+                            setinstaconnected(true)
+                            setresult(true)
+                            setdisable(false)
 
-        settoken(datas.access_token)
+                        })
+
+                    settoken(access_token)
+                })
+                .catch((e) => {
+                    console.log("err", e);
+                    setloading(false)
+                    ToastAndroid.show("Failed to connect try again", ToastAndroid.SHORT)
+
+                })
+
+
+
+
+
+        }
+
     }
     // console.log('data', instadata)
 
@@ -184,8 +227,8 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
             instadata: instadata,
             website: route.params.website,
             applink: route.params.applink,
-            campaigntitle: route.params.title,
-            campaigndescription: route.params.description,
+            campaigntitle: route.params.campaigntitle,
+            campaigndescription: route.params.campaigndescription,
             paymode: route.params.paymode,
             platform: route.params.platform,
             youtubesubs: route.params.youtubesubs,
@@ -267,7 +310,7 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                 <View style={{ flexWrap: "wrap", width: "100%", flexDirection: "row", alignItems: "center", paddingHorizontal: 20, position: "absolute", top: 300 }} >
 
 
-                    <TouchableOpacity onPress={() => instagramLogin.show()} style={{
+                    <TouchableOpacity  onPress={() => setinstamodal(true)} style={{
                         height: 55, width: "92%", backgroundColor: instaconnected ? "#1e87fd" : "white"
                         , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
                         borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10,
@@ -286,15 +329,7 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                     </TouchableOpacity>
 
 
-                    <InstagramLogin
-                        ref={ref => (instagramLogin = ref)}
-                        appId="441868563443736"
-                        appSecret='a04a79f825f35458456f049b802c7f3b'
-                        redirectUrl='https://www.google.com/'
-                        scopes={['user_profile', 'user_media']}
-                        onLoginSuccess={setIgToken}
-                        onLoginFailure={(data) => console.log(data)}
-                    />
+                   
 
 
 
@@ -346,6 +381,19 @@ const BrandSocialMediaPage = ({ navigation, route }) => {
                </TouchableOpacity> */}
 
             </SafeAreaView>
+            <Modal visible={instamodal} dismissable={true} onDismiss={() => { setinstamodal(false), CookieManager.clearAll(true) }} >
+                <View style={{ width: WiDTH * 0.85, height: HEIGHT * 0.80, alignSelf: "center", borderRadius: 10, overflow: "hidden" }}>
+
+                    <WebView
+                        style={{ width: WiDTH * 0.85, height: HEIGHT * 0.80, alignSelf: "center", borderRadius: 10, overflow: "hidden" }}
+                        source={{ uri: "https://www.instagram.com/oauth/authorize?client_id=441868563443736&redirect_uri=https://www.google.com/&scope=user_profile,user_media&response_type=code" }}
+                        onNavigationStateChange={(data) => urlcodefinder(data)}
+                        javaScriptEnabled={true}
+
+                    />
+
+                </View>
+            </Modal>
         </>
 
     )

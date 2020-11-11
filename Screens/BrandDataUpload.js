@@ -571,6 +571,8 @@ const BrandDataUpload = ({ navigation, route }) => {
                         profileimage: item.profileimage,
                         backgroundimage: item.backgroundimage,
                         extraimages: extraimagesarray.length == 0 ? null : extraimagesarray,
+                        youtubedata: route.params.youtubedata,
+                        instadata: route.params.instadata,
                         createdAt: (new Date()).toString()
                     }
                     ref2.add(datamodal).then(async() => {

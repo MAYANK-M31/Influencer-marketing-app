@@ -17,6 +17,7 @@ import { TouchableRipple } from 'react-native-paper';
 import { MyContext } from './AppStartStack';
 import { FlatList } from 'react-native-gesture-handler';
 import WebView from 'react-native-webview';
+import axios from 'axios';
 
 const images = [
     "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg",
@@ -39,14 +40,55 @@ const CampDetailPage = ({ navigation, route }) => {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const { state, dispatch } = useContext(MyContext)
     const { campaignposts, campaignpostedagain } = state;
-    const { switchtype, setswitchtype } = useState(null)
-    const { instagram, setinstagram } = useState(null)
+
+    const [ switchtype, setswitchtype ] = useState(null)
+    const [ instagram, setinstagram ] = useState(null)
+    const [instaimages,setinstaimages] = useState(null)
+    const [ instausername, setinstausername] = useState(null)
+    const [videoId,setvideoId] = useState([])
 
     const data = route.params.data
 
     const switchfunc = (item) => {
         setswitchtype(item)
     }
+
+    useEffect(()=>{
+        if(data.instadata){
+            setinstagram(true)
+            setswitchtype("instagram")
+
+            var filtered = data.instadata.data.filter(function (item) {
+                return item.media_type !== "VIDEO";
+            });
+
+            setinstaimages(filtered)
+
+            setinstausername(data.instadata.data[0].username)
+     
+        }else if(data.youtubedata){
+            setinstagram(false)
+            setswitchtype("youtube")
+        }
+
+        if (data.youtubedata !== undefined) {
+         
+            // console.log(JSON.parse(data.youtubedata).items[0].statistics);
+            const uploadid = data.youtubedata.items[0].contentDetails.relatedPlaylists.uploads
+
+
+
+            const youtubefunc = async () => {
+                await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${uploadid}&key=AIzaSyB0teIk0vu9KpyKgSXPK4WZnOqqb9aQI0Q&part=snippet&maxResults=20`)
+                    .then((res) => {
+                        setvideoId(res.data.items)
+                        // console.log(videoId);
+
+                    })
+            }
+            youtubefunc()
+        }
+    },[])
 
     return (
         <>
@@ -317,14 +359,14 @@ const CampDetailPage = ({ navigation, route }) => {
                     <View style={style.gallery} >
                         {data.instadata ?
                             <TouchableRipple rippleColor="rgb(0,0,0,0.32)" activeOpacity={1} onPress={() => { setinstagram(true), switchfunc("instagram") }} style={style.galleryleft} >
-                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} size={25} name={"instagram"} />
+                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} color={switchtype == "instagram" ? "#0296f6" : "#9e9e9e"}  size={25} name={"instagram"} />
                             </TouchableRipple>
                             :
                             null
                         }
                         {data.youtubedata ?
                             <TouchableRipple rippleColor="rgb(0,0,0,0.32)" activeOpacity={1} onPress={() => { setinstagram(false), switchfunc("youtube") }} style={style.galleryright}>
-                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} size={25} name={"youtube"} />
+                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} color={switchtype == "youtube" ? "#ff0000" : "#9e9e9e"} size={25} name={"youtube"} />
                             </TouchableRipple>
                             :
                             null
@@ -367,23 +409,21 @@ const CampDetailPage = ({ navigation, route }) => {
                     {data.youtubedata ?
                         !instagram ?
                             <View  >
+                               {videoId.map((item) =>
                                 <View style={{
                                     width: "100%", paddingHorizontal: 10, justifyContent: "center", alignItems: "center", marginBottom: 10, overflow: "hidden"
                                 }} >
                                     <View style={{ width: "98%", height: 200, backgroundColor: "white", alignSelf: "center", borderRadius: 10, overflow: "hidden" }} >
 
                                         <WebView
-                                            // onLoadStart={() => { setwebloading(true) }}
-                                            // onLoadProgress={() => { setwebloading(true) }}
-                                            // onLoadEnd={() => { setwebloading(false) }}
-
                                             javaScriptEnabled={true}
                                             domStorageEnabled={true}
-                                            source={{ uri: 'https://www.youtube.com/embed/PqeGwlBNWrw' }}
+                                            source={{ uri: 'https://www.youtube.com/embed/' + `${item.snippet.resourceId.videoId}` }}
                                         />
                                     </View>
 
                                 </View>
+                            )}
 
                             </View>
                             :

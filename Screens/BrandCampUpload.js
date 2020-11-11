@@ -36,7 +36,7 @@ const BrandCampUpload = ({ navigation, route }) => {
     const [uploaded, setuploaded] = useState(null)
     const [num, setnum] = useState(0)
     const [imageloader, setimageloader] = useState(true)
-    const [uploaddatas,setuploaddatas]  = useState(false)
+    const [uploaddatas, setuploaddatas] = useState(false)
 
     const [profileup, setprofileup] = useState(null)
     const [backgdup, setbackgdup] = useState(null)
@@ -47,9 +47,9 @@ const BrandCampUpload = ({ navigation, route }) => {
     const { campaignposts, campaignpostedagain } = state;
 
 
-    
 
-   
+
+
 
 
     useEffect(() => {
@@ -60,17 +60,17 @@ const BrandCampUpload = ({ navigation, route }) => {
 
             if (profileimage) {
                 console.log("profile stack");
-    
-    
+
+
                 setimageloader(true)
                 settext("Please Wait")
                 var x = 0
                 const reference = storage().ref(`/images/brandscampaigns/${profileimage.filename}`)
                 reference.putFile(profileimage.uri)
                     .then((res) => {
-    
+
                         x += 1
-    
+
                         if (res.state == "success") {
                             settext("Uploading Profile Image")
                             setuploaded((x / 1) * 100)
@@ -78,23 +78,23 @@ const BrandCampUpload = ({ navigation, route }) => {
                             settext("please wait Uploading Image ")
                         } else if (res.state == "error") {
                             settext("Failed to upload image")
-    
+
                         }
-    
+
                         const imageref = storage().ref(res.metadata.fullPath)
                         imageref
                             .getDownloadURL()
                             .then((profileurl) => {
                                 // console.log(url);
-                              
-                                  
-                                 
-                                
-    
+
+
+
+
+
                                 setimageloader(false)
                                 if (backgroundimage) {
                                     console.log("yes background + profile");
-    
+
                                     setbackgdup(false)
                                     setimageloader(true)
                                     settext("Uploading Images")
@@ -103,9 +103,9 @@ const BrandCampUpload = ({ navigation, route }) => {
                                     const reference = storage().ref(`/images/brandscampaigns/${backgroundimage.filename}`)
                                     reference.putFile(backgroundimage.uri)
                                         .then((res) => {
-    
+
                                             x += 1
-    
+
                                             if (res.state == "success") {
                                                 settext("Uploading Background Image")
                                                 setuploaded((x / 1) * 100)
@@ -113,35 +113,35 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                 settext("please wait Uploading Image ")
                                             } else if (res.state == "error") {
                                                 settext("Failed to upload image")
-    
+
                                             }
-    
+
                                             const imageref = storage().ref(res.metadata.fullPath)
                                             imageref
                                                 .getDownloadURL()
                                                 .then((backgroundurl) => {
                                                     // console.log(url);
-                                              
-    
+
+
                                                     setimageloader(false)
                                                     if (route.params.extraimages.length > 0) {
                                                         console.log("yes extra + profile + back");
-    
-    
-    
+
+
+
                                                         setimageloader(true)
                                                         settext("Please Wait")
                                                         var x = 0
-    
+
                                                         route.params.extraimages.map((item, index) => {
                                                             // console.log(item);
                                                             const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
                                                             reference.putFile(item.uri)
                                                                 .then((res) => {
-    
+
                                                                     x += 1
-    
-    
+
+
                                                                     if (res.state == "success") {
                                                                         settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
                                                                         setuploaded((x / route.params.extraimages.length) * 100)
@@ -149,9 +149,9 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                                         settext("please wait Uploading Images ")
                                                                     } else if (res.state == "error") {
                                                                         settext("Failed to upload image")
-    
+
                                                                     }
-    
+
                                                                     const imageref = storage().ref(res.metadata.fullPath)
                                                                     imageref
                                                                         .getDownloadURL()
@@ -159,47 +159,47 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                                             // console.log(url);
                                                                             extraimagesarray.push(extraimgurl)
                                                                             setextraimagesarray(extraimagesarray)
-    
+
                                                                             setimageloader(false)
-    
+
                                                                             if (extraimagesarray.length == route.params.extraimages.length) {
-                                                                                uploaddata({profileimage:profileurl,backgroundimage:backgroundurl,extraimages:extraimgurl})
+                                                                                uploaddata({ profileimage: profileurl, backgroundimage: backgroundurl, extraimages: extraimgurl })
                                                                             }
-    
+
                                                                         })
-    
+
                                                                 })
                                                                 .catch((e) => {
                                                                     console.log("error to uplaod", e);
                                                                 })
-    
+
                                                         })
-    
-    
-    
+
+
+
                                                     } else {
                                                         console.log("only profile + back");
-    
-                                                        uploaddata({profileimage:profileurl,backgroundimage:backgroundurl,extraimages:null})
-    
+
+                                                        uploaddata({ profileimage: profileurl, backgroundimage: backgroundurl, extraimages: null })
+
                                                     }
-    
+
                                                 })
-    
-    
+
+
                                         })
                                         .catch((e) => {
                                             settext("Failed to upload background image")
                                         })
-    
-    
+
+
                                 } else {
                                     setimageloader(false)
                                     if (route.params.extraimages.length > 0) {
                                         console.log("yes extra + profile");
-    
-    
-    
+
+
+
                                         setimageloader(true)
                                         settext("Uploading Images")
                                         var x = 0
@@ -211,13 +211,13 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                     .then((res) => {
                                                         console.log(res);
                                                         console.log(res.state);
-    
-    
+
+
                                                         x += 1
                                                         // console.log(x);
-    
-    
-    
+
+
+
                                                         if (res.state == "success") {
                                                             settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
                                                             setuploaded((x / route.params.extraimages.length) * 100)
@@ -225,9 +225,9 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                             settext("please wait Uploading Images ")
                                                         } else if (res.state == "error") {
                                                             settext("Failed to upload image")
-    
+
                                                         }
-    
+
                                                         const imageref = storage().ref(res.metadata.fullPath)
                                                         imageref
                                                             .getDownloadURL()
@@ -236,51 +236,51 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                                 extraimagesarray.push(extraimgurl)
                                                                 setextraimagesarray(extraimagesarray)
                                                                 setimageloader(false)
-    
+
                                                                 if (extraimagesarray.length == route.params.extraimages.length) {
-                                                                    uploaddata({profileimage:profileurl,backgroundimage:null,extraimages:extraimgurl})
+                                                                    uploaddata({ profileimage: profileurl, backgroundimage: null, extraimages: extraimgurl })
                                                                 }
-    
+
                                                             })
-    
+
                                                     })
                                                     .catch((e) => {
                                                         console.log("error to uplaod", e);
                                                     })
-    
+
                                             })
                                         }
-    
+
                                     } else {
-                                        
+
                                         console.log("only only profile");
                                         setimageloader(false)
-                                        uploaddata({profileimage:profileurl,backgroundimage:null,extraimages:null})
+                                        uploaddata({ profileimage: profileurl, backgroundimage: null, extraimages: null })
                                     }
-    
+
                                 }
                             })
-    
+
                     })
                     .catch((e) => {
                         settext("Failed to upload profile image")
                         setimageloader(false)
                     })
-    
-    
+
+
             } else if (backgroundimage) {
                 console.log("background stack");
                 setimageloader(false)
-    
+
                 setimageloader(true)
                 settext("Please Wait")
                 var x = 0
                 const reference = storage().ref(`/images/brandscampaigns/${backgroundimage.filename}`)
                 reference.putFile(backgroundimage.uri)
                     .then((res) => {
-    
+
                         x += 1
-    
+
                         if (res.state == "success") {
                             settext("Uploading Background Image")
                             setuploaded((x / 1) * 100)
@@ -288,25 +288,25 @@ const BrandCampUpload = ({ navigation, route }) => {
                             settext("please wait Uploading Image ")
                         } else if (res.state == "error") {
                             settext("Failed to upload image")
-    
+
                         }
-    
+
                         const imageref = storage().ref(res.metadata.fullPath)
                         imageref
                             .getDownloadURL()
                             .then((backgroundurl) => {
                                 // console.log(url);
-                            
-    
+
+
                                 setimageloader(false)
                                 if (route.params.extraimages.length > 0) {
                                     console.log("yes extra + back");
-    
-    
+
+
                                     setimageloader(true)
                                     settext("Uploading Images")
                                     var x = 0
-    
+
                                     route.params.extraimages.map((item, index) => {
                                         // console.log(item);
                                         const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
@@ -314,13 +314,13 @@ const BrandCampUpload = ({ navigation, route }) => {
                                             .then((res) => {
                                                 // console.log(res);
                                                 // console.log(res.state);
-    
-    
+
+
                                                 x += 1
                                                 // console.log(x);
-    
-    
-    
+
+
+
                                                 if (res.state == "success") {
                                                     settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
                                                     setuploaded((x / route.params.extraimages.length) * 100)
@@ -328,9 +328,9 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                     settext("please wait Uploading Images ")
                                                 } else if (res.state == "error") {
                                                     settext("Failed to upload image")
-    
+
                                                 }
-    
+
                                                 const imageref = storage().ref(res.metadata.fullPath)
                                                 imageref
                                                     .getDownloadURL()
@@ -338,52 +338,52 @@ const BrandCampUpload = ({ navigation, route }) => {
                                                         // console.log(url);
                                                         extraimagesarray.push(extraimgurl)
                                                         setextraimagesarray(extraimagesarray)
-    
+
                                                         setimageloader(false)
-    
+
                                                         if (extraimagesarray.length == route.params.extraimages.length) {
-                                                            uploaddata({profileimage:null,backgroundimage:backgroundurl,extraimages:extraimgurl})
+                                                            uploaddata({ profileimage: null, backgroundimage: backgroundurl, extraimages: extraimgurl })
                                                         }
-    
+
                                                     })
-    
+
                                             })
                                             .catch((e) => {
                                                 settext("failed to upload image")
                                                 console.log("error to uplaod", e);
                                             })
-    
+
                                     })
-    
-    
-    
+
+
+
                                 } else {
                                     console.log("only back");
                                     setimageloader(false)
-                                    uploaddata({profileimage:null,backgroundimage:backgroundurl,extraimages:null})
-    
+                                    uploaddata({ profileimage: null, backgroundimage: backgroundurl, extraimages: null })
+
                                 }
-    
+
                             })
-    
-    
+
+
                     })
                     .catch((e) => {
                         settext("Failed to upload background image")
                     })
-    
-    
-    
-    
+
+
+
+
             } else if (route.params.extraimages.length > 0) {
                 setimageloader(false)
                 console.log("ony extra iamges");
-    
-    
+
+
                 setimageloader(true)
                 settext("Uploading Images")
                 var x = 0
-    
+
                 route.params.extraimages.map((item, index) => {
                     // console.log(item);
                     const reference = storage().ref(`/images/brandscampaigns/${item.filename}`)
@@ -391,13 +391,13 @@ const BrandCampUpload = ({ navigation, route }) => {
                         .then((res) => {
                             // console.log(res);
                             // console.log(res.state);
-    
-    
+
+
                             x += 1
                             // console.log(x);
-    
-    
-    
+
+
+
                             if (res.state == "success") {
                                 settext("Uploading Images" + " " + x + "/" + route.params.extraimages.length)
                                 setuploaded((x / route.params.extraimages.length) * 100)
@@ -405,9 +405,9 @@ const BrandCampUpload = ({ navigation, route }) => {
                                 settext("please wait Uploading Images ")
                             } else if (res.state == "error") {
                                 settext("Failed to upload image")
-    
+
                             }
-    
+
                             const imageref = storage().ref(res.metadata.fullPath)
                             imageref
                                 .getDownloadURL()
@@ -415,36 +415,36 @@ const BrandCampUpload = ({ navigation, route }) => {
                                     // console.log(url);
                                     extraimagesarray.push(extraimgurl)
                                     setextraimagesarray(extraimagesarray)
-    
-    
-    
+
+
+
                                     if (extraimagesarray.length == route.params.extraimages.length) {
-                                        uploaddata({profileimage:null,backgroundimage:null,extraimages:extraimgurl})
+                                        uploaddata({ profileimage: null, backgroundimage: null, extraimages: extraimgurl })
                                     }
-    
+
                                 })
-    
+
                         })
                         .catch((e) => {
                             settext("Failed to upload image")
                             console.log("error to uplaod", e);
                         })
-    
+
                 })
-    
-    
-    
+
+
+
             } else {
                 console.log("nothing");
                 setimageloader(false)
                 setimageloader(true)
                 setuploaded(10)
                 setuploaded(50)
-    
-                uploaddata({profileimage:null,backgroundimage:null,extraimages:null})
-    
-    
-    
+
+                uploaddata({ profileimage: null, backgroundimage: null, extraimages: null })
+
+
+
             }
         }
 
@@ -462,7 +462,7 @@ const BrandCampUpload = ({ navigation, route }) => {
         setuploaded(60)
         try {
             settext("Posting Your Campaign")
-console.log(item);
+            console.log(item);
 
             const datamodal = {
                 uid: uid,
@@ -486,14 +486,16 @@ console.log(item);
                 applink: route.params.applink,
                 profileimage: item.profileimage,
                 backgroundimage: item.backgroundimage,
-                extraimages:  extraimagesarray.length == 0 ? null : extraimagesarray,
+                youtubedata: route.params.youtubedata,
+                instadata: route.params.instadata,
+                extraimages: extraimagesarray.length == 0 ? null : extraimagesarray,
                 createdAt: (new Date()).toString()
             }
             setuploaded(85)
             ref.add(datamodal).then(() => {
                 setuploaded(100)
                 settext("Campaign Posted Successfully")
-               
+
                 campaignposts.push(datamodal)
                 dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: false })
                 dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: campaignposts })
