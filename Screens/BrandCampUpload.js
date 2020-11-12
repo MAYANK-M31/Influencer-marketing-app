@@ -489,7 +489,8 @@ const BrandCampUpload = ({ navigation, route }) => {
                 youtubedata: route.params.youtubedata,
                 instadata: route.params.instadata,
                 extraimages: extraimagesarray.length == 0 ? null : extraimagesarray,
-                createdAt: (new Date()).toString()
+                createdAt: (new Date()).toString(),
+                postId : Math.random().toString(36).slice(2)
             }
             setuploaded(85)
             ref.add(datamodal).then(() => {

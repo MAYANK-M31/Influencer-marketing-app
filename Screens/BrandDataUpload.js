@@ -573,7 +573,8 @@ const BrandDataUpload = ({ navigation, route }) => {
                         extraimages: extraimagesarray.length == 0 ? null : extraimagesarray,
                         youtubedata: route.params.youtubedata,
                         instadata: route.params.instadata,
-                        createdAt: (new Date()).toString()
+                        createdAt: (new Date()).toString(),
+                        postId : Math.random().toString(36).slice(2)
                     }
                     ref2.add(datamodal).then(async() => {
                        

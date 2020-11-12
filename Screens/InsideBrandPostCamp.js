@@ -9,6 +9,7 @@ import BrandPostedCamp from "./BrandPostedCamp";
 import ImageReviewScroll from "./ImageReviewScroll";
 import CampDetailPage from "./CampDetailPage";
 import Gallery from "./Gallery";
+import Browser from "./Browser";
 
 const Stack = createStackNavigator();
 
@@ -28,8 +29,7 @@ const InsideBrandPostCamp = () => {
             <Stack.Screen name="ImageReviewScroll" component={ImageReviewScroll} options={{ headerShown: false }} />
             <Stack.Screen name="CampDetailPage" component={CampDetailPage} options={{ headerShown: false }} />
             <Stack.Screen name="Gallery" component={Gallery} options={{ headerShown: false }} />
-
-
+            <Stack.Screen name="Browser" component={Browser} options={{ headerShown: false }} />
 
             {/* <Stack.Screen name="ProfileSixthPage" component={ProfileSixthtPage} options={{headerShown:false}} />  */}
         </Stack.Navigator>

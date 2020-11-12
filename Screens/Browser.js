@@ -28,7 +28,7 @@ const Browser = ({ route, navigation }) => {
     return (
         <>
             <StatusBar barStyle={"dark-content"} backgroundColor={"white"} />
-            <SafeAreaView style={{ height: HEIGHT, backgroundColor: "white" }} >
+            <SafeAreaView style={{ flex:1, backgroundColor: "white" }} >
 
                 <View style={style.header} >
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
@@ -42,7 +42,7 @@ const Browser = ({ route, navigation }) => {
 
                 </View>
 
-                <View style={{ height: HEIGHT - 10 }}>
+                <View style={{ flex:1}}>
                     <WebView
                     
                         onLoadEnd={() => { setloading(false) }}
