@@ -35,11 +35,7 @@ const BrandSearch = ({ navigation, route }) => {
     const [loading, setloading] = useState(null)
     const [campaignposts, setcampaignposts] = useState([])
 
-    useEffect(()=>{
-        var a = Math.random().toString(36).slice(2)
-        console.log((a));
-        
-    },[])
+  
 
     var array = []
     useEffect(() => {
@@ -74,29 +70,63 @@ const BrandSearch = ({ navigation, route }) => {
 
     }, [])
 
-    const postedOn = (item)=>{
-    var date = item.split(" ")[2]
-    var currentDate = new Date()
-    var currentDate = currentDate.toLocaleString().split(" ")[2]
-    var time = currentDate - date 
-    var type = "day ago"
-    if(time == 0){
-        var date = item.split(" ")[4]
+    const postedOn = (item) => {
+        var date = item.split(" ")[2]
         var currentDate = new Date()
-        var currentDate = currentDate.toLocaleString().split(" ")[3]
-        var time = currentDate.split(":")[0] - date.split(":")[0] 
-        var type = "hour ago"
-        if(time == 0){
+        var currentDate = currentDate.toLocaleString().split(" ")[2]
+        var time = currentDate - date
+        var type = "day ago"
+        if (time == 0) {
             var date = item.split(" ")[4]
             var currentDate = new Date()
             var currentDate = currentDate.toLocaleString().split(" ")[3]
-            var time = currentDate.split(":")[1] - date.split(":")[1] 
-            var type = "min ago"
+            var time = currentDate.split(":")[0] - date.split(":")[0]
+            var type = "hour ago"
+            if (time == 0) {
+                var date = item.split(" ")[4]
+                var currentDate = new Date()
+                var currentDate = currentDate.toLocaleString().split(" ")[3]
+                var time = currentDate.split(":")[1] - date.split(":")[1]
+                var type = "min ago"
+            }
         }
+        return time + type
+
+
     }
-    return time + type
-    
-     
+
+    const apply = async (item) => {
+        const Id = await AsyncStorage.getItem("uid")
+
+
+        const ref = await firestore().collection("brandaccount")
+        const ref2 = await firestore().collection("influencer")
+        const mydocid = await AsyncStorage.getItem("DocId")
+        const insidedata = { personId: Id,postId:item.postId, CreatedAt: new Date(), accepted: false }
+
+        ref.where("uid", "==", item.uid).get().then((res)=>{
+         if(res.docs[0].id){
+            ref.doc(res.docs[0].id).update({
+                requests: firestore.FieldValue.arrayUnion(insidedata)
+            }).then(() => {
+                ToastAndroid.show("Request Sent Succesfully", ToastAndroid.SHORT)
+                ref2.doc(mydocid).update({
+                    requestssent: firestore.FieldValue.arrayUnion(insidedata)
+                }).then(() => {
+                    ToastAndroid.show("Request Sent Succesfully", ToastAndroid.SHORT)
+                })
+            })
+         }else{
+            ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
+         }
+         
+        })
+
+       
+        .catch(()=>{
+            ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
+        })
+
     }
 
 
@@ -105,7 +135,7 @@ const BrandSearch = ({ navigation, route }) => {
             <StatusBar barStyle={"dark-content"} backgroundColor={"white"} />
             <SafeAreaView style={style.container}>
 
-            <View style={style.textinput} >
+                <View style={style.textinput} >
                     <TouchableOpacity onPress={() => { navigation.navigate("Home") }} style={{ height: "100%", width: 20, justifyContent: "center", }} >
                         <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ left: 10 }} />
                     </TouchableOpacity>
@@ -138,7 +168,7 @@ const BrandSearch = ({ navigation, route }) => {
                                                 <View style={style.cardright} >
                                                     <View style={{ height: "100%" }} >
                                                         <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
-                                                            <View style={{width:"80%"}} >
+                                                            <View style={{ width: "80%" }} >
                                                                 <Text numberOfLines={1} style={style.name} >{item.campaigntitle}</Text>
                                                                 <Text style={style.category} >{item.brandpostcategory}</Text>
                                                             </View>
@@ -152,7 +182,7 @@ const BrandSearch = ({ navigation, route }) => {
 
 
                                                             /> */}
-                                                            <Text style={{ position: "absolute", right: 5,fontSize:10,color:"grey",top:4 }}>{postedOn(item.createdAt)}</Text>
+                                                            <Text style={{ position: "absolute", right: 5, fontSize: 10, color: "grey", top: 4 }}>{postedOn(item.createdAt)}</Text>
                                                         </View>
 
 
@@ -190,12 +220,19 @@ const BrandSearch = ({ navigation, route }) => {
                                             </View>
 
                                             <View style={style.buttondiv} >
-                                                <View style={style.button1} >
-                                                    <Text style={style.button1text} >Save for review</Text>
-                                                </View>
-                                                <View style={style.button2} >
-                                                    <Text style={style.button2text} >Apply</Text>
-                                                </View>
+
+                                                <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={style.button1} >
+                                                    <View>
+                                                        <Text style={style.button1text} >Save for review</Text>
+                                                    </View>
+                                                </TouchableRipple >
+
+                                                <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
+                                                    <View  >
+                                                        <Text style={style.button2text} >Apply</Text>
+                                                    </View>
+                                                </TouchableRipple >
+
 
                                             </View>
 
@@ -214,7 +251,7 @@ const BrandSearch = ({ navigation, route }) => {
 
                 </ScrollView>
 
-           
+
 
             </SafeAreaView>
         </>

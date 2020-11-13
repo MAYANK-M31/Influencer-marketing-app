@@ -64,7 +64,6 @@ const BrandDetail = ({ navigation, route }) => {
             });
 
             setinstaimages(filtered)
-
             setinstausername(data.instadata.data[0].username)
 
         } else if (data.youtubedata) {
@@ -72,7 +71,7 @@ const BrandDetail = ({ navigation, route }) => {
             setswitchtype("youtube")
         }
 
-        if (data.youtubedata !== undefined) {
+        if (data.youtubedata) {
 
             // console.log(JSON.parse(data.youtubedata).items[0].statistics);
             const uploadid = data.youtubedata.items[0].contentDetails.relatedPlaylists.uploads
@@ -120,9 +119,7 @@ const BrandDetail = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(false), Keyboard.dismiss() }} activeOpacity={1}>
                         <ImageBackground source={{ uri: data.backgroundimage ? data.backgroundimage : images[1] }} style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#f0f2f5", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }}  >
 
-                            <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(false), Keyboard.dismiss() }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
-                                <Ionicons color={"white"} size={22} name={"plus-circle"} />
-                            </TouchableOpacity>
+                          
                         </ImageBackground>
                     </TouchableOpacity>
 
@@ -130,12 +127,9 @@ const BrandDetail = ({ navigation, route }) => {
                         <View style={{ borderRadius: 30, height: 150, width: 150, overflow: "hidden", elevation: 5, zIndex: 10, borderWidth: 3, borderColor: "white" }}>
                             <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(true), Keyboard.dismiss() }} activeOpacity={1}>
 
-                                <ImageBackground source={{ uri: data.profileimage ? data.profileimage : images[1] }} style={{ width: "100%", height: "100%", backgroundColor: "#f0f2f5", alignItems: "flex-end", justifyContent: "flex-end" }}  >
+                                <ImageBackground source={{ uri: data.profileimage ? data.profileimage : images[0] }} style={{ width: "100%", height: "100%", backgroundColor: "#f0f2f5", alignItems: "flex-end", justifyContent: "flex-end" }}  >
 
-                                    <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(true), Keyboard.dismiss() }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
-                                        <Ionicons color={"white"} size={22} name={"plus-circle"} />
-                                    </TouchableOpacity>
-
+                                   
                                 </ImageBackground>
                             </TouchableOpacity>
                         </View>

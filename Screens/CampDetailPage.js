@@ -41,12 +41,12 @@ const CampDetailPage = ({ navigation, route }) => {
     const { state, dispatch } = useContext(MyContext)
     const { campaignposts, campaignpostedagain } = state;
 
-    const [ switchtype, setswitchtype ] = useState(null)
-    const [ instagram, setinstagram ] = useState(null)
-    const [instaimages,setinstaimages] = useState(null)
-    const [ instausername, setinstausername] = useState(null)
-    const [videoId,setvideoId] = useState([])
-    const [channelid,setchannelid] = useState(null)
+    const [switchtype, setswitchtype] = useState(null)
+    const [instagram, setinstagram] = useState(null)
+    const [instaimages, setinstaimages] = useState(null)
+    const [instausername, setinstausername] = useState(null)
+    const [videoId, setvideoId] = useState([])
+    const [channelid, setchannelid] = useState(null)
 
     const data = route.params.data
 
@@ -54,8 +54,8 @@ const CampDetailPage = ({ navigation, route }) => {
         setswitchtype(item)
     }
 
-    useEffect(()=>{
-        if(data.instadata){
+    useEffect(() => {
+        if (data.instadata) {
             setinstagram(true)
             setswitchtype("instagram")
 
@@ -66,14 +66,14 @@ const CampDetailPage = ({ navigation, route }) => {
             setinstaimages(filtered)
 
             setinstausername(data.instadata.data[0].username)
-     
-        }else if(data.youtubedata){
+
+        } else if (data.youtubedata) {
             setinstagram(false)
             setswitchtype("youtube")
         }
 
-        if (data.youtubedata !== undefined) {
-         
+        if (data.youtubedata) {
+
             // console.log(JSON.parse(data.youtubedata).items[0].statistics);
             const uploadid = data.youtubedata.items[0].contentDetails.relatedPlaylists.uploads
             setchannelid(data.youtubedata.items[0].id)
@@ -89,7 +89,7 @@ const CampDetailPage = ({ navigation, route }) => {
             }
             youtubefunc()
         }
-    },[])
+    }, [])
 
     return (
         <>
@@ -356,34 +356,37 @@ const CampDetailPage = ({ navigation, route }) => {
                         <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>{data.campaigndescription}</Text>
                     </View>
 
-                      {/* ____________________________________________LinkBox_______________________________________________________ */}
-
-                      <View style={{ minHeight: 50, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", flexDirection: "row",marginTop:20, borderRadius: 10, paddingVertical: 15, alignItems: "center", justifyContent: "space-evenly" }} >
-                        {data.instadata ?
-                            <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.instagram.com/" + `${instausername}` }) }} style={[style.linkcard, { width: data.instadata && !data.youtubedata ? WiDTH - WiDTH * 0.1 : WiDTH - WiDTH * 0.55 }]} >
-                                <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/instagram.png")} />
-                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#404852" }} >Instagram</Text>
-                                <Ionicons color={"#404852"} style={{ position: "absolute", right: 10 }} size={15} name={"external-link"} />
-                            </TouchableOpacity>
-                            :
-                            null
-                        }
-                        {data.youtubedata ?
-                            <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.youtube.com/channel/" + `${channelid}` }) }} style={[style.linkcard, { width: !data.instadata && data.youtubedata ? WiDTH - WiDTH * 0.1 : WiDTH - WiDTH * 0.55 }]} >
-                                <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/youtube.png")} />
-                                <Text style={{ fontSize: 15, fontWeight: "bold", color: "#404852" }} >YouTube</Text>
-                                <Ionicons color={"#404852"} style={{ position: "absolute", right: 10 }} size={15} name={"external-link"} />
-                            </TouchableOpacity>
-                            : 
-                            null
-                        }
-                    </View>
+                    {/* ____________________________________________LinkBox_______________________________________________________ */}
+                    {data.youtubedata || data.instadata ?
+                        <View style={{ minHeight: 50, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", flexDirection: "row", marginTop: 20, borderRadius: 10, paddingVertical: 15, alignItems: "center", justifyContent: "space-evenly" }} >
+                            {data.instadata ?
+                                <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.instagram.com/" + `${instausername}` }) }} style={[style.linkcard, { width: data.instadata && !data.youtubedata ? WiDTH - WiDTH * 0.1 : WiDTH - WiDTH * 0.55 }]} >
+                                    <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/instagram.png")} />
+                                    <Text style={{ fontSize: 15, fontWeight: "bold", color: "#404852" }} >Instagram</Text>
+                                    <Ionicons color={"#404852"} style={{ position: "absolute", right: 10 }} size={15} name={"external-link"} />
+                                </TouchableOpacity>
+                                :
+                                null
+                            }
+                            {data.youtubedata ?
+                                <TouchableOpacity onPress={() => { navigation.navigate("Browser", { link: "https://www.youtube.com/channel/" + `${channelid}` }) }} style={[style.linkcard, { width: !data.instadata && data.youtubedata ? WiDTH - WiDTH * 0.1 : WiDTH - WiDTH * 0.55 }]} >
+                                    <Image style={{ width: 25, height: 25, marginRight: 5 }} source={require("../Icons/youtube.png")} />
+                                    <Text style={{ fontSize: 15, fontWeight: "bold", color: "#404852" }} >YouTube</Text>
+                                    <Ionicons color={"#404852"} style={{ position: "absolute", right: 10 }} size={15} name={"external-link"} />
+                                </TouchableOpacity>
+                                :
+                                null
+                            }
+                        </View>
+                        :
+                        null
+                    }
 
 
                     <View style={style.gallery} >
                         {data.instadata ?
                             <TouchableRipple rippleColor="rgb(0,0,0,0.32)" activeOpacity={1} onPress={() => { setinstagram(true), switchfunc("instagram") }} style={style.galleryleft} >
-                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} color={switchtype == "instagram" ? "#0296f6" : "#9e9e9e"}  size={25} name={"instagram"} />
+                                <Ionicons style={{ width: 25, height: 25, marginRight: 5 }} color={switchtype == "instagram" ? "#0296f6" : "#9e9e9e"} size={25} name={"instagram"} />
                             </TouchableRipple>
                             :
                             null
@@ -433,21 +436,21 @@ const CampDetailPage = ({ navigation, route }) => {
                     {data.youtubedata ?
                         !instagram ?
                             <View  >
-                               {videoId.map((item) =>
-                                <View style={{
-                                    width: "100%", paddingHorizontal: 10, justifyContent: "center", alignItems: "center", marginBottom: 10, overflow: "hidden"
-                                }} >
-                                    <View style={{ width: "98%", height: 200, backgroundColor: "white", alignSelf: "center", borderRadius: 10, overflow: "hidden" }} >
+                                {videoId.map((item) =>
+                                    <View style={{
+                                        width: "100%", paddingHorizontal: 10, justifyContent: "center", alignItems: "center", marginBottom: 10, overflow: "hidden"
+                                    }} >
+                                        <View style={{ width: "98%", height: 200, backgroundColor: "white", alignSelf: "center", borderRadius: 10, overflow: "hidden" }} >
 
-                                        <WebView
-                                            javaScriptEnabled={true}
-                                            domStorageEnabled={true}
-                                            source={{ uri: 'https://www.youtube.com/embed/' + `${item.snippet.resourceId.videoId}` }}
-                                        />
+                                            <WebView
+                                                javaScriptEnabled={true}
+                                                domStorageEnabled={true}
+                                                source={{ uri: 'https://www.youtube.com/embed/' + `${item.snippet.resourceId.videoId}` }}
+                                            />
+                                        </View>
+
                                     </View>
-
-                                </View>
-                            )}
+                                )}
 
                             </View>
                             :

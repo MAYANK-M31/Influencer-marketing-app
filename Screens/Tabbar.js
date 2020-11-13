@@ -15,6 +15,7 @@ import BrandProfile from './BrandProfile';
 import BrandPostCampaignPage from './BrandPostCampaignPage';
 import BrandPostCampStack from './BrandPostCampStack';
 import BrandProfileStack from './BrandProfileStack';
+import JobsStack from './JobsStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -69,7 +70,7 @@ const Tabbar = () => {
                null
             }
 
-            <Tab.Screen name="Jobs" component={Jobs} />
+            <Tab.Screen name="Jobs" component={JobsStack} />
             
             {
             type == "influencer" ?
