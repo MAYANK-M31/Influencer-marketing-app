@@ -140,7 +140,7 @@ const BrandSearch = ({ navigation, route }) => {
                         <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ left: 10 }} />
                     </TouchableOpacity>
 
-                    <TextInput style={style.textinputtext} placeholder={"Search Brand ,Campaign"} />
+                    <TextInput style={style.textinputtext}  placeholder={"Search Brand ,Campaign"} />
                 </View>
 
 

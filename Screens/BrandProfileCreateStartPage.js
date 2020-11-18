@@ -24,7 +24,11 @@ const HEIGHT = Dimensions.get("window").height
 
 const BrandProfileCreateStartPage = ({ navigation }) => {
 
-    
+    const func =async ()=>{
+        console.log(await AsyncStorage.getItem("datauploadeduser"));
+        
+    }
+    func()
 
     const { dispatch } = useContext(MyContext)
 
@@ -61,7 +65,7 @@ const BrandProfileCreateStartPage = ({ navigation }) => {
 
                 <Image style={{ height: 250, width: 250, borderRadius: 250 }} source={require("../Icons/illustartion1.jpg")} />
                 <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "#404852", marginTop: 10 }} >Hi I am Jojo !</Text>
-                <TouchableOpacity onPress={() => logout()} style={{ position: "absolute", bottom: 160,flexDirection:"row",alignItems:"center" }} >
+                <TouchableOpacity onPress={() => logout()} style={{ position: "absolute", bottom: HEIGHT*0.20,flexDirection:"row",alignItems:"center" }} >
                     <Text style={{ alignSelf: "center", fontSize: 13, fontWeight: "100", color: "#409cff" }} >Log in with another number</Text>
                     <Ionicons style={{top:1,left:2}}  color={"#409cff"}  size={20} name={"arrow-right"} />
                 </TouchableOpacity>

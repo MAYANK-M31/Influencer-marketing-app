@@ -23,6 +23,16 @@ const HEIGHT = Dimensions.get("window").height
 
 const Choose = ({navigation}) => {
 
+    const [fontsize, setfontsize] = useState(40)
+
+    useEffect(() => {
+        if (WiDTH < 365) {
+            setfontsize(38)
+        } else {
+            setfontsize(42)
+        }
+
+    }, [])
     
     const {dispatch } = useContext(MyContext)
 
@@ -41,8 +51,8 @@ const Choose = ({navigation}) => {
             <SafeAreaView style={style.container}>
 
                 <View style={style.header} >
-                    <Text style={{ alignSelf: "center", fontSize: 42, fontWeight: "bold",color:"#404852" }} >Are you Influencer</Text>
-                    <Text style={{ alignSelf: "flex-start", fontSize: 42, fontWeight: "bold",color:"#404852" }} >or Brand ?</Text>
+                    <Text style={{ alignSelf: "center", fontSize: fontsize, fontWeight: "bold",color:"#404852" }} >Are you Influencer</Text>
+                    <Text style={{ alignSelf: "flex-start", fontSize: fontsize, fontWeight: "bold",color:"#404852" }} >or Brand ?</Text>
                 </View>
 
                 <TouchableOpacity onPress={()=>choose("influencer")} style={{ height: 60, width: 200, backgroundColor: "#1e87fd", alignItems: "center", justifyContent: "center", borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, marginBottom: 20 }} >

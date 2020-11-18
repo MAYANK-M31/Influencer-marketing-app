@@ -62,7 +62,7 @@ const Search = ({ navigation }) => {
                         <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ left: 10 }} />
                     </TouchableOpacity>
 
-                    <TextInput style={style.textinputtext} placeholder={"Search Influencer"} />
+                    <TextInput style={style.textinputtext} underlineColorAndroid={"white"}  placeholder={"Search Influencer"} />
                 </View>
 
                 <ScrollView scrollEventThrottle={16} contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }} >

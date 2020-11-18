@@ -9,7 +9,7 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Button, BackHandler, Alert, AsyncStorage,Modal
+    Button, BackHandler, Alert, AsyncStorage, Modal
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -17,6 +17,7 @@ import Icons from "react-native-vector-icons/Ionicons"
 import auth from '@react-native-firebase/auth';
 import axios from "axios"
 import firestore from "@react-native-firebase/firestore"
+import database from '@react-native-firebase/database';
 
 import { MyContext } from './AppStartStack';
 import WebView from 'react-native-webview';
@@ -32,7 +33,7 @@ const Home = ({ navigation }) => {
     const { state, dispatch } = useContext(MyContext)
     const { type } = state;
 
-   
+
 
     const func = async () => {
         const type = await AsyncStorage.getItem("type")
@@ -41,29 +42,31 @@ const Home = ({ navigation }) => {
     }
     func()
 
+  
+
 
     // useEffect(() => {
-        // const my = async () => {
-        //     var bodyFormData = new FormData();
-        //     bodyFormData.append('client_id', '441868563443736');
-        //     bodyFormData.append('client_secret', 'a04a79f825f35458456f049b802c7f3b');
-        //     bodyFormData.append('code', 'AQBEYAgfAypbH_tk8_9Uy4TZ4rYsgHyTJLiHZquwMLFM5wiptEfgIzmDtO5paDSMhlSwtzPYIYY1N5Gt9yu1VEAUTbYC4vh8Yy1cM_4ZXPRckff4PpCmEUBg2is7ThOCJrR3D5LafWvInZDzi3NQ8qs8tDcxKjaJy_k5EP6Dt2hLohnk6kVmSjDtkhWLIdHyUJhvQcnhUlDJRRZVmT0e7TMdP_2ukvVDW-c-_185hTSyGg');
-        //     bodyFormData.append('grant_type', 'authorization_code');
-        //     bodyFormData.append('redirect_uri', 'https://www.google.com/');
-        //     await axios({
-        //         method: "post",
-        //         url: "https://api.instagram.com/oauth/access_token?",
-        //         data: bodyFormData,
+    // const my = async () => {
+    //     var bodyFormData = new FormData();
+    //     bodyFormData.append('client_id', '441868563443736');
+    //     bodyFormData.append('client_secret', 'a04a79f825f35458456f049b802c7f3b');
+    //     bodyFormData.append('code', 'AQBEYAgfAypbH_tk8_9Uy4TZ4rYsgHyTJLiHZquwMLFM5wiptEfgIzmDtO5paDSMhlSwtzPYIYY1N5Gt9yu1VEAUTbYC4vh8Yy1cM_4ZXPRckff4PpCmEUBg2is7ThOCJrR3D5LafWvInZDzi3NQ8qs8tDcxKjaJy_k5EP6Dt2hLohnk6kVmSjDtkhWLIdHyUJhvQcnhUlDJRRZVmT0e7TMdP_2ukvVDW-c-_185hTSyGg');
+    //     bodyFormData.append('grant_type', 'authorization_code');
+    //     bodyFormData.append('redirect_uri', 'https://www.google.com/');
+    //     await axios({
+    //         method: "post",
+    //         url: "https://api.instagram.com/oauth/access_token?",
+    //         data: bodyFormData,
 
-        //     })
-        //         .then((res) => {
-        //             console.log(res.data);
-        //         })
-        //         .catch((e) => {
-        //             console.log("err", e);
+    //     })
+    //         .then((res) => {
+    //             console.log(res.data);
+    //         })
+    //         .catch((e) => {
+    //             console.log("err", e);
 
-        //         })
-        // }
+    //         })
+    // }
     //     my()
     // }, {})
 
@@ -88,35 +91,35 @@ const Home = ({ navigation }) => {
     // useEffect(()=>{
     //     // CookieManager.clearAll(true)
     //     // console.log(data.url);
-        
+
     //     var str = "https://www.google.com/?code=AQASEYleKhX1Z6r8RRB-xnDkKCyx88CnoO4NUbPV2-4uKDORmGjGL8SrB79u-thpatD7jd5OsMzHutwm90OUdWYU9-Wv8Nivy-gAR20uYTNmTfHpsMAwmKSl3ojKZ5cFWt9evM4DvsxWzuPx2yvBYJT3H-b3YvzpRrDQUMw7KQfZ21qajUvfett5uhPs4hZJ0vUBdwPwwY1srD1-l8aeVAIB-yjEdxYlubeCa3R_Ax9Fow#_"
-        
-       
+
+
     //     if(x !== -1){
-        
-        
+
+
     //         console.log("got it");
-            
+
     //     }
     // },[])
 
-    const urlcodefinder =async(data)=>{
+    const urlcodefinder = async (data) => {
         // console.log(data.url);
-        
+
         var str = data.url
         var x = str.search("/?code=")
-        if(x !== -1){
-        
+        if (x !== -1) {
+
             // console.log("got it",data.url);
-            var y = data.url.split("=")[1].replace("#_","")
+            var y = data.url.split("=")[1].replace("#_", "")
             console.log(y);
-            
-            
+
+
         }
-       
+
     }
 
-  
+
 
 
 
@@ -184,7 +187,7 @@ const Home = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <TouchableOpacity onPress={async () => { await AsyncStorage.clear(), dispatch({ type: "ADD_LOGGEDIN", payload: false }) }} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
+                    <TouchableOpacity onPress={async () => {  await AsyncStorage.multiRemove(["datauploadeduser", "loggedin", "phonenumber", "uid"]),dispatch({ type: "ADD_LOGGEDIN", payload: false }) }} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
 

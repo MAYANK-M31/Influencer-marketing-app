@@ -11,7 +11,7 @@ import {
     TouchableOpacity,
     AsyncStorage,
     Slider,
-    ToastAndroid,ImageBackground,Keyboard
+    ToastAndroid, ImageBackground, Keyboard
 } from 'react-native';
 
 import { TextInput, DefaultTheme, Modal, TouchableRipple, Dialog, Paragraph, ActivityIndicator, Button } from "react-native-paper"
@@ -84,6 +84,28 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
     const [show2, setShow2] = useState(false);
     const [datechanged, setdatechanged] = useState(false)
     const [date2changed, setdate2changed] = useState(null)
+    const [modalheight, setmodalheight] = useState(null)
+    const [shortphone, setshortphone] = useState(false)
+
+    const [padding, setpadding] = useState(0.90)
+    const [fontsize, setfontsize] = useState(35)
+
+    useEffect(() => {
+        if (HEIGHT < 650) {
+            setpadding(0.80)
+            setfontsize(30)
+            setmodalheight(0.51)
+            setshortphone(true)
+        } else {
+            setpadding(0.90)
+            setfontsize(35)
+            setmodalheight(0.44)
+            setshortphone(false)
+        }
+
+    }, [])
+
+
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -134,8 +156,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
         });
     }
 
- 
-    
+
+
 
     const launchcameralogo = () => {
         ImagePicker.launchCamera(options, (response) => {
@@ -443,7 +465,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
 
 
-    const skip=()=>{
+    const skip = () => {
         navigation.navigate("BrandDataUpload", {
             name: route.params.name,
             brandname: route.params.brandname,
@@ -452,8 +474,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
             category: route.params.category,
             website: route.params.website,
             applink: route.params.applink,
-            postcampaign:false
-          
+            postcampaign: false
+
         })
     }
 
@@ -497,8 +519,8 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
                 <ScrollView keyboardShouldPersistTaps={"always"} style={{ width: "100%", height: HEIGHT }} contentContainerStyle={{ paddingBottom: 160 }} >
                     <View style={style.heading} >
-                        <Text style={{ alignSelf: "flex-start", fontSize: 35, fontWeight: "bold", color: "#404852" }} >Post about your brand</Text>
-                        <Text style={{ alignSelf: "flex-start", fontSize: 35, fontWeight: "bold", color: "#404852", top: -8 }} >Campaign</Text>
+                        <Text style={{ alignSelf: "flex-start", fontSize: fontsize, fontWeight: "bold", color: "#404852" }} >Post about your brand</Text>
+                        <Text style={{ alignSelf: "flex-start", fontSize: fontsize, fontWeight: "bold", color: "#404852", top: -8 }} >Campaign</Text>
                     </View>
 
                     <TouchableOpacity onPress={() => { setvisibleselectimagelogo(true), setforprofile(false), Keyboard.dismiss() }} activeOpacity={1}>
@@ -1254,7 +1276,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                                 display="default"
                                 onChange={onChange}
                                 minimumDate={new Date()}
-                                maximumDate={date2changed ? date2 : new Date(2100,12)}
+                                maximumDate={date2changed ? date2 : new Date(2100, 12)}
                             />
                             :
                             null
@@ -1288,56 +1310,56 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                             {source.length > 0 ?
                                 <>
                                     {sourceupdated ?
-                                    <>
-                                        {
-                                            source.map((item) =>
-                                                <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate("ImageReviewScroll", { items: source,item:item }) }} style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
-                                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { removeimage(item) }} style={{ width: 40, height: 40, position: "absolute", zIndex: 1, right: -20, top: -20, justifyContent: "center", alignItems: "center" }} >
-                                                        <View style={{ width: 20, height: 20, elevation: 1, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
-                                                            <Ionicons style={{ borderRadius: 100, backgroundColor: "white" }} color={"#1e87fd"} size={20} name={"x-circle"} />
-                                                        </View>
+                                        <>
+                                            {
+                                                source.map((item) =>
+                                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate("ImageReviewScroll", { items: source, item: item }) }} style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
+                                                        <TouchableOpacity activeOpacity={0.9} onPress={() => { removeimage(item) }} style={{ width: 40, height: 40, position: "absolute", zIndex: 1, right: -20, top: -20, justifyContent: "center", alignItems: "center" }} >
+                                                            <View style={{ width: 20, height: 20, elevation: 1, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
+                                                                <Ionicons style={{ borderRadius: 100, backgroundColor: "white" }} color={"#1e87fd"} size={20} name={"x-circle"} />
+                                                            </View>
+                                                        </TouchableOpacity>
+
+
+                                                        <ImageBackground style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{ uri: item.uri }} >
+                                                            <View style={{ backgroundColor: "rgba(0, 0, 0, .32)", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                                                                <Ionicons name={"eye"} color={"white"} size={25} />
+                                                            </View>
+
+                                                        </ImageBackground>
+
+
+
+
                                                     </TouchableOpacity>
-
-
-                                                    <ImageBackground style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{ uri: item.uri }} >
-                                                        <View style={{ backgroundColor: "rgba(0, 0, 0, .32)", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                                                            <Ionicons name={"eye"} color={"white"} size={25} />
-                                                        </View>
-
-                                                    </ImageBackground>
-
-
-
-
-                                                </TouchableOpacity>
-                                            )
-                                        }
+                                                )
+                                            }
                                         </>
                                         :
                                         <>
-                                        {
-                                            source.map((item) =>
-                                                <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate("ImageReviewScroll", { items: source,item:item }) }} style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
-                                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { removeimage(item) }} style={{ width: 40, height: 40, position: "absolute", zIndex: 1, right: -20, top: -20, justifyContent: "center", alignItems: "center" }} >
-                                                        <View style={{ width: 20, height: 20, elevation: 1, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
-                                                            <Ionicons style={{ borderRadius: 100, backgroundColor: "white" }} color={"#1e87fd"} size={20} name={"x-circle"} />
-                                                        </View>
+                                            {
+                                                source.map((item) =>
+                                                    <TouchableOpacity activeOpacity={0.9} onPress={() => { navigation.navigate("ImageReviewScroll", { items: source, item: item }) }} style={{ width: 80, height: 80, margin: 5, backgroundColor: "white", borderColor: "#1e87fd", borderWidth: 2, borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
+                                                        <TouchableOpacity activeOpacity={0.9} onPress={() => { removeimage(item) }} style={{ width: 40, height: 40, position: "absolute", zIndex: 1, right: -20, top: -20, justifyContent: "center", alignItems: "center" }} >
+                                                            <View style={{ width: 20, height: 20, elevation: 1, backgroundColor: "white", borderRadius: 100, justifyContent: "center", alignItems: "center" }}>
+                                                                <Ionicons style={{ borderRadius: 100, backgroundColor: "white" }} color={"#1e87fd"} size={20} name={"x-circle"} />
+                                                            </View>
+                                                        </TouchableOpacity>
+
+
+                                                        <ImageBackground style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{ uri: item.uri }} >
+                                                            <View style={{ backgroundColor: "rgba(0, 0, 0, .32)", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
+                                                                <Ionicons name={"eye"} color={"white"} size={25} />
+                                                            </View>
+
+                                                        </ImageBackground>
+
+
+
+
                                                     </TouchableOpacity>
-
-
-                                                    <ImageBackground style={{ width: "100%", height: "100%" }} resizeMode={"cover"} source={{ uri: item.uri }} >
-                                                        <View style={{ backgroundColor: "rgba(0, 0, 0, .32)", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
-                                                            <Ionicons name={"eye"} color={"white"} size={25} />
-                                                        </View>
-
-                                                    </ImageBackground>
-
-
-
-
-                                                </TouchableOpacity>
-                                            )
-                                        }
+                                                )
+                                            }
                                         </>
                                     }
 
@@ -1373,20 +1395,20 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
 
                 </ScrollView>
 
-                <TouchableOpacity activeOpacity={0.9} onPress={() => {submit() }} style={{
+                <TouchableOpacity activeOpacity={0.9} onPress={() => { submit() }} style={{
                     height: 55, width: "85%", backgroundColor: "#1e87fd"
                     , alignItems: "center", flexDirection: "row", justifyContent: "center", alignSelf: "center",
-                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10,position:"absolute",top:HEIGHT*0.90,elevation:1
+                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, margin: 10, position: "absolute", top: HEIGHT * padding, elevation: 1
                 }} >
                     <Text style={{ alignSelf: "center", fontSize: 18, fontWeight: "bold", color: "white" }} >Next</Text>
-                  
-                   
+
+
                 </TouchableOpacity>
 
             </SafeAreaView>
 
             <Modal visible={modalvisible} onDismiss={() => setmodalvisible(false)} dismissable={true}   >
-                <View style={{ backgroundColor: "white", width: WiDTH * 0.8, height: HEIGHT * 0.44, borderRadius: 10, alignSelf: "center" }}>
+                <View style={{ backgroundColor: "white", width: WiDTH * 0.90, height: HEIGHT * modalheight, borderRadius: 10, alignSelf: "center" }}>
                     <View style={{ flexWrap: "wrap", width: "100%", flexDirection: "row", alignItems: "center", height: "100%", padding: 5 }} >
 
                         <TouchableOpacity activeOpacity={1} onPress={() => { selectcategory("entertainment"), setmodalvisible(false) }} style={{
@@ -1522,7 +1544,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => setvisibleselectimage(false)} style={{ width: WiDTH, height: HEIGHT * 3 / 4 }}>
 
                     </TouchableOpacity>
-                    <View style={{ width: WiDTH, height: HEIGHT / 4, backgroundColor: "white", position: "absolute", bottom: -25, borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
+                    <View style={{ width: WiDTH, height: HEIGHT / 4, backgroundColor: "white", position: "absolute", bottom: shortphone ? 0 : -10, borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
                         <View style={{ width: "100%", height: "35%", justifyContent: "center" }}>
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2a3659", marginLeft: 20 }} >Choose Given options</Text>
                         </View>
@@ -1563,7 +1585,7 @@ const BrandPostCampaignPage = ({ navigation, route }) => {
                     <TouchableOpacity onPress={() => setvisibleselectimagelogo(false)} style={{ width: WiDTH, height: HEIGHT * 3 / 4 }}>
 
                     </TouchableOpacity>
-                    <View style={{ width: WiDTH, height: HEIGHT / 4, backgroundColor: "white", position: "absolute", bottom: -25, borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
+                    <View style={{ width: WiDTH, height: HEIGHT / 4, backgroundColor: "white", position: "absolute", bottom: shortphone ? 0 : -10, borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
                         <View style={{ width: "100%", height: "35%", justifyContent: "center" }}>
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#2a3659", marginLeft: 20 }} >{forprofile ? "Profile Logo" : "Background Image"}</Text>
                         </View>

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -23,12 +23,22 @@ const HEIGHT = Dimensions.get("window").height
 
 const Browser = ({ route, navigation }) => {
     const [loading, setloading] = useState(true)
+    const [link, setlink] = useState(null)
 
+    useEffect(() => {
+        if (route.params.link) {
+            setlink(route.params.link)
+            console.log(route.params.link);
+            
+        } else {
+            setlink(null)
+        }
+    }, [])
 
     return (
         <>
             <StatusBar barStyle={"dark-content"} backgroundColor={"white"} />
-            <SafeAreaView style={{ flex:1, backgroundColor: "white" }} >
+            <SafeAreaView style={{ flex: 1, backgroundColor: "white" }} >
 
                 <View style={style.header} >
                     <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
@@ -42,11 +52,14 @@ const Browser = ({ route, navigation }) => {
 
                 </View>
 
-                <View style={{ flex:1}}>
-                    <WebView
-                    
-                        onLoadEnd={() => { setloading(false) }}
-                        source={{ uri: route.params.link }} />
+                <View style={{ flex: 1 }}>
+                    {link ?
+                        <WebView
+                            onLoadEnd={() => { setloading(false) }}
+                            source={{ uri: link }} />
+                        :
+                        null
+                    }
                 </View>
 
 

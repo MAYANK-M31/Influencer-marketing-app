@@ -482,6 +482,10 @@ const BrandDataUpload = ({ navigation, route }) => {
                     }).then(() => {
                         ToastAndroid.show("Signed in successfully", ToastAndroid.SHORT)
                         dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
+                        const myfunc = async () => {
+                            await AsyncStorage.setItem("datauploadeduser", "true")
+                        }
+                        myfunc()
                     })
                 } else {
                     imageuploadfunc()
@@ -528,9 +532,14 @@ const BrandDataUpload = ({ navigation, route }) => {
                     website: route.params.website,
                     applink: route.params.applink,
                     createdAt: (new Date()).toString()
-                }).then(() => {
+                }).then(async() => {
                     ToastAndroid.show("Signed in successfully", ToastAndroid.SHORT)
                     dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
+                    const myfunc = async () => {
+                        await AsyncStorage.setItem("datauploadeduser", "true")
+                    }
+                    myfunc()
+
                 })
             } else {
                 ref.add({
@@ -543,9 +552,11 @@ const BrandDataUpload = ({ navigation, route }) => {
                     website: route.params.website,
                     applink: route.params.applink,
                     createdAt: (new Date()).toString()
-                }).then(() => {
+                }).then(async() => {
                     settext("Posting Your Campaign")
                     ToastAndroid.show("Signed in successfully", ToastAndroid.SHORT)
+                  
+
                     const datamodal = {
                         uid: uid,
                         campaigntitle: route.params.campaigntitle,
@@ -581,7 +592,11 @@ const BrandDataUpload = ({ navigation, route }) => {
                         dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: datamodal })
                         dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
 
-                        await AsyncStorage.setItem("datauploadeduser", "true")
+                        const myfunc = async () => {
+                            await AsyncStorage.setItem("datauploadeduser", "true")
+                            
+                        }
+                        myfunc()
 
                         ToastAndroid.show("Campaign Posted Successfully", ToastAndroid.SHORT)
                     })

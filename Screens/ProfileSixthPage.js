@@ -69,7 +69,8 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             youtubedata:route.params.youtubedata,
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
-                            maxrange: route.params.maxrange
+                            maxrange: route.params.maxrange,
+                            experiences:[]
                         })
                     }else if(route.params.youtubedata == null){
                         ref.add({
@@ -82,7 +83,8 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             instadata:route.params.instadata,
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
-                            maxrange: route.params.maxrange
+                            maxrange: route.params.maxrange,
+                            experiences:[]
                         })
                     }else{
                         ref.add({
@@ -96,7 +98,8 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             instadata:route.params.instadata,
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
-                            maxrange: route.params.maxrange
+                            maxrange: route.params.maxrange,
+                            experiences:[]
                         })
                     }
                    

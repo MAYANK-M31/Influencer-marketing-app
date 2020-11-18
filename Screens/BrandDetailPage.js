@@ -32,6 +32,19 @@ const BrandDetailPage = ({ navigation, route }) => {
 
     const [disable, setdisable] = useState(true)
 
+    const [padding,setpadding] = useState(null)
+
+    useEffect(() => {
+        if (HEIGHT < 650) {
+            setpadding(20)
+         
+        } else {
+           
+        
+        }
+
+    }, [])
+
     const submit = () => {
         if (!/[^\s]/.test(name) == true || !/[^\s]/.test(brandname) == true || !/[^\s]/.test(email) == true || !/[^\s]/.test(city) == true) {
             ToastAndroid.show("Please Fill Details", ToastAndroid.SHORT)
@@ -196,7 +209,7 @@ const BrandDetailPage = ({ navigation, route }) => {
                 <TouchableOpacity onPress={() => { submit() }} style={{
                     height: 55, width: "85%", backgroundColor: "#1e87fd"
                     , alignItems: "center", flexDirection: "row", justifyContent: "center",
-                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, position: "absolute", top: HEIGHT - 85
+                    borderColor: "#1e87fd", borderWidth: 1, borderRadius: 50, position: "absolute", top: (HEIGHT - 80)-padding
                 }} >
                     <View style={{ height: 52, width: 52, borderRadius: 100, justifyContent: "center", alignItems: "center", backgroundColor: "white", left: 0, position: "absolute" }} >
                         <Ionicons name={"arrow-right"} color={"black"} size={25} />
