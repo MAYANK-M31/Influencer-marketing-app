@@ -34,12 +34,17 @@ const BrandSearch = ({ navigation, route }) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const [loading, setloading] = useState(null)
     const [campaignposts, setcampaignposts] = useState([])
+    
 
-  
+    const { dispatch, state } = useContext(MyContext)
+    const { requestsent } = state;
+
 
     var array = []
     useEffect(() => {
         setloading(true)
+        // console.log(requestsent);
+
         const func = async () => {
 
 
@@ -102,30 +107,31 @@ const BrandSearch = ({ navigation, route }) => {
         const ref = await firestore().collection("brandaccount")
         const ref2 = await firestore().collection("influencer")
         const mydocid = await AsyncStorage.getItem("DocId")
-        const insidedata = { personId: Id,postId:item.postId, CreatedAt: new Date(), accepted: false }
+        const insidedata = { personId: Id, postId: item.postId, CreatedAt: new Date(), accepted: false }
+        dispatch({type:"ADD_REQUESTSENT",payload:insidedata}) 
 
-        ref.where("uid", "==", item.uid).get().then((res)=>{
-         if(res.docs[0].id){
-            ref.doc(res.docs[0].id).update({
-                requests: firestore.FieldValue.arrayUnion(insidedata)
-            }).then(() => {
-                ToastAndroid.show("Request Sent Succesfully", ToastAndroid.SHORT)
-                ref2.doc(mydocid).update({
-                    requestssent: firestore.FieldValue.arrayUnion(insidedata)
+        ref.where("uid", "==", item.uid).get().then((res) => {
+            if (res.docs[0].id) {
+                ref.doc(res.docs[0].id).update({
+                    requests: firestore.FieldValue.arrayUnion(insidedata)
                 }).then(() => {
-                    ToastAndroid.show("Request Sent Succesfully", ToastAndroid.SHORT)
+                    // ToastAndroid.show("Request Sent Succesfully", ToastAndroid.SHORT)
+                    ref2.doc(mydocid).update({
+                        requestssent: firestore.FieldValue.arrayUnion(insidedata)
+                    }).then(() => {
+                        ToastAndroid.show("Request Sent Succesfully", ToastAndroid.SHORT)
+                    })
                 })
-            })
-         }else{
-            ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
-         }
-         
+            } else {
+                ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
+            }
+
         })
 
-       
-        .catch(()=>{
-            ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
-        })
+
+            .catch(() => {
+                ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
+            })
 
     }
 
@@ -140,7 +146,7 @@ const BrandSearch = ({ navigation, route }) => {
                         <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ left: 10 }} />
                     </TouchableOpacity>
 
-                    <TextInput style={style.textinputtext}  placeholder={"Search Brand ,Campaign"} />
+                    <TextInput style={style.textinputtext} placeholder={"Search Brand ,Campaign"} />
                 </View>
 
 
@@ -172,16 +178,7 @@ const BrandSearch = ({ navigation, route }) => {
                                                                 <Text numberOfLines={1} style={style.name} >{item.campaigntitle}</Text>
                                                                 <Text style={style.category} >{item.brandpostcategory}</Text>
                                                             </View>
-                                                            {/* <Switch
-                                                                trackColor={{ false: "#f0f2f5", true: "#2989ff" }}
-                                                                thumbColor={isEnabled ? "white" : "white"}
-                                                                ios_backgroundColor="#3e3e3e"
-                                                                onValueChange={toggleSwitch}
-                                                                value={isEnabled}
-                                                                style={{ position: "absolute", right: 0 }}
 
-
-                                                            /> */}
                                                             <Text style={{ position: "absolute", right: 5, fontSize: 10, color: "grey", top: 4 }}>{postedOn(item.createdAt)}</Text>
                                                         </View>
 
@@ -227,11 +224,42 @@ const BrandSearch = ({ navigation, route }) => {
                                                     </View>
                                                 </TouchableRipple >
 
-                                                <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
-                                                    <View  >
-                                                        <Text style={style.button2text} >Apply</Text>
-                                                    </View>
-                                                </TouchableRipple >
+                                                {requestsent.length > 0 ?
+                                                    <>
+                                                        {requestsent.map((sent) =>
+                                                            <>
+                                                                {sent.postId == item.postId ?
+                                                                    <>
+
+                                                                        <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.buttonapplied} >
+                                                                            <View style={{flexDirection:"row-reverse",alignItems:"center",width:"100%",height:"100%",justifyContent:"center"}}  >
+                                                                                <Text style={style.buttonappliedtext} >Applied</Text>
+                                                                                <Ionicons style={{left:5}} name={"check"} size={20} color={"white"} />
+                                                                            </View>
+                                                                        </TouchableRipple >
+
+
+                                                                    </>
+                                                                    :
+                                                                    <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
+                                                                        <View  >
+                                                                            <Text style={style.button2text} >Apply</Text>
+                                                                        </View>
+                                                                    </TouchableRipple >
+                                                                }
+                                                            </>
+
+
+                                                        )}
+                                                    </>
+
+                                                    :
+                                                    <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
+                                                        <View  >
+                                                            <Text style={style.button2text} >Apply</Text>
+                                                        </View>
+                                                    </TouchableRipple >
+                                                }
 
 
                                             </View>
@@ -373,7 +401,24 @@ const style = StyleSheet.create({
         fontSize: 16,
         color: "#409cff",
         fontWeight: 'bold'
-    }
+    },
+    buttonapplied: {
+        width: WiDTH / 2.5,
+        height: 45,
+        backgroundColor: "#007bff",
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        borderColor: "#007bff",
+        borderWidth: 1.5,
+        marginRight: 10
+    },
+    buttonappliedtext: {
+        fontSize: 16,
+        color: "white",
+        fontWeight: 'bold',
+        alignSelf:"center"
+    },
 
 
 

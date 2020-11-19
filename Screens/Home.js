@@ -31,8 +31,38 @@ const Home = ({ navigation }) => {
 
 
     const { state, dispatch } = useContext(MyContext)
-    const { type } = state;
+    const { type, requestsent } = state;
 
+    var array = []
+    useEffect(() => {
+        const myfunc = async () => {
+
+            const uid = await AsyncStorage.getItem("uid")
+            const type = await AsyncStorage.getItem("type")
+            dispatch({ type: "ADD_TYPE", payload: type })
+
+            if (type == "influencer") {
+                const ref = await firestore().collection("influencer").where("uid","==",uid)
+                ref.get().then(function (querySnapshot) {
+                    querySnapshot.forEach(function (doc) {
+                        if(doc.data().requestssent){
+                            dispatch({type:"ADD_REQUESTSENT",payload:doc.data().requestssent}) 
+                        }else{
+                            dispatch({type:"ADD_REQUESTSENT",payload:[]}) 
+                        }
+                        // console.log(doc.data().requestssent)
+                    
+                        
+                    })
+           
+                   
+                })
+            } else {
+
+            }
+        }
+        myfunc()
+    }, [])
 
 
     const func = async () => {
@@ -42,7 +72,7 @@ const Home = ({ navigation }) => {
     }
     func()
 
-  
+
 
 
     // useEffect(() => {
@@ -187,7 +217,7 @@ const Home = ({ navigation }) => {
                         </View>
                     </View>
 
-                    <TouchableOpacity onPress={async () => {  await AsyncStorage.multiRemove(["datauploadeduser", "loggedin", "phonenumber", "uid"]),dispatch({ type: "ADD_LOGGEDIN", payload: false }) }} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
+                    <TouchableOpacity onPress={async () => { await AsyncStorage.multiRemove(["datauploadeduser", "loggedin", "phonenumber", "uid"]), dispatch({ type: "ADD_LOGGEDIN", payload: false }) }} style={{ backgroundColor: "yellow", width: 100, height: 50 }} >
                         <Text>Log Out</Text>
                     </TouchableOpacity>
 

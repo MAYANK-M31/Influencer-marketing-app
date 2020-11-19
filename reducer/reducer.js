@@ -25,7 +25,8 @@ export const initState = {
     website: null,
     campaignposts: [],
     campaignpostedagain: false,
-    brandprofileimage: null
+    brandprofileimage: null,
+    requestsent: []  // To show requests user has sent for post (applied) 
 
 }
 
@@ -175,7 +176,11 @@ export const reducer = (state, action) => {
                 ...state,
                 brandprofileimage: action.payload
             }
-
+        case "ADD_REQUESTSENT":
+            return {
+                ...state,
+                requestsent: action.payload
+            }
 
         default:
             break;

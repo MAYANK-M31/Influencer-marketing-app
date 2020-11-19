@@ -29,7 +29,7 @@ const HEIGHT = Dimensions.get("window").height
 const ProfileSixthPage = ({ navigation, route }) => {
 
     const [disable, setdisable] = useState(true)
-    const {dispatch} = useContext(MyContext)
+    const { dispatch } = useContext(MyContext)
 
     // For YouTube Auth
     const [stats, setstats] = useState([])
@@ -58,7 +58,7 @@ const ProfileSixthPage = ({ navigation, route }) => {
             if (route.params.youtubedata || route.params.instadata) {
 
                 try {
-                    if(route.params.instadata == null){
+                    if (route.params.instadata == null) {
                         ref.add({
                             uid: uid,
                             name: route.params.name,
@@ -66,13 +66,13 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             email: route.params.email,
                             city: route.params.city,
                             category: route.params.category,
-                            youtubedata:route.params.youtubedata,
+                            youtubedata: route.params.youtubedata,
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
                             maxrange: route.params.maxrange,
-                            experiences:[]
+                            experiences: []
                         })
-                    }else if(route.params.youtubedata == null){
+                    } else if (route.params.youtubedata == null) {
                         ref.add({
                             uid: uid,
                             name: route.params.name,
@@ -80,13 +80,13 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             email: route.params.email,
                             city: route.params.city,
                             category: route.params.category,
-                            instadata:route.params.instadata,
+                            instadata: route.params.instadata,
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
                             maxrange: route.params.maxrange,
-                            experiences:[]
+                            experiences: []
                         })
-                    }else{
+                    } else {
                         ref.add({
                             uid: uid,
                             name: route.params.name,
@@ -94,24 +94,24 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             email: route.params.email,
                             city: route.params.city,
                             category: route.params.category,
-                            youtubedata:route.params.youtubedata,
-                            instadata:route.params.instadata,
+                            youtubedata: route.params.youtubedata,
+                            instadata: route.params.instadata,
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
                             maxrange: route.params.maxrange,
-                            experiences:[]
+                            experiences: []
                         })
                     }
-                   
-                   
-                    
+
+
+
 
 
 
                     await AsyncStorage.setItem("datauploadeduser", "true")
-                    dispatch({type:"ADD_UPLOADEDUSER",payload:true})
+                    dispatch({ type: "ADD_UPLOADEDUSER", payload: true })
                     // navigation.navigate("Tabbar")
-                    ToastAndroid.show("Signed In",ToastAndroid.SHORT)
+                    ToastAndroid.show("Signed In", ToastAndroid.SHORT)
 
 
 
@@ -119,12 +119,12 @@ const ProfileSixthPage = ({ navigation, route }) => {
 
                 } catch (error) {
                     console.log(error);
-                    dispatch({type:"ADD_LOGGEDIN",payload:false})
-                    const myfunc =async()=>{
-                       await AsyncStorage.clear()
+                    dispatch({ type: "ADD_LOGGEDIN", payload: false })
+                    const myfunc = async () => {
+                        await AsyncStorage.clear()
                     }
                     myfunc()
-              
+
 
                 }
             }
@@ -161,9 +161,6 @@ const ProfileSixthPage = ({ navigation, route }) => {
         <>
             <StatusBar barStyle={"dark-content"} backgroundColor={"white"} />
             <SafeAreaView style={style.container}>
-
-
-
                 <ImageBackground style={{ height: "100%", width: "100%", alignItems: "center" }} source={require("../Icons/rocket.gif")} >
                     <Text style={{ alignSelf: "center", fontSize: 32, fontWeight: "bold", color: "#404852", bottom: 200, position: "absolute" }} >Setting Up</Text>
                     <Text style={{ alignSelf: "center", fontSize: 50, fontWeight: "bold", color: "#404852", bottom: 145, position: "absolute" }} >Everything</Text>
