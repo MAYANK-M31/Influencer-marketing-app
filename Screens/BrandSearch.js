@@ -34,7 +34,7 @@ const BrandSearch = ({ navigation, route }) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const [loading, setloading] = useState(null)
     const [campaignposts, setcampaignposts] = useState([])
-    
+    const [postIds, setpostIds] = useState("")
 
     const { dispatch, state } = useContext(MyContext)
     const { requestsent } = state;
@@ -46,9 +46,6 @@ const BrandSearch = ({ navigation, route }) => {
         // console.log(requestsent);
 
         const func = async () => {
-
-
-
 
             const ref = await firestore().collection("brandpost")
 
@@ -67,6 +64,9 @@ const BrandSearch = ({ navigation, route }) => {
                     console.log("Error getting documents: ", error);
                     setloading(false)
                 });
+
+            // var e = requestsent.find(x=>x.postId == "j1kh1j4ztr").postId == "j1kh1j4ztr"
+            // console.log(e);
 
         }
         func()
@@ -99,6 +99,8 @@ const BrandSearch = ({ navigation, route }) => {
 
 
     }
+    // console.log(requestsent.length);
+
 
     const apply = async (item) => {
         const Id = await AsyncStorage.getItem("uid")
@@ -107,8 +109,22 @@ const BrandSearch = ({ navigation, route }) => {
         const ref = await firestore().collection("brandaccount")
         const ref2 = await firestore().collection("influencer")
         const mydocid = await AsyncStorage.getItem("DocId")
-        const insidedata = { personId: Id, postId: item.postId, CreatedAt: new Date(), accepted: false }
-        dispatch({type:"ADD_REQUESTSENT",payload:insidedata}) 
+        const insidedata = { personId: Id, postId: item.postId, CreatedAt: new Date(), accepted: false,profileimage:item.profileimage,campaigntitle:item.campaigntitle }
+        requestsent.push(insidedata)
+        dispatch({ type: "ADD_REQUESTSENT", payload: requestsent })
+        console.log(requestsent.length);
+
+
+        // for (var i = 0; i < campaignposts.length; i++) {
+        //     if (campaignposts[i].postId == item.postId) {
+        //         setpostIds(item.postId)
+        //         // console.log(item.postId);
+
+        //     } else {
+        //         // setpostIds("")
+        //     }
+        // }
+
 
         ref.where("uid", "==", item.uid).get().then((res) => {
             if (res.docs[0].id) {
@@ -134,6 +150,7 @@ const BrandSearch = ({ navigation, route }) => {
             })
 
     }
+
 
 
     return (
@@ -163,7 +180,7 @@ const BrandSearch = ({ navigation, route }) => {
                                 keyExtractor={(item, index) => index}
                                 renderItem={({ item, index }) => (
 
-                                    <TouchableRipple onPress={() => { navigation.navigate("BrandDetail", { data: item }) }} rippleColor={"rgb(0,0,0,0.32)"} >
+                                    <TouchableRipple key={index} onPress={() => { navigation.navigate("BrandDetail", { data: item }) }} rippleColor={"rgb(0,0,0,0.32)"} >
                                         <View style={style.card} >
                                             <View style={style.insidecard} >
                                                 <View style={style.cardleft} >
@@ -220,46 +237,53 @@ const BrandSearch = ({ navigation, route }) => {
 
                                                 <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={style.button1} >
                                                     <View>
-                                                        <Text style={style.button1text} >Save for review</Text>
+                                                        <Text style={style.button1text} >Save for Review</Text>
                                                     </View>
                                                 </TouchableRipple >
 
-                                                {requestsent.length > 0 ?
-                                                    <>
-                                                        {requestsent.map((sent) =>
-                                                            <>
-                                                                {sent.postId == item.postId ?
-                                                                    <>
 
-                                                                        <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.buttonapplied} >
-                                                                            <View style={{flexDirection:"row-reverse",alignItems:"center",width:"100%",height:"100%",justifyContent:"center"}}  >
+                                                {
+                                                    requestsent.length > 0 ?
+                                                        <>
+                                                            {requestsent.find((sent) =>
+                                                                
+                                                                    sent.postId == item.postId) ?
+
+
+                                                                        <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={  style.buttonapplied } >
+                                                                            <View style={{ flexDirection: "row-reverse", alignItems: "center", width: "100%", height: "100%", justifyContent: "center" }}  >
                                                                                 <Text style={style.buttonappliedtext} >Applied</Text>
-                                                                                <Ionicons style={{left:5}} name={"check"} size={20} color={"white"} />
+                                                                                <Ionicons style={{ left: 5 }} name={"check"} size={20} color={"white"} />
                                                                             </View>
                                                                         </TouchableRipple >
 
 
-                                                                    </>
-                                                                    :
-                                                                    <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
+
+                                                                        :
+                                                                        <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
                                                                         <View  >
                                                                             <Text style={style.button2text} >Apply</Text>
                                                                         </View>
                                                                     </TouchableRipple >
-                                                                }
-                                                            </>
-
-
-                                                        )}
-                                                    </>
-
-                                                    :
-                                                    <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
-                                                        <View  >
-                                                            <Text style={style.button2text} >Apply</Text>
-                                                        </View>
-                                                    </TouchableRipple >
+                                                                    
+                                                                
+                                                            }
+                                                        </>
+                                                        :
+                                                        <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
+                                                            <View  >
+                                                                <Text style={style.button2text} >Apply</Text>
+                                                            </View>
+                                                        </TouchableRipple >
                                                 }
+
+
+
+
+
+
+
+
 
 
                                             </View>
@@ -417,7 +441,7 @@ const style = StyleSheet.create({
         fontSize: 16,
         color: "white",
         fontWeight: 'bold',
-        alignSelf:"center"
+        alignSelf: "center"
     },
 
 
