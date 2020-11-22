@@ -14,9 +14,11 @@ import {
 
 import Ionicons from "react-native-vector-icons/Feather"
 import axios from "axios"
+import { TouchableRipple } from 'react-native-paper';
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
+import { useNavigation } from '@react-navigation/native';
 
 
 const images = [
@@ -27,6 +29,8 @@ const images = [
 var abbreviate = require('number-abbreviate')
 
 const Card = (props) => {
+
+    const navigation = useNavigation()
 
     const [followers, setfollowers] = useState(null)
     const [instaposts, setinstaposts] = useState(null)
@@ -122,12 +126,12 @@ const Card = (props) => {
                 </View>
 
                 <View style={style.buttondiv} >
-                    <View style={style.button1} >
+                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={()=>{}} style={style.button1} style={style.button1} >
                         <Text style={style.button1text} >Save for Review</Text>
-                    </View>
-                    <View style={style.button2} >
+                    </TouchableRipple>
+                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={()=>{navigation.navigate("BrandSendMessage")}} style={style.button1} style={style.button2} >
                         <Text style={style.button2text} >Contact</Text>
-                    </View>
+                    </TouchableRipple>
 
                 </View>
 

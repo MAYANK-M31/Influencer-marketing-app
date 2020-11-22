@@ -19,6 +19,7 @@ import axios from "axios";
 import { TouchableRipple } from 'react-native-paper';
 import { MyContext } from './AppStartStack';
 import Requests from './Requests';
+import {ChatsHeader,Requestheader} from './ChatsHeader';
 
 
 
@@ -29,7 +30,7 @@ const HEIGHT = Dimensions.get("window").height
 
 const Jobs = ({ navigation }) => {
 
- 
+
 
  
     
@@ -76,10 +77,11 @@ const Jobs = ({ navigation }) => {
 
           </Animated.View>
           <TouchableOpacity activeOpacity={1} onPress={() => { setscrollview(1) }} style={{ width: "50%", height: "100%", justifyContent: "center", alignItems: "center", borderRadius: 8 }}>
-            <Text style={{ color: "#007bff", fontWeight: "bold", fontSize: 15 }} >Chats</Text>
+           <ChatsHeader/>
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={1} onPress={() => { setscrollview(0) }} style={{ width: "50%", height: "100%", justifyContent: "center", alignItems: "center", borderRadius: 8 }}>
-            <Text style={{ color: "#007bff", fontWeight: "bold", fontSize: 15 }} >Requests</Text>
+           
+            <Requestheader/>
           </TouchableOpacity>
         </View>
 

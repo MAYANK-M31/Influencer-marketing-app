@@ -86,7 +86,7 @@ const Requests = ({ navigation }) => {
                     <View style={{ width: WiDTH * 0.25, height: "100%", backgroundColor: "#f0f2f500", justifyContent: "center", alignSelf: "flex-end", borderBottomWidth: 0.6, borderBottomColor: "#f0f2f5" }} >
                         <View style={{ width: 80, height: 30, backgroundColor: "white", borderWidth: 1, alignSelf: "center", borderColor:item.accepted ? "#e7164c": "#409cff", borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
                             <View style={{ flexDirection: "row", alignItems: "center", alignSelf: "center",justifyContent:"center" }}>
-                                <Text style={{ color:item.accepted ? "#e7164c": "#409cff" }}>{ item.accepted ? " Accepted":"Sent"} </Text>
+                                <Text style={{ color:item.accepted ? "#e7164c": "#409cff" }}>{ item.accepted ? " Chat now":"Sent"} </Text>
                                 { item.accepted ?
                                 null
                                 :

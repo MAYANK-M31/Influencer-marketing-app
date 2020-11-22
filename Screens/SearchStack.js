@@ -9,6 +9,7 @@ import BrandSearch from "./BrandSearch";
 import BrandDetail from "./BrandDetail";
 import ImageReviewScroll from "./ImageReviewScroll";
 import { MyContext } from "./AppStartStack";
+import BrandSendMessage from "./BrandSendMessage";
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const SearchStack = () => {
                     <>
                         <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
                         <Stack.Screen name="Profilepage" component={profilePage} options={{ headerShown: false }} />
+                        <Stack.Screen name="BrandSendMessage" component={BrandSendMessage} options={{ headerShown: false,animationEnabled:false }} />
                     </>
                     :
                     null

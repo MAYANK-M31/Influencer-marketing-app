@@ -178,6 +178,7 @@ const Home = ({ navigation }) => {
                     <Text style={style.textinputtext} >Search Influencer</Text>
                 </TouchableOpacity>
 
+              
 
                 <View style={style.container2} >
                     <View>
@@ -228,6 +229,7 @@ const Home = ({ navigation }) => {
                     }
 
                 </View>
+             
 
             </SafeAreaView>
 
