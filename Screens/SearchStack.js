@@ -10,6 +10,7 @@ import BrandDetail from "./BrandDetail";
 import ImageReviewScroll from "./ImageReviewScroll";
 import { MyContext } from "./AppStartStack";
 import BrandSendMessage from "./BrandSendMessage";
+import BrandToInfluencerChat from "./BrandToInfluencerChat";
 
 const Stack = createStackNavigator();
 
@@ -21,11 +22,12 @@ const SearchStack = () => {
     return (
         <Stack.Navigator screenOptions={{ cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS }} >
             {
-                type == "brand" ?
+                type == "brand" ? 
                     <>
                         <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
                         <Stack.Screen name="Profilepage" component={profilePage} options={{ headerShown: false }} />
                         <Stack.Screen name="BrandSendMessage" component={BrandSendMessage} options={{ headerShown: false,animationEnabled:false }} />
+                        <Stack.Screen name="BrandToInfluencerChat" component={BrandToInfluencerChat} options={{ headerShown: false }} />
                     </>
                     :
                     null

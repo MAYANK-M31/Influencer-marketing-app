@@ -103,8 +103,6 @@ const Requests = ({ navigation }) => {
     )
 }
 
-const style = StyleSheet.create({
 
-})
 
 export default Requests

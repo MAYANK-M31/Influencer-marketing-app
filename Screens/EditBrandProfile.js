@@ -79,24 +79,24 @@ const EditBrandProfile = ({ route, navigation }) => {
 
 
     const save = async () => {
-        if (!/[^\s]/.test(nametext) == true || !/[^\s]/.test(brandnametext) == true || !/[^\s]/.test(emailtext) == true || !/[^\s]/.test(citytext) == true || !/[^\s]/.test(categorytext) == true ) {
+        if (!/[^\s]/.test(nametext) == true || !/[^\s]/.test(brandnametext) == true || !/[^\s]/.test(emailtext) == true || !/[^\s]/.test(citytext) == true || !/[^\s]/.test(categorytext) == true) {
             ToastAndroid.show("Please Fill Details", ToastAndroid.SHORT)
         } else {
-Keyboard.dismiss()
+            Keyboard.dismiss()
             const DocId = await AsyncStorage.getItem("DocId")
             const ref = await firestore().collection("brandaccount").doc(DocId)
             setloading(true)
             ref.update({
-                name:nametext.toLowerCase(),
-                brandname:brandnametext.toLowerCase(),
-                email:emailtext.toLowerCase(),
-                city:citytext.toLowerCase(),
-                category:categorytext.toLowerCase(),
-                website:websitetext,
-                applink:applinktext
-            }).then(async()=>{
+                name: nametext.toLowerCase(),
+                brandname: brandnametext.toLowerCase(),
+                email: emailtext.toLowerCase(),
+                city: citytext.toLowerCase(),
+                category: categorytext.toLowerCase(),
+                website: websitetext,
+                applink: applinktext
+            }).then(async () => {
                 setloading(false)
-                ToastAndroid.show("Updated",ToastAndroid.SHORT)
+                ToastAndroid.show("Updated", ToastAndroid.SHORT)
                 dispatch({ type: "ADD_NAME", payload: nametext })
                 dispatch({ type: "ADD_BRANDNAME", payload: brandnametext })
                 dispatch({ type: "ADD_EMAIL", payload: emailtext })
@@ -106,13 +106,13 @@ Keyboard.dismiss()
                 dispatch({ type: "ADD_APPLINK", payload: applinktext })
                 navigation.goBack()
             })
-            .catch((err)=>{
-                setloading(false)
-                ToastAndroid.show("Failed To Update",ToastAndroid.SHORT)
-            })
-            
+                .catch((err) => {
+                    setloading(false)
+                    ToastAndroid.show("Failed To Update", ToastAndroid.SHORT)
+                })
 
-          
+
+
 
 
         }

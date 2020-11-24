@@ -68,7 +68,7 @@ const Search = ({ navigation }) => {
                 <ScrollView scrollEventThrottle={16} contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }} >
                     {result.map((item) =>
                         <TouchableRipple rippleColor="rgb(0,0,0,0.32)" activeOpacity={0.9} onPress={() => navigation.navigate("Profilepage", { uid: item.uid,data:item ,name: item.name, category: item.category, age: item.age, image: item.image, city: item.city, budget: [item.minrange, item.maxrange], paymode: item.paymode, youtubedata: JSON.stringify(item.youtubedata), instadata: JSON.stringify(item.instadata) })} >
-                            <Card  key={item.uid} profileimage={JSON.stringify(item.profileimage)} name={item.name} category={item.category} youtubedata={JSON.stringify(item.youtubedata)} instausername={JSON.stringify(item.instadata)} image={item.image} />
+                            <Card  key={item.uid} profileimage={JSON.stringify(item.profileimage)} uid={item.uid}  name={item.name} category={item.category} youtubedata={JSON.stringify(item.youtubedata)} instausername={JSON.stringify(item.instadata)} image={item.image} />
                         </TouchableRipple>
 
                     )}

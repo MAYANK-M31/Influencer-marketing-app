@@ -129,7 +129,7 @@ const Card = (props) => {
                     <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={()=>{}} style={style.button1} style={style.button1} >
                         <Text style={style.button1text} >Save for Review</Text>
                     </TouchableRipple>
-                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={()=>{navigation.navigate("BrandSendMessage")}} style={style.button1} style={style.button2} >
+                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={()=>{navigation.navigate("BrandSendMessage",{UserId:props.uid})}} style={style.button1} style={style.button2} >
                         <Text style={style.button2text} >Contact</Text>
                     </TouchableRipple>
 
