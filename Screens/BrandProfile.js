@@ -316,7 +316,7 @@ const BrandProfile = ({ route, navigation }) => {
         var y = x.split("%2F")
         var x = y[2]
         var y = x.split("?")
-        // console.log(y[0]);
+        console.log(y[0]);
         return y[0]
 
 
@@ -338,7 +338,7 @@ const BrandProfile = ({ route, navigation }) => {
     
             reference.delete().then(() => {
                 ref.update({
-                    profileimage: null,
+                    profileimage: firestore.FieldValue.delete(),
     
                 }).then(async () => {
                     dispatch({ type: "ADD_PROFILEIMAGE", payload: null })
@@ -356,7 +356,7 @@ const BrandProfile = ({ route, navigation }) => {
     
             reference.delete().then(() => {
                 ref.update({
-                    backgroundimage: null,
+                    backgroundimage: firestore.FieldValue.delete(),
     
                 }).then(async () => {
                     dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: null })

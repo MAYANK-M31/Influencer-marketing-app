@@ -37,7 +37,7 @@ const BrandSearch = ({ navigation, route }) => {
     const [postIds, setpostIds] = useState("")
 
     const { dispatch, state } = useContext(MyContext)
-    const { requestsent } = state;
+    const { requestsent,AllInfluencerData } = state;
 
 
     var array = []
@@ -109,10 +109,11 @@ const BrandSearch = ({ navigation, route }) => {
         const ref = await firestore().collection("brandaccount")
         const ref2 = await firestore().collection("influencer")
         const mydocid = await AsyncStorage.getItem("DocId")
-        const insidedata = { personId: Id, postId: item.postId, CreatedAt: new Date(), accepted: false,profileimage:item.profileimage,campaigntitle:item.campaigntitle }
+
+        const insidedata = { personId: Id, postId: item.postId, CreatedAt: new Date().toLocaleString(), accepted: false, profileimage: item.profileimage, campaigntitle: item.campaigntitle,influencername:AllInfluencerData.name,influencerprofile:AllInfluencerData.profileimage ? AllInfluencerData.profileimage : null  }
         requestsent.push(insidedata)
         dispatch({ type: "ADD_REQUESTSENT", payload: requestsent })
-        console.log(requestsent.length);
+        // console.log(requestsent.length);
 
 
         // for (var i = 0; i < campaignposts.length; i++) {
@@ -124,6 +125,7 @@ const BrandSearch = ({ navigation, route }) => {
         //         // setpostIds("")
         //     }
         // }
+        // console.log(mydocid);
 
 
         ref.where("uid", "==", item.uid).get().then((res) => {
@@ -136,12 +138,18 @@ const BrandSearch = ({ navigation, route }) => {
                         requestssent: firestore.FieldValue.arrayUnion(insidedata)
                     }).then(() => {
                         ToastAndroid.show("Request Sent Succesfully", ToastAndroid.SHORT)
+                    }).catch(() => {
+                        ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
                     })
+                }).catch(() => {
+                    ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
                 })
             } else {
                 ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
             }
 
+        }).catch(() => {
+            ToastAndroid.show("Failed To Send Request", ToastAndroid.SHORT)
         })
 
 
@@ -246,27 +254,27 @@ const BrandSearch = ({ navigation, route }) => {
                                                     requestsent.length > 0 ?
                                                         <>
                                                             {requestsent.find((sent) =>
-                                                                
-                                                                    sent.postId == item.postId) ?
+
+                                                                sent.postId == item.postId) ?
 
 
-                                                                        <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={  style.buttonapplied } >
-                                                                            <View style={{ flexDirection: "row-reverse", alignItems: "center", width: "100%", height: "100%", justifyContent: "center" }}  >
-                                                                                <Text style={style.buttonappliedtext} >Applied</Text>
-                                                                                <Ionicons style={{ left: 5 }} name={"check"} size={20} color={"white"} />
-                                                                            </View>
-                                                                        </TouchableRipple >
+                                                                <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.buttonapplied} >
+                                                                    <View style={{ flexDirection: "row-reverse", alignItems: "center", width: "100%", height: "100%", justifyContent: "center" }}  >
+                                                                        <Text style={style.buttonappliedtext} >Applied</Text>
+                                                                        <Ionicons style={{ left: 5 }} name={"check"} size={20} color={"white"} />
+                                                                    </View>
+                                                                </TouchableRipple >
 
 
 
-                                                                        :
-                                                                        <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
-                                                                        <View  >
-                                                                            <Text style={style.button2text} >Apply</Text>
-                                                                        </View>
-                                                                    </TouchableRipple >
-                                                                    
-                                                                
+                                                                :
+                                                                <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
+                                                                    <View  >
+                                                                        <Text style={style.button2text} >Apply</Text>
+                                                                    </View>
+                                                                </TouchableRipple >
+
+
                                                             }
                                                         </>
                                                         :

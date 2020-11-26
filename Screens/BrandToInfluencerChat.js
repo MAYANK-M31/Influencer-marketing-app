@@ -8,7 +8,7 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage,
+    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage,BackHandler, Alert
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -22,13 +22,16 @@ import { GiftedChat, Send, InputToolbar, Bubble } from 'react-native-gifted-chat
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
+const images = [
+    "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg",
+    "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg"
+]
 
-
-const BrandToInfluencerChat = ({ navigation,route }) => {
+const BrandToInfluencerChat = ({ navigation, route }) => {
     const [messages, setMessages] = useState([]);
     const [messagedata, setmessagedata] = useState([])
     const [myid, setmyid] = useState(null)
-
+    const [headingData, setheadingData] = useState({ influencerimage: images[0], influencername: "name" })
 
     // useEffect(() => {
     //     setMessages([
@@ -64,7 +67,26 @@ const BrandToInfluencerChat = ({ navigation,route }) => {
     //     ])
     // }, [])
 
+
+    const backAction = () => {
+        navigation.navigate("Search") 
+      
+        return true;
+      };
+    
+      useEffect(() => {
+        BackHandler.addEventListener("hardwareBackPress", backAction);
+    
+        return () =>
+          BackHandler.removeEventListener("hardwareBackPress", backAction);
+      }, []);
+
+
     useEffect(() => {
+
+        const chatdata = route.params.ChatData.find((data) => data.ChatRoom_Id == route.params.ChatRoom_Id) //Heading data like profileimage influencer name etc
+        setheadingData(chatdata)
+        // console.log(chatdata);
 
         const myfunc = async () => {
             const uid = await AsyncStorage.getItem("uid")
@@ -113,7 +135,7 @@ const BrandToInfluencerChat = ({ navigation,route }) => {
         const text = messages[0].text
         const user = messages[0].user
 
-        const datas = { _id: id, createdAt: createdAt, text: text, user: user,sent:true }
+        const datas = { _id: id, createdAt: createdAt, text: text, user: user, sent: true }
         //    console.log(datas);
 
         ref.push(datas)
@@ -186,11 +208,11 @@ const BrandToInfluencerChat = ({ navigation,route }) => {
 
     const renderComposer = (props) => {
         return (
-            <View style={{height:60,width:WiDTH}} >
-                <View style={{height:"100%",width:"100%"}} >
-                <TextInput placeholder={"grey"} underlineColorAndroid={"transparent"}/>
+            <View style={{ height: 60, width: WiDTH }} >
+                <View style={{ height: "100%", width: "100%" }} >
+                    <TextInput placeholder={"grey"} underlineColorAndroid={"transparent"} />
                 </View>
-              
+
             </View>
         )
     }
@@ -199,17 +221,20 @@ const BrandToInfluencerChat = ({ navigation,route }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }} >
 
             <View style={style.header} >
-                <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
+                <TouchableOpacity onPress={() => navigation.navigate("Search")} style={style.back} >
                     <Ionicons style={{ marginRight: 10 }} color={"#404852"} size={30} name={"chevron-left"} />
 
                 </TouchableOpacity>
 
                 <View style={style.heading} >
+
                     <View style={{ width: 30, height: 30, backgroundColor: "#f0f2f5", borderRadius: 100, marginRight: 5, overflow: 'hidden', }}>
-                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJcAAACPCAMAAADAxLm9AAAAclBMVEXhAAD////gAABjDAzoAAD85+flQEDyoKD86urqWVjvkpL+9/fvh4flMjHvjo7qYmP2sbHzuLn88O/ypKT73NzqUFDwmZnqSkroXFvugIH5yMjvfH3udnblKyz4z8/74eHnOzvkGxziExPqamrlJSX4wcHZUF1nAAAGoklEQVR4nO2b6XqiShCGmzoHhTTI6oIiq97/LZ6uahCJmrEQhnnm8P1IJJDuN71U10LEP/+KP1ILF08LF08LF08LF08LF08LF08LF08LF08LF08LF08LF08LF0//Ay4AGK2tz7kAiKd03dWqOF/K9gfzcWHvF3ebREfTsqxQS33K/M3BvVTiI7gPuFZJdLWMFwqPa2clhrMN4wJx3sUvmVpZebQdijaIq3DiXzHdxs2vy9/GtX6XCiWTISM2iMvncBlfc3Adnc1m42zwK+pr5+d/BJdRY69wk7oofDkDF4iyxyW9hycgtfpc1eRc4Ka5A731lRePT23DHtc69i7MQeNxVRvTML5xmavHLuHU44oMIz7xDBmL60Dz88DVsFRVN19V9o1Lke2n4YLVUfezecoF+yw7BkmDBl8PXIbhXybhuho/cQmbrnZ6tsCTj1wGw8IyuPTUyKAQT8dLcxkN18q64zo0I+1Mx3U8CPEGl3DvuUCk8cRctN9/4hJPuNTddGIu92/k2vyhXIyT8i8YL9rsxUCu03TrK8Cm6TAZwOVMx0VW+8AfL5w9fS6lk3BtsGkPm45YXCdo/yhvEq4am07w05rDJZFGb5r9JFwrbBrPZT1yb3PRfb2Z38bi+F8VNp0h1yFkcIV0idFIzIgkOX4hnr0xIlwsBleOk0duj/9+Vywu3FOhfVstb3J125ET4HK46I8mx895zfXg52zxJg61dX6/K55/jx6riZ7y5SWX1fiF+3YJZiXGR+2WmYQLCmyejHbwyHWgzXdquNLWj6azGuddsqJI1niRY28VaMvkdy4VZvuRc4t5WhNnua1dYRzaXC5xxnVyFO1h2eOC+wRm2WYp1OjqGCTg9MPl0gtFTQ2cH7h6z7WWV61GKJAxLHkBNzcPQBOoFlFn8+NHK669LYPOICCTajGOoCFcQiTYXQ1dRP0kb/LVrr5IReEUCdncnA4/n0MjlggQZKHkAfoS5+SW5IwBtiaO1padauLnvwCzFHIN+pTMTkmjNE1Pzjo4dqlXs9BYJh9rUF7ugh51UMKhn3/7rrAUDj5xZaQlPuISsMNJKiH5CSw86FNxN6CDwfl7T20ys4Y6fIllFZRoyRk+6udcAko1l9KBw6viQuyuMprDgRWPoXUYADQYQVU8pJ9JWUVG/jSs8Q+4KBFHScBnpQ+fzsfrkwzn9FzqEFRBTpiK4wPWjmaZ5deMyaVMWYxj8638IVNPrbrsg8H6lEuAq/yK+JL0uGw0H2vmOT0uV2P9Ha+zF5mt5jArPq3Yfl5HLtSQ+bfILatjXF8fF5JHqLtj2cU6mYR1VSY+YyXqp+NSLvTRkJorJ99mhCZH4QKRtPNofryytEZ6f6JNpeyqkd6hGIlrR54FHtKc4PUHjTOPZPKlr5xZX0ajjNgY+5E8B8PyhJ1x0yMvNQKXLlH55ak9wXkVvYm4dMQfevevVOQDHPqRuXQCPN/1PWrJDRdH56rMJ+6Xsvtzc62ee/jh7FzPQyI5N9d5t36mQe9yjMnVvWoi+umAubkm0sLF08LF01tcerd1F3cb7nbr+0+bq7utqT+9uVff4FrVHmpLrmhle94BrxovvsCL+gz6IVunSUrPiYIgSkWZRkHk0aMlPngRwq69uhiHqz0CY+WOuq3bINF0tnFjentlJ0yrpmjcyVQclGaRHtj4G2+k8t/g6nL1cgVu586UOtXc51KdPnAZR9BvHSkuStWNxyWjTUYdIJe5x7yEgsEKrukHQWATV2qnajSk5jIzHGZpYYIs3AoRSnrnL5CjcoXKocoxd4lcsU5+OeR7NfloxSULoLCoIC7lGoZUq0Lf3wM4+8Tl1uNybQFrdbmLXHmfi57xqWBM07QlLsV7RC4qQKiFiZV3LDPsp+QSHdeWNr7mgh6X+N1cMVDp9kRceRzHV5pHo5h5vGRwxUVc3d66zDXXMQjyObm0oarhxmXC/SuH83FJ3Oxq+yHX6XI+n3XFVNLP5+MyDx7GZdfWToimkpt4nv/buaimH58b++Wa+C3tc82w7qUtsOaSicZO4Amkub4urutWc9mvZu18QY+LXk3AO+kcXF3hQNmplovmsWpPdH1u/8glRueq9X8G5YFXCeFmYZihuxOGR+VUJRnekjVEMrQU10aGcguJ+moDBFJuABwZhsr4wy4MTQW7V/ecX4/FO/PYiwk7P/T+HxXaa9FFkvfP3JrpfvNzrlm0cPG0cPG0cPG0cPG0cPG0cPG0cPG0cPG0cPG0cPG0cPG0cLH0H6IbbT2z8bzNAAAAAElFTkSuQmCC" }} />
+                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: headingData.influencerimage ? headingData.influencerimage : images[0] }} />
                     </View>
 
-                    <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852" }} >Dream 11</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", textTransform: "capitalize" }} >{headingData.influencername}</Text>
+
+
 
 
                 </View>
@@ -243,7 +268,7 @@ const BrandToInfluencerChat = ({ navigation,route }) => {
                 showUserAvatar={true}
                 renderSystemMessage={renderMessage}
                 renderAvatar={() => null}
-                
+
                 alignTop={true}
 
             />

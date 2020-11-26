@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -19,16 +19,20 @@ import { TouchableRipple } from 'react-native-paper';
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 import { useNavigation } from '@react-navigation/native';
+import { MyContext } from './AppStartStack';
 
 
 const images = [
     "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg",
     "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg"
-  ]
+]
 
 var abbreviate = require('number-abbreviate')
 
 const Card = (props) => {
+
+    const { dispatch, state } = useContext(MyContext)
+    const { AllBrandAccountData } = state;
 
     const navigation = useNavigation()
 
@@ -41,6 +45,9 @@ const Card = (props) => {
 
 
     useEffect(() => {
+
+       
+
         if (props.instausername == undefined) {
 
         } else {
@@ -70,7 +77,7 @@ const Card = (props) => {
         // profile image logic
         if (image !== undefined) {
             setprofileimage(JSON.parse(image))
-            
+
 
         }
 
@@ -126,12 +133,38 @@ const Card = (props) => {
                 </View>
 
                 <View style={style.buttondiv} >
-                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={()=>{}} style={style.button1} style={style.button1} >
+                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { }} style={style.button1} style={style.button1} >
                         <Text style={style.button1text} >Save for Review</Text>
                     </TouchableRipple>
-                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={()=>{navigation.navigate("BrandSendMessage",{UserId:props.uid})}} style={style.button1} style={style.button2} >
-                        <Text style={style.button2text} >Contact</Text>
-                    </TouchableRipple>
+                    {props.chats ?
+                        <>
+                            {props.chats.map((chatroomId) =>
+
+                                AllBrandAccountData.chats.find((data) =>
+                                    data.ChatRoom_Id == chatroomId.ChatRoom_Id
+
+                                ) ? <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { navigation.navigate("BrandToInfluencerChat", { UserId: props.uid, profileimage: profileimage, name: props.name,ChatRoom_Id:chatroomId.ChatRoom_Id,ChatData:AllBrandAccountData.chats }) }} style={[style.button2,{backgroundColor:"#409cff"}]} style={[style.button2,{backgroundColor:"#409cff"}]} >
+                                        <View>
+                                            <Text style={[style.button2text,{color:"white"}]} >Contacted</Text>
+                                        </View>
+                                    </TouchableRipple>
+                                    :
+                                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { navigation.navigate("BrandSendMessage", { UserId: props.uid, profileimage: profileimage, name: props.name,chats:props.chats }) }} style={style.button2} style={style.button2} >
+                                        <View>
+                                            <Text style={style.button2text} >Contact</Text>
+                                        </View>
+                                    </TouchableRipple>
+
+                            )}
+                        </>
+                        :
+                        <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { navigation.navigate("BrandSendMessage", { UserId: props.uid, profileimage: profileimage, name: props.name,chats:props.chats }) }} style={style.button2} style={style.button2} >
+                            <View>
+                                <Text style={style.button2text} >Contact</Text>
+                            </View>
+                        </TouchableRipple>
+                    }
+
 
                 </View>
 

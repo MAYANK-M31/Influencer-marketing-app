@@ -122,7 +122,7 @@ const Profilepage = ({ route, navigation }) => {
         // ADD Background picture  if exist to state 
 
         if (route.params.data.backgroundimage !== undefined) {
-            setbackgroundimage(route.params.data.profileimage)
+            setbackgroundimage(route.params.data.backgroundimage)
         }
 
 
@@ -233,8 +233,7 @@ const Profilepage = ({ route, navigation }) => {
 
                     <View style={style.topprofile} >
                         <View style={{ borderRadius: 30, height: 150, width: 150, overflow: "hidden", elevation: 5, zIndex: 10, borderWidth: 3, borderColor: "white" }}>
-                            <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: profileimage ?  profileimage : images[0
-                            ] }} />
+                            <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: profileimage ?  profileimage : images[0] }} />
                         </View>
                     </View>
 

@@ -26,8 +26,11 @@ export const initState = {
     campaignposts: [],
     campaignpostedagain: false,
     brandprofileimage: null,
-    requestsent: []  // To show requests user has sent for post (applied) 
-
+    requestsent: [], // To show requests user has sent for post (applied) 
+    AllBrandAccountData: [], // To fetch data of brand account on home page
+    InfluencerChatData: [], // To fetch save the chatid after brand send message from sendmessage page (in order to direct open chatpage in search stack for brands)
+    RequestsGot: [],  // Requests got to brand by influencer
+    AllInfluencerData:null
 }
 
 export const reducer = (state, action) => {
@@ -181,7 +184,26 @@ export const reducer = (state, action) => {
                 ...state,
                 requestsent: action.payload
             }
-
+        case "ADD_ALLBRANDACCOUNTDATA":
+            return {
+                ...state,
+                AllBrandAccountData: action.payload
+            }
+        case "ADD_INFLUENCERCHATDATA":
+            return {
+                ...state,
+                InfluencerChatData: action.payload
+            }
+        case "ADD_REQUESTSGOT":
+            return {
+                ...state,
+                RequestsGot: action.payload
+            }
+        case "ADD_ALLINFLUENCERDATA":
+            return {
+                ...state,
+                AllInfluencerData: action.payload
+            }
         default:
             break;
     }

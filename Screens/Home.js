@@ -9,7 +9,7 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Button, BackHandler, Alert, AsyncStorage, Modal
+    Button, BackHandler, Alert, AsyncStorage, Modal, ToastAndroid
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -43,13 +43,21 @@ const Home = ({ navigation }) => {
 
             if (type == "influencer") {
                 const ref = await firestore().collection("influencer").where("uid","==",uid)
-                ref.get().then(function (querySnapshot) {
-                    querySnapshot.forEach(function (doc) {
-                        if(doc.data().requestssent){
-                            dispatch({type:"ADD_REQUESTSENT",payload:doc.data().requestssent}) 
+                ref.get().then(async function (querySnapshot) {
+                    querySnapshot.forEach(async function (doc) {
+                        if(doc.exists){
+                            await AsyncStorage.setItem("DocId",doc.id)
+                            
+                            dispatch({type:"ADD_ALLINFLUENCERDATA",payload:doc.data()}) 
+                            if(doc.data().requestssent){
+                                dispatch({type:"ADD_REQUESTSENT",payload:doc.data().requestssent}) 
+                            }else{
+                                dispatch({type:"ADD_REQUESTSENT",payload:[]}) 
+                            }
                         }else{
-                            dispatch({type:"ADD_REQUESTSENT",payload:[]}) 
+                            ToastAndroid.show("Cant Find your account",ToastAndroid.SHORT)
                         }
+                       
                         // console.log(doc.data().requestssent)
                     
                         
@@ -58,7 +66,24 @@ const Home = ({ navigation }) => {
                    
                 })
             } else {
-
+                const ref = await firestore().collection("brandaccount").where("uid","==",uid)
+                ref.get().then(async function (querySnapshot) {
+                    querySnapshot.forEach(async function (doc) {
+                        if(doc.data()){
+                            await AsyncStorage.setItem("DocId",doc.id)
+                            dispatch({type:"ADD_ALLBRANDACCOUNTDATA",payload:doc.data()}) 
+                            // console.log(doc.data());
+                            
+                        }else{
+                            dispatch({type:"ADD_ALLBRANDACCOUNTDATA",payload:[]}) 
+                        }
+                        // console.log(doc.data().requestssent)
+                    
+                        
+                    })
+           
+                   
+                })
             }
         }
         myfunc()
