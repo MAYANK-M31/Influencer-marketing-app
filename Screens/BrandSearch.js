@@ -104,13 +104,13 @@ const BrandSearch = ({ navigation, route }) => {
 
     const apply = async (item) => {
         const Id = await AsyncStorage.getItem("uid")
-
+        
 
         const ref = await firestore().collection("brandaccount")
         const ref2 = await firestore().collection("influencer")
         const mydocid = await AsyncStorage.getItem("DocId")
 
-        const insidedata = { personId: Id, postId: item.postId, CreatedAt: new Date().toLocaleString(), accepted: false, profileimage: item.profileimage, campaigntitle: item.campaigntitle,influencername:AllInfluencerData.name,influencerprofile:AllInfluencerData.profileimage ? AllInfluencerData.profileimage : null  }
+        const insidedata = { personId: Id,InfluencerDocId:mydocid ,postId: item.postId, CreatedAt: new Date().toLocaleString(), accepted: false, profileimage: item.profileimage, campaigntitle: item.campaigntitle,influencername:AllInfluencerData.name,influencerprofile:AllInfluencerData.profileimage ? AllInfluencerData.profileimage : null  }
         requestsent.push(insidedata)
         dispatch({ type: "ADD_REQUESTSENT", payload: requestsent })
         // console.log(requestsent.length);

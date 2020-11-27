@@ -8,7 +8,7 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage,
+    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, ToastAndroid,
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -60,7 +60,7 @@ const Requests = ({ navigation }) => {
                 })
             } else {
                 const ref = await firestore().collection("brandaccount").where("uid", "==", uid)
-                ref.get().then(function (querySnapshot) {
+                ref.onSnapshot(function (querySnapshot) {
                     querySnapshot.forEach(function (doc) {
                         if (doc.data().requests) {
                             dispatch({ type: "ADD_REQUESTSGOT", payload: doc.data().requests })
@@ -112,9 +112,67 @@ const Requests = ({ navigation }) => {
 
     }
 
+    const accept = async (data) => {
+        const docId = await AsyncStorage.getItem("DocId")
+        const ref = await firestore().collection("brandaccount").doc(docId)
+
+
+
+
+        removeToUpdateInfluencer(data)
+
+        ref.update({
+            requests: firestore.FieldValue.arrayRemove(data)
+        }).then(async () => {
+            data.accepted = true
+            ref.update({
+                requests: firestore.FieldValue.arrayUnion(data)
+            }).then(async () => {
+                ToastAndroid.show("Chat Now", ToastAndroid.SHORT)
+            })
+        })
+
+    }
+
+
+    const decline = (data) => {
+
+
+    }
+
+
+    const removeToUpdateInfluencer = async (data) => {
+
+        const ref2 = await firestore().collection("influencer").doc(data.InfluencerDocId)
+
+
+
+        ref2.update({
+            requestssent: firestore.FieldValue.arrayRemove(data)
+        }).then(async () => {
+            data.accepted = true
+            ref2.update({
+                requestssent: firestore.FieldValue.arrayUnion(data)
+            }).then(async () => {
+
+            })
+
+
+        })
+    }
+
+
+
+
     return (
 
         <View >
+            <View style={{ width: "100%", height: 60, flexDirection: "row", backgroundColor: "#f0f2f500", alignItems: "center", paddingHorizontal: 15,borderBottomColor:"#f0f2f5",borderBottomWidth:0.2 }}>
+                <View style={{ width: "30%", height: "65%", backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                    <Text style={{fontSize:15,fontWeight:"bold",color:"#2a365a"}} >Accepted</Text>
+                </View>
+                
+            </View>
             {type == "influencer" ?
                 <FlatList
                     data={requestsent}
@@ -156,61 +214,78 @@ const Requests = ({ navigation }) => {
                     contentContainerStyle={{ paddingBottom: 50 }}
                     keyExtractor={(item, index) => index}
                     renderItem={({ item, index }) => (
-                        <View style={{ width: "100%", height: 180, paddingHorizontal: 10, marginTop: 10, backgroundColor: "#f0f2f500" }} >
-                            <View style={{ flexDirection: "row",height:75 }}>
-                                <View style={{ width: WiDTH * 0.15, height: WiDTH * 0.15, borderRadius: 100, backgroundColor: "#f0f2f5", overflow: "hidden" }} >
-                                    <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.influencerprofile ? item.influencerprofile : images[0] }} />
-                                </View>
-                                <View style={{ width: WiDTH * 0.45, height: 100, backgroundColor: "#f0f2f500", paddingLeft: 10, justifyContent: "center" }} >
-                                    <Text numberOfLines={1} style={{ fontWeight: "bold", color: "#2a3659", fontSize: 17, textTransform: "capitalize", position: "absolute", top: 0, left: 10 }} >{item.influencername}</Text>
-                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                        <Text style={{ fontWeight: "100", color: "#a0b3c3", fontSize: 14 }} >You got a request</Text>
+                        <TouchableRipple rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { }} style={{ width: "100%", height: 150, paddingTop: 15, paddingHorizontal: 10, marginTop: 0, backgroundColor: "#f0f2f500" }} >
+                            <>
+                                <View style={{ flexDirection: "row", height: 75 }}>
+                                    <View style={{ width: WiDTH * 0.15, height: WiDTH * 0.15, borderRadius: 100, backgroundColor: "#f0f2f5", overflow: "hidden" }} >
+                                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.influencerprofile ? item.influencerprofile : images[0] }} />
                                     </View>
-                                    <View style={{ width: WiDTH * 0.65, height: 30, marginTop: 5 }}>
-                                        <View style={{ flexDirection: "row", alignItems: "center", height: "100%" }}>
-                                            {/* <View style={{ width: WiDTH * 0.06, height: WiDTH * 0.06, borderRadius: 100, backgroundColor: "#f0f2f5", overflow: "hidden" }} >
+                                    <View style={{ width: WiDTH * 0.45, height: 100, backgroundColor: "#f0f2f500", paddingLeft: 10, justifyContent: "center" }} >
+                                        <Text numberOfLines={1} style={{ fontWeight: "bold", color: "#2a3659", fontSize: 17, textTransform: "capitalize", position: "absolute", top: 0, left: 10 }} >{item.influencername}</Text>
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <Text style={{ fontWeight: "100", color: "#a0b3c3", fontSize: 14 }} >You got a request</Text>
+                                        </View>
+                                        <View style={{ width: WiDTH * 0.65, height: 30, marginTop: 5 }}>
+                                            <View style={{ flexDirection: "row", alignItems: "center", height: "100%" }}>
+                                                {/* <View style={{ width: WiDTH * 0.06, height: WiDTH * 0.06, borderRadius: 100, backgroundColor: "#f0f2f5", overflow: "hidden" }} >
                                                 <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.profileimage ? item.profileimage : images[0] }} />
                                             </View> */}
-                                            <View style={{ width: "100%", height: "100%", backgroundColor: "#f0f2f500", flexDirection: "row" }} >
-                                                <Text numberOfLines={1} style={{ fontWeight: "bold", color: "#2a3659", fontSize: 13, textTransform: "capitalize" }} >For {item.campaigntitle}</Text>
-                                                <Image style={{ width: 20, height: 20, borderRadius: 100, marginLeft: 5 }} source={{ uri: item.profileimage ? item.profileimage : images[0] }} />
+                                                <View style={{ width: "100%", height: "100%", backgroundColor: "#f0f2f500", flexDirection: "row" }} >
+                                                    <Text numberOfLines={1} style={{ fontWeight: "bold", color: "#2a3659", fontSize: 13, textTransform: "capitalize" }} >For {item.campaigntitle}</Text>
+                                                    <Image style={{ width: 20, height: 20, borderRadius: 100, marginLeft: 5 }} source={{ uri: item.profileimage ? item.profileimage : images[0] }} />
+                                                </View>
                                             </View>
                                         </View>
+
+
                                     </View>
+                                    <View style={{ width: WiDTH * 0.30, height: 45, justifyContent: "center", }} >
+
+                                        <View style={{ width: "100%", height: "75%", alignItems: "flex-end", alignSelf: "center", justifyContent: "flex-start" }}>
+                                            <Text style={{ color: "grey", fontSize: 12 }}>{DateandTime(item.CreatedAt)} </Text>
+                                        </View>
 
 
+                                    </View>
                                 </View>
-                                <View style={{ width: WiDTH * 0.30, height: 45, justifyContent: "center", }} >
 
-                                    <View style={{ width: "100%", height: "75%", alignItems: "flex-end", alignSelf: "center", justifyContent: "flex-start" }}>
-                                        <Text style={{ color: "grey", fontSize: 12 }}>{DateandTime(item.CreatedAt)} </Text>
+                                {!item.accepted ?
+                                    <View style={style.buttondiv} >
+
+                                        <TouchableRipple onPress={() => { decline(item) }} borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={style.button1} >
+                                            <View>
+                                                <Text style={style.button1text} >Decline</Text>
+                                            </View>
+                                        </TouchableRipple >
+
+
+
+                                        <TouchableRipple onPress={() => { accept(item) }} borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
+                                            <View  >
+                                                <Text style={style.button2text} >Accept</Text>
+                                            </View>
+                                        </TouchableRipple >
+
+
                                     </View>
+                                    :
+                                    <View style={style.buttondiv} >
 
 
-                                </View>
-                            </View>
 
-                            <View style={style.buttondiv} >
 
-                                <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={style.button1} >
-                                    <View>
-                                        <Text style={style.button1text} >Decline</Text>
+                                        <TouchableRipple onPress={() => { }} borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={[style.button2, { width: "98%" }]} >
+                                            <View  >
+                                                <Text style={style.button2text} >Chat now</Text>
+                                            </View>
+                                        </TouchableRipple >
+
+
                                     </View>
-                                </TouchableRipple >
+                                }
 
-
-
-                                <TouchableRipple borderless={true} onPress={() => { apply(item) }} rippleColor={"rgb(0,0,0,0.32)"} style={style.button2} >
-                                    <View  >
-                                        <Text style={style.button2text} >Accept</Text>
-                                    </View>
-                                </TouchableRipple >
-
-
-                            </View>
-
-
-                        </View>
+                            </>
+                        </TouchableRipple>
                     )}
                 />
 
@@ -225,11 +300,9 @@ const Requests = ({ navigation }) => {
 const style = StyleSheet.create({
     buttondiv: {
         width: "100%",
-        height: "40%",
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        backgroundColor:"white"
     },
     button1: {
         width: WiDTH / 2.3,
@@ -240,7 +313,7 @@ const style = StyleSheet.create({
         alignItems: "center",
         borderColor: "#de4229",
         borderWidth: 1.5,
-        
+
     },
     button2: {
         width: WiDTH / 2.3,
@@ -251,8 +324,8 @@ const style = StyleSheet.create({
         alignItems: "center",
         borderColor: "#409cff",
         borderWidth: 1.5,
-        
-    
+
+
     },
     button1text: {
         fontSize: 16,
