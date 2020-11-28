@@ -16,6 +16,7 @@ import axios from "axios"
 import firestore from '@react-native-firebase/firestore';
 import { MyContext } from './AppStartStack';
 import { TouchableRipple } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 const images = [
     "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/82b8e9101650903.5f2369beab58a.jpg"
@@ -25,16 +26,19 @@ const images = [
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
+var _ = require('underscore');
 
-
-const Requests = ({ navigation }) => {
+const Requests = () => {
 
     const { dispatch, state } = useContext(MyContext)
     const { requestsent, RequestsGot } = state;
     const [type, settype] = useState("influencer")
-
+    const [acceptedrequests, setacceptedrequests] = useState([])
+    const navigation = useNavigation();
 
     useEffect(() => {
+
+
 
         const myfunc = async () => {
 
@@ -63,11 +67,24 @@ const Requests = ({ navigation }) => {
                 ref.onSnapshot(function (querySnapshot) {
                     querySnapshot.forEach(function (doc) {
                         if (doc.data().requests) {
-                            dispatch({ type: "ADD_REQUESTSGOT", payload: doc.data().requests })
+                            var NewRequests_array = []
+                            var AcceptedRequests_array = []
+
+                            for (var i = 0; i < doc.data().requests.length; i++) {
+                                if (doc.data().requests[i].accepted == false) {
+                                    NewRequests_array.push(doc.data().requests[i])
+                                    var unique = _.uniq(NewRequests_array)
+                                    dispatch({ type: "ADD_REQUESTSGOT", payload: unique })
+                                } else if (doc.data().requests[i].accepted == true) {
+                                    AcceptedRequests_array.push(doc.data().requests[i])
+                                    var unique = _.uniq(AcceptedRequests_array)
+                                    setacceptedrequests(unique)
+                                }
+                            }
                         } else {
                             dispatch({ type: "ADD_REQUESTSGOT", payload: [] })
                         }
-                        console.log(doc.data().requests)
+                        // console.log(doc.data().requests)
 
 
                     })
@@ -167,12 +184,18 @@ const Requests = ({ navigation }) => {
     return (
 
         <View >
-            <View style={{ width: "100%", height: 60, flexDirection: "row", backgroundColor: "#f0f2f500", alignItems: "center", paddingHorizontal: 15,borderBottomColor:"#f0f2f5",borderBottomWidth:0.2 }}>
-                <View style={{ width: "30%", height: "65%", backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
-                    <Text style={{fontSize:15,fontWeight:"bold",color:"#2a365a"}} >Accepted</Text>
+            {acceptedrequests.length > 0 ?
+                <View style={{ width: "100%", height: 60, flexDirection: "row", backgroundColor: "#f0f2f500", alignItems: "center", paddingHorizontal: 15, borderBottomColor: "#f0f2f5", borderBottomWidth: 0.2 }}>
+                    <TouchableOpacity onPress={() => navigation.navigate("AcceptedRequests", { AcceptedRequests: acceptedrequests })} style={{ width: "30%", height: "65%", flexDirection: "row", backgroundColor: "#f0f2f5", borderRadius: 50, justifyContent: "center", alignItems: "center" }}>
+                        <Text style={{ fontSize: 15, fontWeight: "bold", color: "#2a365a" }} >Accepted</Text>
+                        <View style={{ height: 14, width: 14, backgroundColor: "#00ca95", justifyContent: "center", alignItems: "center", borderRadius: 50, left: 5, top: 0 }}>
+                            <Text style={{ color: "white", fontSize: 10, fontWeight: "bold" }}>{acceptedrequests.length}</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
-                
-            </View>
+                :
+                null
+            }
             {type == "influencer" ?
                 <FlatList
                     data={requestsent}
@@ -211,7 +234,7 @@ const Requests = ({ navigation }) => {
                 :
                 <FlatList
                     data={RequestsGot}
-                    contentContainerStyle={{ paddingBottom: 50 }}
+                    contentContainerStyle={{ paddingBottom: 150 }}
                     keyExtractor={(item, index) => index}
                     renderItem={({ item, index }) => (
                         <TouchableRipple rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { }} style={{ width: "100%", height: 150, paddingTop: 15, paddingHorizontal: 10, marginTop: 0, backgroundColor: "#f0f2f500" }} >
