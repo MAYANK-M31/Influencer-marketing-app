@@ -13,6 +13,8 @@ import Jobs from "./Jobs";
 import Chat from "./Chat";
 import Requests from "./Requests";
 import AcceptedRequests from "./AcceptedRequests";
+import BrandToInfluencerChat from "./BrandToInfluencerChat";
+import InfluencerToBrandChat from "./InfluencerToBrandChat";
 
 const Stack = createStackNavigator();
 
@@ -25,7 +27,9 @@ const JobsStack = () => {
             <Stack.Screen name="Jobs" component={Jobs} options={{ headerShown: false }} />
             <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
             <Stack.Screen name="Requests" component={Requests} options={{ headerShown: false }} />
-            <Stack.Screen name="AcceptedRequests" component={AcceptedRequests} options={{ headerShown: false }} />
+            <Stack.Screen name="AcceptedRequests" component={AcceptedRequests} options={{ headerShown: false }} />   
+            <Stack.Screen name="BrandToInfluencerChat" component={BrandToInfluencerChat} options={{ headerShown: false }} />  
+            <Stack.Screen name="InfluencerToBrandChat" component={InfluencerToBrandChat} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 }

@@ -73,7 +73,8 @@ const AcceptedRequests = ({ navigation, route }) => {
     }
 
     const DateandTime = (item) => {
-        var date = item
+        var x = new Date(item).toLocaleString()  // To Date Format from numbers
+        var date = x
         var time = date.split(" ")[3]
         var formatdate = date.split(" ")[2] + " " + date.split(" ")[1] + " " + date.split(" ")[4]
         var newDate = new Date().toLocaleString().split(" ")[2]
@@ -87,6 +88,11 @@ const AcceptedRequests = ({ navigation, route }) => {
 
     }
    
+
+    const ChatRoom = (item)=>{
+        navigation.navigate("BrandToInfluencerChat", { ChatRoom_Id: item.ChatRoom_Id, ChatData: [{ ChatRoom_Id: item.ChatRoom_Id, CreatedAt: (new Date()).toString(), influencername: item.influencername, influencerimage:item.influencerprofile }],backaction:false })
+    
+    }
 
 
     return (
@@ -140,7 +146,7 @@ const AcceptedRequests = ({ navigation, route }) => {
                                     <View style={{ width: WiDTH * 0.30, height: 45, justifyContent: "center", }} >
 
                                         <View style={{ width: "100%", height: "75%", alignItems: "flex-end", alignSelf: "center", justifyContent: "flex-start" }}>
-                                            <Text style={{ color: "grey", fontSize: 12 }}>{DateandTime(item.CreatedAt)} </Text>
+                                            <Text style={{ color: "grey", fontSize: 12 }}>{DateandTime(item.AcceptedOn)} </Text>
                                         </View>
 
 
@@ -172,7 +178,7 @@ const AcceptedRequests = ({ navigation, route }) => {
 
 
 
-                                        <TouchableRipple onPress={() => { }} borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={[style.button2, { width: "98%" }]} >
+                                        <TouchableRipple onPress={() => { ChatRoom(item)}} borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={[style.button2, { width: "98%" }]} >
                                             <View  >
                                                 <Text style={style.button2text} >Chat now</Text>
                                             </View>

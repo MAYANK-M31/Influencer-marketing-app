@@ -99,7 +99,7 @@ const BrandSendMessage = ({ navigation, route }) => {
                     ref2.update({
                         chats: firestore.FieldValue.arrayUnion({ ChatRoom_Id: ChatRoom_Id, CreatedAt: (new Date()).toString(), influencername: route.params.name, influencerimage: route.params.profileimage })   // Adding chat Information to brandaccount
                     }).then(() => {
-                        const ref3 = database().ref(ChatRoom_Id)
+                        const ref3 = database().ref(ChatRoom_Id+"/ChatData")
                         const id = RandomMessageId
                         const createdAt = database.ServerValue.TIMESTAMP
                         const text = message

@@ -27,32 +27,16 @@ const images = [
     "https://image.shutterstock.com/image-illustration/3d-illustration-abstract-background-connection-260nw-651685186.jpg"
 ]
 
-const BrandToInfluencerChat = ({ navigation, route }) => {
+const InfluencerToBrandChat = ({ navigation, route }) => {
     const [messages, setMessages] = useState([]);
     const [messagedata, setmessagedata] = useState([])
     const [myid, setmyid] = useState(null)
-    const [headingData, setheadingData] = useState({ influencerimage: images[0], influencername: "name" })
+    const [headingData, setheadingData] = useState({ BrandImage: images[0], BrandName: "name" })
 
-    const [online, setonline] = useState(false)
+    const [online,setonline] = useState(false)
 
+    
 
-
-    const backAction = () => {
-        if (route.params.backaction == false) {
-
-        } else {
-            navigation.navigate("Search")
-            return true;
-        }
-
-    };
-
-    useEffect(() => {
-        BackHandler.addEventListener("hardwareBackPress", backAction);
-
-        return () =>
-            BackHandler.removeEventListener("hardwareBackPress", backAction);
-    }, []);
 
 
     useEffect(() => {
@@ -93,30 +77,31 @@ const BrandToInfluencerChat = ({ navigation, route }) => {
             });
 
 
-             // To get Influencer Is online or not
-             database()
-             .ref(route.params.ChatRoom_Id)
-             .on('value', snapshot => {
-                 // setmessagedata(snapshot.val())
-                 // setMessages(snapshot.val())
-                 if (snapshot.val().onlineInfluencer) {
-                    setonline(snapshot.val().onlineInfluencer)
- 
-                 }else{
-                     setonline(false)
-                 }
- 
-             });
+            // To get Brand Is online or not
+            database()
+            .ref(route.params.ChatRoom_Id)
+            .on('value', snapshot => {
+                // setmessagedata(snapshot.val())
+                // setMessages(snapshot.val())
+                if (snapshot.val().onlineBrand) {
+                   setonline(snapshot.val().onlineBrand)
+
+                }else{
+                    setonline(false)
+                }
+
+            });
 
 
-        //TO Add User(Me Brand) is online or offline
-        const ref = database().ref(route.params.ChatRoom_Id)
-        ref.update({ onlineBrand: true })
 
+            //TO Add User(Me Influencer) is online or offline
+            const ref = database().ref(route.params.ChatRoom_Id)
+            ref.update({onlineInfluencer:true})
+            
 
-        return () =>
-            ref.update({ onlineBrand: false })
-
+            return ()=> 
+            ref.update({onlineInfluencer:false})
+            
 
 
     }, [])
@@ -219,7 +204,7 @@ const BrandToInfluencerChat = ({ navigation, route }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }} >
 
             <View style={style.header} >
-                <TouchableOpacity onPress={() => route.params.backaction == false ? navigation.goBack() : navigation.navigate("Search")} style={style.back} >
+                <TouchableOpacity onPress={() =>  navigation.goBack()} style={style.back} >
                     <Ionicons style={{ marginRight: 10 }} color={"#404852"} size={30} name={"chevron-left"} />
 
                 </TouchableOpacity>
@@ -227,10 +212,10 @@ const BrandToInfluencerChat = ({ navigation, route }) => {
                 <View style={style.heading} >
 
                     <View style={{ width: 30, height: 30, backgroundColor: "#f0f2f5", borderRadius: 100, marginRight: 5, overflow: 'hidden', }}>
-                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: headingData.influencerimage ? headingData.influencerimage : images[0] }} />
+                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: headingData.BrandImage ? headingData.BrandImage : images[0] }} />
                     </View>
 
-                    <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", textTransform: "capitalize" }} >{headingData.influencername}</Text>
+                    <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", textTransform: "capitalize" }} >{headingData.BrandName}</Text>
 
 
 
@@ -326,4 +311,4 @@ const style = StyleSheet.create({
     },
 })
 
-export default BrandToInfluencerChat
+export default InfluencerToBrandChat

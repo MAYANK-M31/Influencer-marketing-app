@@ -14,6 +14,7 @@ import {
 import Ionicons from "react-native-vector-icons/Feather"
 import axios from "axios"
 import firestore from '@react-native-firebase/firestore';
+import database from '@react-native-firebase/database';
 import { MyContext } from './AppStartStack';
 import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -48,7 +49,7 @@ const Requests = () => {
 
             if (type == "influencer") {
                 const ref = await firestore().collection("influencer").where("uid", "==", uid)
-                ref.get().then(function (querySnapshot) {
+                ref.onSnapshot(function (querySnapshot) {
                     querySnapshot.forEach(function (doc) {
                         if (doc.data().requestssent) {
                             dispatch({ type: "ADD_REQUESTSENT", payload: doc.data().requestssent })
@@ -115,7 +116,9 @@ const Requests = () => {
     }
 
     const DateandTime = (item) => {
-        var date = item
+        var x = new Date(item).toLocaleString()  // To Date Format from numbers
+
+        var date = x
         var time = date.split(" ")[3]
         var formatdate = date.split(" ")[2] + " " + date.split(" ")[1] + " " + date.split(" ")[4]
         var newDate = new Date().toLocaleString().split(" ")[2]
@@ -133,20 +136,33 @@ const Requests = () => {
         const docId = await AsyncStorage.getItem("DocId")
         const ref = await firestore().collection("brandaccount").doc(docId)
 
+        var ChatRoom_Id = Math.random().toString(36).slice(2)  //Random ChatRoom Ids
+        const ref3 = database().ref(ChatRoom_Id)  // Realtime database refernce 
 
-
-
-        removeToUpdateInfluencer(data)
+        removeToUpdateInfluencer({ data, ChatRoom_Id })
 
         ref.update({
             requests: firestore.FieldValue.arrayRemove(data)
         }).then(async () => {
-            data.accepted = true
-            ref.update({
-                requests: firestore.FieldValue.arrayUnion(data)
-            }).then(async () => {
-                ToastAndroid.show("Chat Now", ToastAndroid.SHORT)
-            })
+            const ref3 = database().ref(ChatRoom_Id)  // Realtime database refernce 
+            ref3.set({ online: true })
+                .then(async () => {
+                    data.accepted = true
+                    data.AcceptedOn = Date.now()
+                    data.ChatRoom_Id = ChatRoom_Id
+                    ref.update({
+                        requests: firestore.FieldValue.arrayUnion(data),
+                        chats: firestore.FieldValue.arrayUnion({ ChatRoom_Id: ChatRoom_Id, CreatedAt: (new Date()).toString(), influencerimage: data.influencerprofile ? data.influencerprofile : null, influencername: data.influencername })   // Adding chat Information to Influenceraccount
+
+                    }).then(async () => {
+                        //    ref3.push(null)
+                        ToastAndroid.show("Chat Now", ToastAndroid.SHORT)
+                    })
+                }).catch((e) => {
+                    console.log(e);
+
+                })
+
         })
 
     }
@@ -158,26 +174,48 @@ const Requests = () => {
     }
 
 
-    const removeToUpdateInfluencer = async (data) => {
+    const removeToUpdateInfluencer = async ({ data, ChatRoom_Id }) => {
 
         const ref2 = await firestore().collection("influencer").doc(data.InfluencerDocId)
 
-
+        alert(ChatRoom_Id)
 
         ref2.update({
             requestssent: firestore.FieldValue.arrayRemove(data)
         }).then(async () => {
-            data.accepted = true
-            ref2.update({
-                requestssent: firestore.FieldValue.arrayUnion(data)
-            }).then(async () => {
+            const ref3 = database().ref(ChatRoom_Id)  // Realtime database refernce 
+            ref3.set({ online: true })
+                .then(async () => {
+                    data.accepted = true
+                    data.AcceptedOn = Date.now()
+                    data.ChatRoom_Id = ChatRoom_Id
+                    ref2.update({
+                        requestssent: firestore.FieldValue.arrayUnion(data),
+                        chats: firestore.FieldValue.arrayUnion({ ChatRoom_Id: ChatRoom_Id, CreatedAt: (new Date()).toString(), profileimage: data.profileimage ? data.profileimage : null, brandname: data.campaigntitle })   // Adding chat Information to Influenceraccount
+                    }).then(async () => {
+                        alert("send")
+                    }).catch((e) => {
+                        console.log(e);
 
-            })
+                    })
+                }).catch((e) => {
+                    console.log(e);
 
+                })
 
         })
     }
 
+const ChatRoom = (item)=>{
+    navigation.navigate("BrandToInfluencerChat", { ChatRoom_Id: item.ChatRoom_Id, ChatData: [{ ChatRoom_Id: item.ChatRoom_Id, CreatedAt: (new Date()).toString(), influencername: item.influencername, influencerimage:item.influencerimage}],backaction:false  })
+
+}
+
+
+const InfluencerSideChat = (item)=>{
+    navigation.navigate("InfluencerToBrandChat", { ChatRoom_Id: item.ChatRoom_Id, ChatData: [{ ChatRoom_Id: item.ChatRoom_Id, CreatedAt: (new Date()).toString(), BrandName:item.campaigntitle, BrandImage:item.profileimage }] })
+
+}
 
 
 
@@ -217,21 +255,23 @@ const Requests = () => {
                             </View>
                             <View style={{ width: WiDTH * 0.25, height: "100%", backgroundColor: "#f0f2f500", justifyContent: "center", alignSelf: "flex-end", borderBottomWidth: 0.6, borderBottomColor: "#f0f2f5" }} >
                                 <View style={{ width: 80, height: 30, backgroundColor: "white", borderWidth: 1, alignSelf: "center", borderColor: item.accepted ? "#e7164c" : "#409cff", borderRadius: 5, justifyContent: "center", alignItems: "center" }}>
-                                    <View style={{ flexDirection: "row", alignItems: "center", alignSelf: "center", justifyContent: "center" }}>
+                                    <TouchableOpacity activeOpacity={1} onPress={()=> item.accepted ?  InfluencerSideChat(item) : null } style={{ flexDirection: "row", alignItems: "center", alignSelf: "center", justifyContent: "center" }}>
                                         <Text style={{ color: item.accepted ? "#e7164c" : "#409cff" }}>{item.accepted ? " Chat now" : "Sent"} </Text>
                                         {item.accepted ?
                                             null
                                             :
                                             <Ionicons size={15} color={"#409cff"} name={"check"} />
                                         }
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
 
                             </View>
                         </View>
                     )}
                 />
+
                 :
+
                 <FlatList
                     data={RequestsGot}
                     contentContainerStyle={{ paddingBottom: 150 }}
@@ -297,7 +337,7 @@ const Requests = () => {
 
 
 
-                                        <TouchableRipple onPress={() => { }} borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={[style.button2, { width: "98%" }]} >
+                                        <TouchableRipple onPress={() => {ChatRoom(item) }} borderless={true} rippleColor={"rgb(0,0,0,0.32)"} style={[style.button2, { width: "98%" }]} >
                                             <View  >
                                                 <Text style={style.button2text} >Chat now</Text>
                                             </View>
@@ -334,7 +374,7 @@ const style = StyleSheet.create({
         borderRadius: 10,
         justifyContent: "center",
         alignItems: "center",
-        borderColor: "#de4229",
+        borderColor: "#e7164c",
         borderWidth: 1.5,
 
     },
@@ -352,7 +392,7 @@ const style = StyleSheet.create({
     },
     button1text: {
         fontSize: 16,
-        color: "#de4229",
+        color: "#e7164c",
         fontWeight: 'bold'
     },
     button2text: {

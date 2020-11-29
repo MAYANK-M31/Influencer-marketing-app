@@ -110,7 +110,7 @@ const BrandSearch = ({ navigation, route }) => {
         const ref2 = await firestore().collection("influencer")
         const mydocid = await AsyncStorage.getItem("DocId")
 
-        const insidedata = { personId: Id,InfluencerDocId:mydocid ,postId: item.postId, CreatedAt: new Date().toLocaleString(), accepted: false, profileimage: item.profileimage, campaigntitle: item.campaigntitle,influencername:AllInfluencerData.name,influencerprofile:AllInfluencerData.profileimage ? AllInfluencerData.profileimage : null  }
+        const insidedata = { personId: Id,InfluencerDocId:mydocid ,postId: item.postId, CreatedAt: Date.now(), accepted: false, profileimage: item.profileimage, campaigntitle: item.campaigntitle,influencername:AllInfluencerData.name,influencerprofile:AllInfluencerData.profileimage ? AllInfluencerData.profileimage : null  }
         requestsent.push(insidedata)
         dispatch({ type: "ADD_REQUESTSENT", payload: requestsent })
         // console.log(requestsent.length);
@@ -409,7 +409,7 @@ const style = StyleSheet.create({
         borderRadius: 10,
         justifyContent: "center",
         alignItems: "center",
-        borderColor: "#de4229",
+        borderColor: "#e7164c",
         borderWidth: 1.5,
         marginLeft: 10
     },
@@ -426,7 +426,7 @@ const style = StyleSheet.create({
     },
     button1text: {
         fontSize: 16,
-        color: "#de4229",
+        color: "#e7164c",
         fontWeight: 'bold'
     },
     button2text: {

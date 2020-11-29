@@ -229,7 +229,7 @@ const style = StyleSheet.create({
         borderRadius: 10,
         justifyContent: "center",
         alignItems: "center",
-        borderColor: "#de4229",
+        borderColor: "#e7164c",
         borderWidth: 1.5,
         marginLeft: 10
     },
@@ -246,7 +246,7 @@ const style = StyleSheet.create({
     },
     button1text: {
         fontSize: 16,
-        color: "#de4229",
+        color: "#e7164c",
         fontWeight: 'bold'
     },
     button2text: {
