@@ -30,40 +30,6 @@ const Chat = ({ navigation }) => {
     const [myid, setmyid] = useState(null)
 
 
-    // useEffect(() => {
-    //     setMessages([
-    //         {
-    //             _id: 543,
-    //             text: 'Hello Influencer',
-    //             createdAt: new Date(),
-    //             user: {
-    //                 _id: 20,
-    //                 name: 'Dream 11',
-    //             },
-    //         },
-    //         {
-    //             _id: 466,
-    //             text: 'Hello mayank',
-    //             createdAt: new Date(),
-    //             user: {
-    //                 _id: 5,
-    //                 name: 'Dream 11',
-
-    //             },
-    //         },
-    //         {
-    //             _id: "k",
-    //             text: 'Hello mayank',
-    //             createdAt: new Date(),
-    //             user: {
-    //                 _id: 10,
-    //                 name: 'Dream 11',
-
-    //             },
-    //         },
-    //     ])
-    // }, [])
-
     useEffect(() => {
 
         const myfunc = async () => {

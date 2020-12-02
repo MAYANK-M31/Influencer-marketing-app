@@ -30,7 +30,8 @@ export const initState = {
     AllBrandAccountData: [], // To fetch data of brand account on home page
     InfluencerChatData: [], // To fetch save the chatid after brand send message from sendmessage page (in order to direct open chatpage in search stack for brands)
     RequestsGot: [],  // Requests got to brand by influencer
-    AllInfluencerData:null
+    Chats:[], // Chats List Of Influencer and also of brand
+    AllInfluencerData: null
 }
 
 export const reducer = (state, action) => {
@@ -198,6 +199,11 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 RequestsGot: action.payload
+            }
+        case "ADD_CHATS":
+            return {
+                ...state,
+                Chats: action.payload
             }
         case "ADD_ALLINFLUENCERDATA":
             return {
