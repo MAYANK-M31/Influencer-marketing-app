@@ -24,9 +24,9 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditAbout = ({ navigation, route }) => {
 
-    const {state,dispatch} = useContext(MyContext)
-    const {about} = state;
-    const [value, setvalue] = useState("")
+    const {dispatch} = useContext(MyContext)
+ 
+    const [value, setvalue] = useState(route.params.about)
     const [disable, setdisable] = useState(true)
 
     useEffect(()=>{
@@ -60,7 +60,7 @@ const EditAbout = ({ navigation, route }) => {
                 }).then(async () => {
                     ToastAndroid.show("Updated", ToastAndroid.SHORT)
                     navigation.goBack()
-                    dispatch({type:"ADD_ABOUT",payload:value})
+                    // dispatch({type:"ADD_ABOUT",payload:value})
                 })
                
 

@@ -23,11 +23,10 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditPayMode = ({ navigation,route }) => {
 
-    const {state,dispatch} = useContext(MyContext)
-    const {paymode} = state;
+    const {dispatch} = useContext(MyContext)
 
 
-    const [type, settype] = useState(paymode)
+    const [type, settype] = useState(route.params.paymode)
 
     const select = (item) => {
         settype(item)
@@ -39,7 +38,7 @@ const EditPayMode = ({ navigation,route }) => {
             ToastAndroid.show("Please Choose One option", ToastAndroid.SHORT)
         } else {
 
-            const func = async () => {
+            const update = async () => {
            
                 const docid = await AsyncStorage.getItem("DocId")
                 const ref = await firestore().collection("influencer").doc(docid)
@@ -47,7 +46,7 @@ const EditPayMode = ({ navigation,route }) => {
                     paymode:type
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
-                    dispatch({type:"ADD_PAYMODE",payload:type})
+                    // dispatch({type:"ADD_PAYMODE",payload:type})
                     navigation.goBack()
 
                 })
@@ -56,7 +55,7 @@ const EditPayMode = ({ navigation,route }) => {
                   
 
             }
-              func()
+              update()
 
 
             // navigation.goBack()

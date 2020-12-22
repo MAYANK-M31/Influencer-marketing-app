@@ -16,6 +16,8 @@ import Ionicons from "react-native-vector-icons/Feather"
 import Card from './Card';
 import { TouchableRipple } from 'react-native-paper';
 
+
+
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
@@ -58,11 +60,10 @@ const Search = ({ navigation }) => {
             <SafeAreaView style={style.container}>
 
                 <View style={style.textinput} >
-                    <TouchableOpacity onPress={() => { navigation.navigate("Home") }} style={{ height: "100%", width: 20, justifyContent: "center", }} >
-                        <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ left: 10 }} />
-                    </TouchableOpacity>
-
-                    <TextInput style={style.textinputtext} underlineColorAndroid={"white"}  placeholder={"Search Influencer"} />
+                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { navigation.navigate("Home") }} style={{ height: 35, width: 35, justifyContent: "center",alignItems:"center",backgroundColor:"white",borderRadius:100,left: 10  }} >
+                        <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ }} />
+                    </TouchableRipple>
+                    <TextInput clearButtonMode={"always"} style={style.textinputtext}    placeholder={"Search Influencer"} />
                 </View>
 
                 <ScrollView scrollEventThrottle={16} contentContainerStyle={{ paddingTop: 20, paddingBottom: 100 }} >
@@ -119,20 +120,27 @@ const style = StyleSheet.create({
         justifyContent: "center",
     },
     textinput: {
-        width: "90%",
-        height: 45,
-        elevation: 2,
+        width: "100%",
+        height: 60,
+        elevation: 1,
         backgroundColor: "white",
-        borderRadius: 5,
+        borderRadius: 0,
         alignSelf: "center",
-        marginTop: 10,
+        marginTop: 0,
         flexDirection: "row",
         alignItems: "center",
+        
     },
     textinputtext: {
-        color: "#878ca0",
-        left: 18,
-        fontSize: 16
+        left: 25,
+        fontSize: 17,
+        fontWeight:"100",
+        color:"#343860",
+        width:"83%",
+        backgroundColor:"white",
+        
+        
+      
     },
     card: {
         width: WiDTH,

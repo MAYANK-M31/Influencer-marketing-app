@@ -135,7 +135,7 @@ const Chats = () => {
 
 
     const InfluencerToBrandChat = (item) => {
-        navigation.navigate("InfluencerToBrandChat", { ChatRoom_Id: item.ChatRoom_Id, ChatData: [{ ChatRoom_Id: item.ChatRoom_Id, CreatedAt: (new Date()).toString(), BrandName: item.campaigntitle, BrandImage: item.profileimage }] })
+        navigation.navigate("InfluencerToBrandChat", { ChatRoom_Id: item.ChatRoom_Id, ChatData: [{ ChatRoom_Id: item.ChatRoom_Id, CreatedAt: (new Date()).toString(), BrandName: item.brandname, BrandImage: item.profileimage }] })
 
     }
 
@@ -152,25 +152,25 @@ const Chats = () => {
                     keyExtractor={(item, index) => index}
                     renderItem={({ item, index }) => (
                         <TouchableRipple onPress={() => { InfluencerToBrandChat(item) }} rippleColor={"rgb(0,0,0,0.32)"}>
-                        <View style={{ width: "100%", height: 65, flexDirection: "row", alignItems: "center", paddingHorizontal: 10, justifyContent: "space-around", marginTop: 10 }} >
-                            <View style={{ width: WiDTH * 0.15, height: WiDTH * 0.15, borderRadius: 100, backgroundColor: "#f0f2f5" }} >
-                                <View style={{ width: "100%", height: "100%", borderRadius: 100, backgroundColor: "#f0f2f5", overflow: "hidden" }} >
-                                    <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.profileimage ? item.profileimage : images[0] }} />
-                                </View>
-                                <View style={{ width: 15, height: 15, borderRadius: 100, backgroundColor: "#007bff", justifyContent: "center", alignItems: "center", position: "absolute", right: 1, bottom: 2, zIndex: 1, borderWidth: 1.5, borderColor: "white" }}>
-                                </View>
-                            </View>
-                            <View style={{ width: WiDTH * 0.75, height: "100%", backgroundColor: "#f0f2f500", top: -5, justifyContent: "center", alignSelf: "flex-end", borderBottomWidth: 0.6, borderBottomColor: "#f0f2f5" }} >
-                                <Text style={{ fontWeight: "bold", color: "#2a3659", fontSize: 18, top: -5 }} >{item.brandname}</Text>
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <View style={{ width: 15, height: 15, borderRadius: 100, backgroundColor: "#007bff", justifyContent: "center", alignItems: "center", marginRight: 5 }}>
-                                        <Text style={{ fontWeight: "bold", color: "white", fontSize: 10 }} >1</Text>
+                            <View style={{ width: "100%", height: 65, flexDirection: "row", alignItems: "center", paddingHorizontal: 10, justifyContent: "space-around", marginTop: 10 }} >
+                                <View style={{ width: WiDTH * 0.15, height: WiDTH * 0.15, borderRadius: 100, backgroundColor: "#f0f2f5" }} >
+                                    <View style={{ width: "100%", height: "100%", borderRadius: 100, backgroundColor: "#f0f2f5", overflow: "hidden" }} >
+                                        <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.profileimage ? item.profileimage : images[0] }} />
                                     </View>
-                                    <Text style={{ fontWeight: "100", color: "#a0b3c3", fontSize: 14 }} >How Are you</Text>
+                                    <View style={{ width: 15, height: 15, borderRadius: 100, backgroundColor: "#007bff", justifyContent: "center", alignItems: "center", position: "absolute", right: 1, bottom: 2, zIndex: 1, borderWidth: 1.5, borderColor: "white" }}>
+                                    </View>
+                                </View>
+                                <View style={{ width: WiDTH * 0.75, height: "100%", backgroundColor: "#f0f2f500", justifyContent: "center", alignSelf: "flex-end", borderBottomWidth: 0.6, borderBottomColor: "#f0f2f5" }} >
+                                    <Text style={{ fontWeight: "bold", color: "#2a3659", fontSize: 18, top: -5 }} >{item.brandname}</Text>
+                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <View style={{ width: 15, height: 15, borderRadius: 100, backgroundColor: "#007bff", justifyContent: "center", alignItems: "center", marginRight: 5 }}>
+                                            <Text style={{ fontWeight: "bold", color: "white", fontSize: 10 }} >1</Text>
+                                        </View>
+                                        <Text style={{ fontWeight: "100", color: "#a0b3c3", fontSize: 14 }} >How Are you</Text>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    </TouchableRipple>
+                        </TouchableRipple>
                     )}
                 />
 
@@ -183,7 +183,7 @@ const Chats = () => {
                     renderItem={({ item, index }) => (
                         <TouchableRipple onPress={() => { BrandToInfluencerChat(item) }} rippleColor={"rgb(0,0,0,0.32)"}>
                             <View style={{ width: "100%", height: 65, flexDirection: "row", alignItems: "center", paddingHorizontal: 10, justifyContent: "space-around", marginTop: 10 }} >
-                                <View style={{ width: WiDTH * 0.15, height: WiDTH * 0.15, borderRadius: 100, backgroundColor: "#f0f2f5",marginTop:-10 }} >
+                                <View style={{ width: WiDTH * 0.15, height: WiDTH * 0.15, borderRadius: 100, backgroundColor: "#f0f2f5", marginTop: -10 }} >
                                     <View style={{ width: "100%", height: "100%", borderRadius: 100, backgroundColor: "#f0f2f5", overflow: "hidden" }} >
                                         <Image style={{ width: "100%", height: "100%" }} source={{ uri: item.influencerimage ? item.influencerimage : images[0] }} />
                                     </View>
@@ -191,8 +191,8 @@ const Chats = () => {
                                     </View>
                                 </View>
                                 <View style={{ width: WiDTH * 0.75, height: "100%", backgroundColor: "#f0f2f500", top: -5, justifyContent: "center", alignSelf: "flex-end", borderBottomWidth: 0.6, borderBottomColor: "#f0f2f5" }} >
-                                  
-                                    <Text style={{ fontWeight: "bold", color: "#2a3659", fontSize: 18, top: -5,textTransform:"capitalize" }} >{item.influencername}</Text>
+
+                                    <Text style={{ fontWeight: "bold", color: "#2a3659", fontSize: 18, top: -5, textTransform: "capitalize" }} >{item.influencername}</Text>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                                         <View style={{ width: 15, height: 15, borderRadius: 100, backgroundColor: "#007bff", justifyContent: "center", alignItems: "center", marginRight: 5 }}>
                                             <Text style={{ fontWeight: "bold", color: "white", fontSize: 10 }} >1</Text>

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -9,7 +9,7 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Button, BackHandler, Alert, AsyncStorage, Modal, ToastAndroid
+    Button, BackHandler, Alert, AsyncStorage, Modal, ToastAndroid, AppState
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -18,71 +18,227 @@ import auth from '@react-native-firebase/auth';
 import axios from "axios"
 import firestore from "@react-native-firebase/firestore"
 import database from '@react-native-firebase/database';
+import messaging from '@react-native-firebase/messaging';
 
 import { MyContext } from './AppStartStack';
 import WebView from 'react-native-webview';
 import CookieManager from '@react-native-community/cookies';
+import { TouchableRipple } from 'react-native-paper';
+
 
 
 const WiDTH = Dimensions.get("window").width
 const HEIGHT = Dimensions.get("window").height
 
+
+
+
+
+
+
 const Home = ({ navigation }) => {
 
 
     const { state, dispatch } = useContext(MyContext)
-    const { type, requestsent } = state;
+    const { type, requestsent, CurrentChatRoomId } = state;
 
-    var array = []
+    // TO CHECK APP STATE WHEATHER OPENED OR IN BACKGROUND
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+    useEffect(() => {
+        AppState.addEventListener("change", _handleAppStateChange);
+
+        return () => {
+            AppState.removeEventListener("change", _handleAppStateChange);
+        };
+    }, []);
+
+    const _handleAppStateChange = (nextAppState) => {
+        if (
+            appState.current.match(/inactive|background/) &&
+            nextAppState === "active"
+        ) {
+            // ToastAndroid.show("App has come to the foreground!", ToastAndroid.SHORT);
+            if (CurrentChatRoomId !== null) {
+                const ref = database().ref(CurrentChatRoomId)
+                if(type == "influencer"){
+                    ref.update({ onlineInfluencer: true })
+                }else{
+                    ref.update({ onlineBrand: true })
+                }
+            }
+
+        } else {
+            // ToastAndroid.show("App has come to the Background!", ToastAndroid.SHORT);
+            if (CurrentChatRoomId !== null) {
+                const ref = database().ref(CurrentChatRoomId)
+                if(type == "influencer"){
+                    ref.update({ onlineInfluencer: false })
+                }else{
+                    ref.update({ onlineBrand: false })
+                }
+              
+            }
+
+        }
+
+        appState.current = nextAppState;
+        setAppStateVisible(appState.current);
+        // ToastAndroid.show("AppState" + appState.current, ToastAndroid.SHORT);
+    };
+
+    //  TO CHECK APP STATE WHEATHER OPENED OR IN BACKGROUND (END)
+
+
+    // To GET FCM TOKEN FOR NOTIFICATIONS
+
+    useEffect(() => {
+
+
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+            // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+            ToastAndroid.show("You got a new message", ToastAndroid.SHORT)
+        });
+
+        // const getFcmToken = async () => {
+
+        //     const fcmToken = await messaging().getToken();
+        //     const SavedFCMToken = await AsyncStorage.getItem("FCM_Token")  // Saved in device  - Asyncstorage
+
+        //     if (fcmToken) {
+        //         // console.log(fcmToken);
+        //         console.log("Your Firebase Token is:", fcmToken);
+
+        //         // To Chane Token in database if user reinstall app install app  looged out or delete app data 
+        //         if (fcmToken == SavedFCMToken) {
+        //             alert("Same token as aloted ")
+        //         } else {
+        //             await AsyncStorage.setItem("FCM_Token", fcmToken).then(() => {
+        //                 alert("FCM Token Set")
+        //             })
+        //         }
+
+        //     } else {
+        //         console.log("Failed", "No token received");
+        //     }
+        // }
+
+
+
+        // getFcmToken()
+
+        return unsubscribe;
+    }, []);
+
+
+
+    const FCM_Brand_Func = async (item) => {
+        const fcmToken = await messaging().getToken();
+
+        if (fcmToken) {
+            const ref = await firestore().collection("brandaccount").doc(item)
+            ref.update({
+                FCM_TOKEN: fcmToken
+            }).then(async () => {
+                alert("FCM Token Set")
+            })
+        } else {
+            console.log("Failed", "No token received");
+        }
+
+
+
+
+    }
+
+    const FCM_Influencer_Func = async (item) => {
+        const fcmToken = await messaging().getToken();
+
+        if (fcmToken) {
+            const ref = await firestore().collection("influencer").doc(item)
+            ref.update({
+                FCM_TOKEN: fcmToken
+            }).then(async () => {
+                alert("FCM Token Set")
+            })
+        } else {
+            console.log("Failed", "No token received");
+        }
+
+
+
+
+    }
+
+
+
     useEffect(() => {
         const myfunc = async () => {
+
+            const fcmToken = await messaging().getToken();
 
             const uid = await AsyncStorage.getItem("uid")
             const type = await AsyncStorage.getItem("type")
             dispatch({ type: "ADD_TYPE", payload: type })
 
             if (type == "influencer") {
-                const ref = await firestore().collection("influencer").where("uid","==",uid)
+                const ref = await firestore().collection("influencer").where("uid", "==", uid)
                 ref.get().then(async function (querySnapshot) {
                     querySnapshot.forEach(async function (doc) {
-                        if(doc.exists){
-                            await AsyncStorage.setItem("DocId",doc.id)
-                            
-                            dispatch({type:"ADD_ALLINFLUENCERDATA",payload:doc.data()}) 
-                            if(doc.data().requestssent){
-                                dispatch({type:"ADD_REQUESTSENT",payload:doc.data().requestssent}) 
-                            }else{
-                                dispatch({type:"ADD_REQUESTSENT",payload:[]}) 
+                        if (doc.exists) {
+                            await AsyncStorage.setItem("DocId", doc.id)
+
+                            if (fcmToken !== doc.data().FCM_TOKEN) {
+                                FCM_Influencer_Func(doc.id)
+                            } else {
+                                // alert("same token")
                             }
-                        }else{
-                            ToastAndroid.show("Cant Find your account",ToastAndroid.SHORT)
+
+                            dispatch({ type: "ADD_ALLINFLUENCERDATA", payload: doc.data() })
+                            if (doc.data().requestssent) {
+                                dispatch({ type: "ADD_REQUESTSENT", payload: doc.data().requestssent })
+                            } else {
+                                dispatch({ type: "ADD_REQUESTSENT", payload: [] })
+                            }
+                        } else {
+                            ToastAndroid.show("Cant Find your account", ToastAndroid.SHORT)
                         }
-                       
+
                         // console.log(doc.data().requestssent)
-                    
-                        
+
+
                     })
-           
-                   
+
+
                 })
             } else {
-                const ref = await firestore().collection("brandaccount").where("uid","==",uid)
+                const ref = await firestore().collection("brandaccount").where("uid", "==", uid)
                 ref.get().then(async function (querySnapshot) {
                     querySnapshot.forEach(async function (doc) {
-                        if(doc.data()){
-                            await AsyncStorage.setItem("DocId",doc.id)
-                            dispatch({type:"ADD_ALLBRANDACCOUNTDATA",payload:doc.data()}) 
+                        if (doc.data()) {
+                            await AsyncStorage.setItem("DocId", doc.id)
+
+                            if (fcmToken !== doc.data().FCM_TOKEN) {
+                                FCM_Brand_Func(doc.id)
+                            } else {
+                                // alert("same token")
+                            }
+
+
+
+                            dispatch({ type: "ADD_ALLBRANDACCOUNTDATA", payload: doc.data() })
                             // console.log(doc.data());
-                            
-                        }else{
-                            dispatch({type:"ADD_ALLBRANDACCOUNTDATA",payload:[]}) 
+
+                        } else {
+                            dispatch({ type: "ADD_ALLBRANDACCOUNTDATA", payload: [] })
                         }
                         // console.log(doc.data().requestssent)
-                    
-                        
+
+
                     })
-           
-                   
+
+
                 })
             }
         }
@@ -198,12 +354,14 @@ const Home = ({ navigation }) => {
                     </View>
                 </View>
                 {/* //#878ca0 */}
-                <TouchableOpacity onPress={() => { navigation.navigate("Search") }} style={style.textinput} >
-                    <Ionicons name={"search"} size={22} color={"#404852"} style={{ left: 10 }} />
-                    <Text style={style.textinputtext} >Search Influencer</Text>
-                </TouchableOpacity>
+                <TouchableRipple borderless={true} style={style.textinput} rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { navigation.navigate("Search") }}  >
+                    <>
+                        <Ionicons name={"search"} size={22} color={"#404852"} style={{ left: 10 }} />
+                        <Text style={style.textinputtext} >Search Influencer</Text>
+                    </>
+                </TouchableRipple>
 
-              
+
 
                 <View style={style.container2} >
                     <View>
@@ -254,7 +412,7 @@ const Home = ({ navigation }) => {
                     }
 
                 </View>
-             
+
 
             </SafeAreaView>
 

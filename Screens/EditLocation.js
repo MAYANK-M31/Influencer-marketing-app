@@ -25,16 +25,16 @@ const HEIGHT = Dimensions.get("window").height
 const EditLocation = ({ navigation,route }) => {
 
   
-    const {state,dispatch} = useContext(MyContext)
-    const {city} = state;
-    const [value,setvalue] = useState(city)
+    const {dispatch} = useContext(MyContext)
+ 
+    const [value,setvalue] = useState(route.params.location)
 
     const save = () => {
         if (value == undefined) {
             ToastAndroid.show("Please enter city", ToastAndroid.SHORT)
         } else {
 
-            const func = async () => {
+            const update = async () => {
            
                 const docid = await AsyncStorage.getItem("DocId")
                 const ref = await firestore().collection("influencer").doc(docid)
@@ -43,14 +43,14 @@ const EditLocation = ({ navigation,route }) => {
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
                     navigation.goBack()
-                    dispatch({type:"ADD_CITY",payload:value})
+                    // dispatch({type:"ADD_CITY",payload:value})
                 })
                 
               
                   
 
             }
-              func()
+              update()
 
 
             // navigation.goBack()

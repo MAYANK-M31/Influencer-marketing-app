@@ -166,12 +166,11 @@ const BrandSearch = ({ navigation, route }) => {
             <StatusBar barStyle={"dark-content"} backgroundColor={"white"} />
             <SafeAreaView style={style.container}>
 
-                <View style={style.textinput} >
-                    <TouchableOpacity onPress={() => { navigation.navigate("Home") }} style={{ height: "100%", width: 20, justifyContent: "center", }} >
-                        <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ left: 10 }} />
-                    </TouchableOpacity>
-
-                    <TextInput style={style.textinputtext} placeholder={"Search Brand ,Campaign"} />
+            <View style={style.textinput} >
+                    <TouchableRipple borderless={true} rippleColor={"rgb(0,0,0,0.32)"} onPress={() => { navigation.navigate("Home") }} style={{ height: 35, width: 35, justifyContent: "center",alignItems:"center",backgroundColor:"white",borderRadius:100,left: 10  }} >
+                        <Ionicons name={"arrow-left"} size={22} color={"#404852"} style={{ }} />
+                    </TouchableRipple>
+                    <TextInput clearButtonMode={"always"} style={style.textinputtext}    placeholder={"Search Influencer"} />
                 </View>
 
 
@@ -347,20 +346,27 @@ const style = StyleSheet.create({
         height: WiDTH / 1.8
     },
     textinput: {
-        width: "90%",
-        height: 45,
-        elevation: 2,
+        width: "100%",
+        height: 60,
+        elevation: 1,
         backgroundColor: "white",
-        borderRadius: 5,
+        borderRadius: 0,
         alignSelf: "center",
-        marginTop: 10,
+        marginTop: 0,
         flexDirection: "row",
         alignItems: "center",
+        
     },
     textinputtext: {
-        color: "#878ca0",
-        left: 18,
-        fontSize: 16
+        left: 25,
+        fontSize: 17,
+        fontWeight:"100",
+        color:"#343860",
+        width:"83%",
+        backgroundColor:"white",
+        
+        
+      
     },
     insidecard: {
         width: WiDTH,

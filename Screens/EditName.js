@@ -27,11 +27,10 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditName = ({ navigation,route }) => {
 
-  const {state,dispatch} = useContext(MyContext)
-  const {name} = state
+  const {dispatch} = useContext(MyContext)
   
 
-    const [value,setvalue] = useState(name.toUpperCase())
+    const [value,setvalue] = useState(route.params.name.toUpperCase())
 
     const save = () => {
        
@@ -40,7 +39,7 @@ const EditName = ({ navigation,route }) => {
             ToastAndroid.show("Please enter your name", ToastAndroid.SHORT)
         } else {
 
-            const func = async () => {
+            const update = async () => {
            
                 const docid = await AsyncStorage.getItem("DocId")
                 const ref = await firestore().collection("influencer").doc(docid)
@@ -48,7 +47,7 @@ const EditName = ({ navigation,route }) => {
                     name:value.toLowerCase()
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
-                    dispatch({type:"ADD_NAME",payload:value})
+                    // dispatch({type:"ADD_NAME",payload:value})
                     navigation.goBack()
                 })
                 
@@ -56,7 +55,7 @@ const EditName = ({ navigation,route }) => {
                   
 
             }
-              func()
+              update()
 
 
         }

@@ -12,7 +12,6 @@ const BrandProfileStack = () => {
         <Stack.Navigator screenOptions={{cardStyleInterpolator:CardStyleInterpolators.forHorizontalIOS}} >
             <Stack.Screen name="BrandProfile" component={BrandProfile} options={{headerShown:false}} />
             <Stack.Screen name="EditBrandProfile" component={EditBrandProfile} options={{headerShown:false}} />
-           
         </Stack.Navigator>
     );
 }

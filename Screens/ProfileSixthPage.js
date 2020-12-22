@@ -70,7 +70,7 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
                             maxrange: route.params.maxrange,
-                            experiences: []
+                          
                         })
                     } else if (route.params.youtubedata == null) {
                         ref.add({
@@ -84,7 +84,7 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
                             maxrange: route.params.maxrange,
-                            experiences: []
+                          
                         })
                     } else {
                         ref.add({
@@ -99,7 +99,7 @@ const ProfileSixthPage = ({ navigation, route }) => {
                             paymode: route.params.paymode,
                             minrange: route.params.minrange,
                             maxrange: route.params.maxrange,
-                            experiences: []
+                          
                         })
                     }
 

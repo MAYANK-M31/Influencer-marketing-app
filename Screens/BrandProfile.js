@@ -46,47 +46,33 @@ const options = {
 
 const BrandProfile = ({ route, navigation }) => {
 
-    const { state, dispatch } = useContext(MyContext)
-    const { name, brandname, city, category, email, website, applink, profileimage, backgroundimage } = state
+    const { state } = useContext(MyContext)
+    const { FetchUserData } = state
 
 
+    // Data relates states
+    const [data, setdata] = useState({})
+
+
+    // Images Realated States
     const [imageselector, setimageselector] = useState(false)
     const [InitLoading, setInitLoading] = useState(false)
     const [profilesource, setprofilesource] = useState(null)
     const [backgroundsource, setbackgroundsource] = useState(null)
     const [forprofile, setforprofile] = useState(false)
     const [loading, setloading] = useState(null)
-    const [loading2,setloading2 ] = useState(null)
+    const [loading2, setloading2] = useState(null)
+    const [profileimage, setprofileimage] = useState(null)
+    const [backgroundimage, setbackgroundimage] = useState(null)
 
 
 
 
 
 
-
-
-    function animateValue(start, end, duration) {
-        if (start === end) return;
-        var range = end - start;
-        var current = start;
-        var increment = end > start ? 1 : +1;
-        var stepTime = Math.abs(Math.floor(duration / range));
-        var timer = setInterval(function () {
-            current += increment;
-
-            if (current == end) {
-                clearInterval(timer);
-            }
-            setnumber(current)
-            return current
-
-        }, stepTime);
-    }
 
 
     useEffect(() => {
-
-
 
         const func = async () => {
             setInitLoading(true)
@@ -115,62 +101,74 @@ const BrandProfile = ({ route, navigation }) => {
     }, [])
 
 
+
     useEffect(() => {
         setInitLoading(true)
-        const func = async () => {
-            const ref = await firestore().collection("brandaccount")
-            const uid = await AsyncStorage.getItem("uid")
-            // console.log(uid);
+        FetchData()
+    }, [FetchUserData])
+
+    const FetchData = async () => {
+        const ref = await firestore().collection("brandaccount")
+        const uid = await AsyncStorage.getItem("uid")
+        // console.log(uid);
 
 
-            ref.where("uid", "==", uid).get()
-                .then(function (querySnapshot) {
+        ref.where("uid", "==", uid).get()
+            .then(function (querySnapshot) {
 
-                    querySnapshot.forEach(async function (doc) {
-                        // console.log(doc.data());
-                        dispatch({ type: "ADD_NAME", payload: doc.data().name })
-                        dispatch({ type: "ADD_BRANDNAME", payload: doc.data().brandname })
-                        dispatch({ type: "ADD_CITY", payload: doc.data().city })
-                        dispatch({ type: "ADD_CATEGORY", payload: doc.data().category })
-                        dispatch({ type: "ADD_EMAIL", payload: doc.data().email })
-                        dispatch({ type: "ADD_APPLINK", payload: doc.data().applink })
-                        dispatch({ type: "ADD_WEBSITE", payload: doc.data().website })
+                querySnapshot.forEach(async function (doc) {
+                    // // console.log(doc.data());
 
 
+                    if (doc.data()) {
+                        setInitLoading(false)
+                        setdata(doc.data())
+                        // dispatch({type:"ADD_USERDATA",payload:doc.data()})
+                    }
 
-                        if (doc.data()) {
-                            setInitLoading(false)
-                        }
 
+                    // ADD Profile picture  if exist to state 
 
-                        // ADD Profile picture  if exist to state 
+                    if (doc.data().profileimage !== undefined) {
+                        setprofileimage(doc.data().profileimage)
+                    }
 
-                        if (doc.data().profileimage !== undefined) {
-                            dispatch({ type: "ADD_PROFILEIMAGE", payload: doc.data().profileimage })
-                        }
+                    // ADD Background picture  if exist to state 
 
-                        // ADD Background picture  if exist to state 
-
-                        if (doc.data().backgroundimage !== undefined) {
-                            dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: doc.data().backgroundimage })
-                        }
+                    if (doc.data().backgroundimage !== undefined) {
+                        setbackgroundimage(doc.data().backgroundimage)
+                    }
 
 
 
-                    });
-
-
-
-                })
-                .catch(function (error) {
-                    console.log("Error getting documents: ", error);
-                    ToastAndroid.show("ACCOUNT DOES NOT EXIST ANYMORE REGISTER AGAIN", ToastAndroid.LONG)
                 });
 
-        }
-        func()
 
-    }, [])
+
+            })
+            .catch(function (error) {
+                // console.log("Error getting documents: ", error);
+                ToastAndroid.show("ACCOUNT DOES NOT EXIST ANYMORE REGISTER AGAIN", ToastAndroid.LONG)
+            });
+
+    }
+
+
+
+
+    const EditProfile = async () => {
+        const Data = {
+            name: data.name,
+            brandname: data.brandname,
+            email: data.email,
+            city: data.city,
+            category: data.category,
+            website: data.website ? data.website : null,
+            applink: data.applink ? data.applink : null
+        }
+
+        navigation.navigate("EditBrandProfile", { data: Data })
+    }
 
 
 
@@ -269,7 +267,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 profileimage: url
                             }).then(async () => {
                                 ToastAndroid.show("Image Uploaded successfully", ToastAndroid.SHORT)
-                                dispatch({ type: "ADD_PROFILEIMAGE", payload: url })
+                                setprofileimage(url)
                                 setloading(false)
 
 
@@ -280,12 +278,12 @@ const BrandProfile = ({ route, navigation }) => {
                                 backgroundimage: url
                             }).then(async () => {
                                 ToastAndroid.show("Image Uploaded successfully", ToastAndroid.SHORT)
-                                dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: url })
+                                setbackgroundimage(url)
                                 setloading(false)
 
 
                             })
-                        
+
                         }
 
 
@@ -310,8 +308,8 @@ const BrandProfile = ({ route, navigation }) => {
 
     // seprate the image name from url to remove it from storage for further use
     const ImageNameFinder = (url) => {
- 
- 
+
+
         var x = url
         var y = x.split("%2F")
         var x = y[2]
@@ -329,44 +327,44 @@ const BrandProfile = ({ route, navigation }) => {
 
     const removeimage = async (item) => {
 
-        if(item == "profileimage"){
+        if (item == "profileimage") {
             setloading2(true)
             const imagename = ImageNameFinder(profileimage)
             const docid = await AsyncStorage.getItem("DocId")
             const ref = await firestore().collection("brandaccount").doc(docid)
             const reference = storage().ref(`/images/brandsprofile/${imagename}`)
-    
+
             reference.delete().then(() => {
                 ref.update({
                     profileimage: firestore.FieldValue.delete(),
-    
+
                 }).then(async () => {
-                    dispatch({ type: "ADD_PROFILEIMAGE", payload: null })
+                    setprofileimage(null)
                     setimageselector(false)
                     setloading2(false)
                     ToastAndroid.show("Profile Image Removed", ToastAndroid.SHORT)
                 })
             })
-        }else if(item == "backgroundimage"){
+        } else if (item == "backgroundimage") {
             setloading2(true)
             const imagename = ImageNameFinder(backgroundimage)
             const docid = await AsyncStorage.getItem("DocId")
             const ref = await firestore().collection("brandaccount").doc(docid)
             const reference = storage().ref(`/images/brandsprofile/${imagename}`)
-    
+
             reference.delete().then(() => {
                 ref.update({
                     backgroundimage: firestore.FieldValue.delete(),
-    
+
                 }).then(async () => {
-                    dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: null })
+                    setbackgroundimage(null)
                     setimageselector(false)
                     setloading2(false)
                     ToastAndroid.show("Profile Image Removed", ToastAndroid.SHORT)
                 })
             })
         }
-       
+
 
 
 
@@ -417,9 +415,9 @@ const BrandProfile = ({ route, navigation }) => {
 
 
                     <View style={style.cardbottom} >
-                        <Text style={style.name} >{brandname}</Text>
+                        <Text style={style.name} >{data.brandname}</Text>
                         {/* <Text style={style.category} >Founder -  <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/youtube.png")} /> Ranker Jee</Text> */}
-                        <Text style={style.category} >{category}</Text>
+                        <Text style={style.category} >{data.category}</Text>
                     </View>
 
 
@@ -428,7 +426,7 @@ const BrandProfile = ({ route, navigation }) => {
 
                     <View style={style.buttondiv} >
 
-                        <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate("EditBrandProfile")} style={style.button2} >
+                        <TouchableOpacity activeOpacity={0.9} onPress={() => { EditProfile() }} style={style.button2} >
                             <Text style={style.button2text} >Edit Profile</Text>
                             <Ionicons style={{ marginLeft: 10 }} color={"white"} size={18} name={"edit"} />
                         </TouchableOpacity>
@@ -450,7 +448,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"user"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{name}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{data.name}</Text>
                             </View>
                         </View>
 
@@ -469,7 +467,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"user"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{brandname}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{data.brandname}</Text>
                             </View>
                         </View>
 
@@ -489,7 +487,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"map-pin"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{email}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{data.email}</Text>
                             </View>
                         </View>
 
@@ -530,7 +528,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"map-pin"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{city}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{data.city}</Text>
                             </View>
                         </View>
 
@@ -548,7 +546,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"grid"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{category}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{data.category}</Text>
                             </View>
                         </View>
 
@@ -561,10 +559,10 @@ const BrandProfile = ({ route, navigation }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >website</Text>
-                            {website ?
+                            {data.website ?
                                 null
                                 :
-                                <TouchableOpacity onPress={() => { navigation.navigate("EditBrandProfile") }}>
+                                <TouchableOpacity onPress={() => { EditProfile() }}>
                                     <Text style={{ fontSize: 15, fontWeight: "100", color: "#007bff", alignSelf: "flex-end", marginBottom: 5, textTransform: "capitalize" }} >Add</Text>
                                 </TouchableOpacity>
                             }
@@ -576,7 +574,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"globe"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: website ? "lowercase" : "capitalize" }} >{website ? website : "Please Add Your Website Link"}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: data.website ? "lowercase" : "capitalize" }} >{data.website ? data.website : "Please Add Your Website Link"}</Text>
                             </View>
                         </View>
 
@@ -587,10 +585,10 @@ const BrandProfile = ({ route, navigation }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >app link</Text>
-                            {applink ?
+                            {data.applink ?
                                 null
                                 :
-                                <TouchableOpacity onPress={() => { navigation.navigate("EditBrandProfile") }}>
+                                <TouchableOpacity onPress={() => { EditProfile() }}>
                                     <Text style={{ fontSize: 15, fontWeight: "100", color: "#007bff", alignSelf: "flex-end", marginBottom: 5, textTransform: "capitalize" }} >Add</Text>
                                 </TouchableOpacity>
                             }
@@ -602,7 +600,7 @@ const BrandProfile = ({ route, navigation }) => {
                                 <Ionicons name={"smartphone"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: applink ? "capitalize" : "none" }} >{applink ? applink : "Please Add Your Applink"}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: data.applink ? "capitalize" : "none" }} >{data.applink ? data.applink : "Please Add Your Applink"}</Text>
                             </View>
                         </View>
 
@@ -643,7 +641,7 @@ const BrandProfile = ({ route, navigation }) => {
                             <>
                                 {backgroundimage != null && forprofile == false ?
 
-                                    <TouchableOpacity activeOpacity={1} onPress={() => { removeimage("backgroundimage")  }}>
+                                    <TouchableOpacity activeOpacity={1} onPress={() => { removeimage("backgroundimage") }}>
                                         <View style={{ height: 45, width: 45, backgroundColor: "#e7164c", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
                                             <Icons size={18} color={"white"} name={"trash"} />
                                         </View>
@@ -661,7 +659,7 @@ const BrandProfile = ({ route, navigation }) => {
                             <>
                                 {profileimage != null && forprofile == true ?
 
-                                    <TouchableOpacity activeOpacity={1} onPress={() => { removeimage("profileimage")}}>
+                                    <TouchableOpacity activeOpacity={1} onPress={() => { removeimage("profileimage") }}>
                                         <View style={{ height: 45, width: 45, backgroundColor: "#e7164c", borderRadius: 50, justifyContent: "center", alignItems: "center", marginLeft: 30 }}>
                                             <Icons size={18} color={"white"} name={"trash"} />
                                         </View>

@@ -28,7 +28,7 @@ const EditProfile = ({ navigation, route }) => {
 
 
     const { state } = useContext(MyContext)
-    const { name, age, city, minrange, maxrange, category, paymode, result, about, achievements, experiences, instaconnected, instaimages, instausername, youtubeconnected } = state
+    const { instaconnected, youtubeconnected } = state
 
 
 
@@ -90,16 +90,16 @@ const EditProfile = ({ navigation, route }) => {
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >About</Text>
 
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditAbout") }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditAbout", { about: route.params.about }) }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
 
                         </View>
 
-                        {about ?
+                        {route.params.about ?
 
                             <View style={{ minHeight: 10, width: "95%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>{about}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>{route.params.about}</Text>
                             </View>
                             :
                             <View style={{ width: "95%", alignSelf: "center", flexDirection: "row", justifyContent: "space-between", height: 50, borderRadius: 10, backgroundColor: "white", marginTop: 10, alignItems: "center", paddingHorizontal: 10 }} >
@@ -120,11 +120,11 @@ const EditProfile = ({ navigation, route }) => {
 
                     {/*----------------- ExperinceColumn------------------- */}
 
-                    {experiences.length > 0 ?
+                    {route.params.experiences ?
                         <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Experiences</Text>
 
-                            {experiences.map((item, index) =>
+                            {route.params.experiences.map((item, index) =>
                                 <View >
                                     {index == 0 ?
                                         null
@@ -212,13 +212,13 @@ const EditProfile = ({ navigation, route }) => {
 
                     {/*----------------- Achievemnts Column------------------- */}
 
-                    {achievements.length > 0 ?
+                    {route.params.achievements ?
 
 
                         <View style={{ minHeight: 100, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Achievements</Text>
 
-                            {achievements.map((items, index) =>
+                            {route.params.achievements.map((items, index) =>
                                 <View>
                                     {index == 0 ?
                                         null
@@ -254,7 +254,7 @@ const EditProfile = ({ navigation, route }) => {
                                             </View>
                                         </View>
                                         <View style={{ width: "100%", justifyContent: "center" }}>
-                                            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}} >
+                                            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }} >
                                                 <View style={{ width: items.description == null ? "100%" : items.description.length > 80 ? "75%" : "100%" }}>
                                                     <Text style={{ fontSize: 16, fontWeight: "bold", color: "#404852", marginLeft: 20, textTransform: "capitalize" }} >{items.title}</Text>
                                                 </View>
@@ -327,7 +327,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Name</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditName") }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditName", { name: route.params.name }) }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -337,7 +337,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Ionicons name={"user"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{name}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{route.params.name}</Text>
                             </View>
                         </View>
 
@@ -349,7 +349,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Category</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditCategory") }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditCategory", { category: route.params.category }) }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -359,7 +359,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Ionicons name={"heart"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{category}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{route.params.category}</Text>
                             </View>
                         </View>
 
@@ -371,7 +371,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Location</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditLocation") }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditLocation", { location: route.params.city }) }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -381,7 +381,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Ionicons name={"map-pin"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{city}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{route.params.city}</Text>
                             </View>
                         </View>
 
@@ -393,7 +393,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Paymode</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditPayMode") }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditPayMode", { paymode: route.params.paymode }) }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -403,7 +403,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Ionicons name={"credit-card"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{paymode == "both" ? "Pay or Barter" : paymode}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{route.params.paymode == "both" ? "Pay or Barter" : route.params.paymode}</Text>
                             </View>
                         </View>
 
@@ -416,7 +416,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Budget</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditBudget") }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditBudget", { minrange: route.params.budget[0], maxrange: route.params.budget[1] }) }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -427,7 +427,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Text style={{ color: "#007bff", fontSize: 25 }}>&#x20B9;</Text>
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{minrange}K - {maxrange}K </Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5, textTransform: "capitalize" }} >{route.params.budget[0]}K - {route.params.budget[1]}K </Text>
                             </View>
                         </View>
 
@@ -439,7 +439,7 @@ const EditProfile = ({ navigation, route }) => {
 
                         <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 15 }} >
                             <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >Age</Text>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditAge") }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditAge",{age:route.params.age}) }}>
                                 <Text style={{ fontSize: 15, fontWeight: "normal", color: "#007bff", alignSelf: "flex-start", marginBottom: 5 }} >Edit</Text>
                             </TouchableOpacity>
                         </View>
@@ -449,7 +449,7 @@ const EditProfile = ({ navigation, route }) => {
                                 <Ionicons name={"user"} size={25} color={"#007bff"} />
                             </View>
                             <View style={{ width: "85%", marginTop: 5 }} >
-                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{age}</Text>
+                                <Text style={{ fontSize: 14, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >{route.params.age}</Text>
                             </View>
                         </View>
 

@@ -12,6 +12,7 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import androidx.multidex.MultiDexApplication; // <-- ADD THIS IMPORT
+// import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;  // <--- Import Package 
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
@@ -28,6 +29,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          // packages.add( new ReactNativePushNotificationPackage() ); // <---- Add the Package 
           return packages;
         }
 

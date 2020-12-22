@@ -9,7 +9,7 @@ import {
   StatusBar,
   Dimensions,
   TouchableOpacity,
-  Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage,
+  Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, ToastAndroid,
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -31,6 +31,11 @@ const HEIGHT = Dimensions.get("window").height
 var abbreviate = require('number-abbreviate')
 
 const Profile = ({ route, navigation }) => {
+
+
+  const [data, setdata] = useState([])
+
+  // Social Media related states
   const [followers, setfollowers] = useState(null)
   const [instaposts, setinstaposts] = useState(null)
   const [subs, setsubs] = useState(null)
@@ -44,11 +49,11 @@ const Profile = ({ route, navigation }) => {
   const [see, setsee] = useState(null)
   const [achievesee, setachievesee] = useState(null)
   const [InitLoading, setInitLoading] = useState(true)
-  
+
 
 
   const { state, dispatch } = useContext(MyContext)
-  const { name, age, city, minrange, maxrange, category, paymode, result, about, achievements, experiences, instaconnected, instaimages, instausername, youtubeconnected, profileimage, backgroundimage } = state
+  const { result, instaconnected, instaimages, instausername, youtubeconnected, profileimage, backgroundimage } = state
 
 
 
@@ -115,31 +120,23 @@ const Profile = ({ route, navigation }) => {
         .then(function (querySnapshot) {
 
           querySnapshot.forEach(async function (doc) {
-            // console.log(doc.data());
-            dispatch({ type: "ADD_NAME", payload: doc.data().name })
-            dispatch({ type: "ADD_RESULT", payload: doc.data() })
-            dispatch({ type: "ADD_AGE", payload: doc.data().age })
-            dispatch({ type: "ADD_MINRANGE", payload: doc.data().minrange })
-            dispatch({ type: "ADD_MAXRANGE", payload: doc.data().maxrange })
-            dispatch({ type: "ADD_CITY", payload: doc.data().city })
-            dispatch({ type: "ADD_CATEGORY", payload: doc.data().category })
-            dispatch({ type: "ADD_PAYMODE", payload: doc.data().paymode })
 
-            if (doc.data()) {
-              setInitLoading(false)
-            }
 
+            if (!doc.exists) return ToastAndroid.show("Cant find your account loggin again")
+
+            setInitLoading(false)
+            setdata(doc.data())
 
             // ADD Profile picture  if exist to state 
 
             if (doc.data().profileimage !== undefined) {
-              dispatch({ type: "ADD_PROFILEIMAGE", payload: doc.data().profileimage })
+              // dispatch({ type: "ADD_PROFILEIMAGE", payload: doc.data().profileimage })
             }
 
             // ADD Background picture  if exist to state 
 
             if (doc.data().backgroundimage !== undefined) {
-              dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: doc.data().backgroundimage })
+              // dispatch({ type: "ADD_BACKGROUNDIMAGE", payload: doc.data().backgroundimage })
             }
 
 
@@ -148,28 +145,28 @@ const Profile = ({ route, navigation }) => {
               // alert(doc.data().youtubedata.items[0].statistics.subscriberCount)
               setsubs(doc.data().youtubedata.items[0].statistics.subscriberCount)
               setchannelid(doc.data().youtubedata.items[0].id)
-              dispatch({ type: "ADD_YOUTUBECONNECTED", payload: true })
+              // dispatch({ type: "ADD_YOUTUBECONNECTED", payload: true })
               // setyoutubeconnected(true)
 
               // About Column Logic
               if (doc.data().about !== undefined) {
-                dispatch({ type: "ADD_ABOUT", payload: doc.data().about })
+                // dispatch({ type: "ADD_ABOUT", payload: doc.data().about })
               } else {
-                dispatch({ type: "ADD_ABOUT", payload: null })
+                // dispatch({ type: "ADD_ABOUT", payload: null })
               }
 
               // Achievements Column Logic
               if (doc.data().achievements !== undefined) {
-                dispatch({ type: "ADD_ACHIEVEMENTS", payload: doc.data().achievements })
+                // dispatch({ type: "ADD_ACHIEVEMENTS", payload: doc.data().achievements })
               } else {
-                dispatch({ type: "ADD_ACHIEVEMENTS", payload: [] })
+                // dispatch({ type: "ADD_ACHIEVEMENTS", payload: [] })
               }
 
               // experiences Column Logic
               if (doc.data().experiences !== undefined) {
-                dispatch({ type: "ADD_EXPERIENCES", payload: doc.data().experiences })
+                // dispatch({ type: "ADD_EXPERIENCES", payload: doc.data().experiences })
               } else {
-                dispatch({ type: "ADD_EXPERIENCES", payload: [] })
+                // dispatch({ type: "ADD_EXPERIENCES", payload: [] })
 
 
               }
@@ -179,16 +176,16 @@ const Profile = ({ route, navigation }) => {
 
             if (doc.data().instadata !== undefined) {
               // alert(doc.data().instadata.data[0].username)
-              dispatch({ type: "ADD_INSTACONNECTED", payload: true })
+              // dispatch({ type: "ADD_INSTACONNECTED", payload: true })
 
               var filtered = doc.data().instadata.data.filter(function (item) {
                 return item.media_type !== "VIDEO";
               });
 
-              dispatch({ type: "ADD_INSTAIMAGES", payload: filtered })
+              // dispatch({ type: "ADD_INSTAIMAGES", payload: filtered })
               // setinstaimages(filtered)
 
-              dispatch({ type: "ADD_INSTAUSERNAME", payload: doc.data().instadata.data[0].username })
+              // dispatch({ type: "ADD_INSTAUSERNAME", payload: doc.data().instadata.data[0].username })
               // setinstausername(doc.data().instadata.data[0].username)
               setloading(true)
 
@@ -223,6 +220,22 @@ const Profile = ({ route, navigation }) => {
     func()
 
   }, [])
+
+
+  const EditProfile = () => {
+    const Data = {
+      budget: [data.minrange, data.maxrange],
+      city: data.city,
+      paymode: data.paymode,
+      age: data.age,
+      name: data.name,
+      category: data.category,
+      about: data.about,
+      instaconnected: instaconnected,
+      youtubeconnected: youtubeconnected
+    }
+    navigation.navigate("EditProfileStack", { screen: "EditProfile", params: Data })
+  }
 
 
 
@@ -266,7 +279,7 @@ const Profile = ({ route, navigation }) => {
         <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{ paddingBottom: 100 }} >
           <TouchableOpacity onPress={() => { navigation.navigate("ProfileBackground") }} activeOpacity={1}>
             <ImageBackground style={{ width: WiDTH * 0.95, height: 160, alignSelf: "center", backgroundColor: "#e6fff6", top: 10, borderTopRightRadius: 10, borderTopLeftRadius: 10, alignItems: "flex-end", justifyContent: "flex-end", overflow: "hidden" }} source={{ uri: backgroundimage !== null ? backgroundimage : images[1] }} >
-              <TouchableOpacity  onPress={() => { navigation.navigate("ProfileBackground") }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
+              <TouchableOpacity onPress={() => { navigation.navigate("ProfileBackground") }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                 <Ionicons color={"white"} size={22} name={"edit-2"} />
               </TouchableOpacity>
             </ImageBackground>
@@ -274,8 +287,8 @@ const Profile = ({ route, navigation }) => {
           <View style={style.topprofile} >
             <View style={{ borderRadius: 30, height: 150, width: 150, overflow: "hidden", elevation: 5, zIndex: 10, borderWidth: 3, borderColor: "white" }}>
               <TouchableOpacity onPress={() => { navigation.navigate("ProfilePicture") }} activeOpacity={1}>
-                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6", alignItems: "flex-end", justifyContent: "flex-end" }} source={{ uri: profileimage == null ?  images[0] : profileimage }} >
-                  <TouchableOpacity onPress={() => {  navigation.navigate("ProfilePicture") }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
+                <ImageBackground style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6", alignItems: "flex-end", justifyContent: "flex-end" }} source={{ uri: profileimage == null ? images[0] : profileimage }} >
+                  <TouchableOpacity onPress={() => { navigation.navigate("ProfilePicture") }} style={{ width: 40, height: 40, alignItems: "center", justifyContent: "center", marginBottom: 5, marginRight: 5 }} >
                     <Ionicons color={"white"} size={22} name={"edit-2"} />
                   </TouchableOpacity>
                 </ImageBackground>
@@ -285,9 +298,9 @@ const Profile = ({ route, navigation }) => {
 
 
           <View style={style.cardbottom} >
-            <Text style={style.name} >{name}</Text>
+            <Text style={style.name} >{data.name}</Text>
             <Text style={style.category} >Founder -  <Image style={{ width: 15, height: 14, marginRight: 5 }} source={require("../Icons/youtube.png")} /> Ranker Jee</Text>
-            <Text style={style.category} >{category}</Text>
+            <Text style={style.category} >{data.category}</Text>
           </View>
 
 
@@ -343,7 +356,7 @@ const Profile = ({ route, navigation }) => {
 
           <View style={style.buttondiv} >
 
-            <TouchableOpacity activeOpacity={0.9} onPress={() => navigation.navigate("EditProfileStack", { screen: "EditProfile", params: { budget: [minrange, maxrange], city: city, paymode: paymode, age: age, name: name, category: category, instaconnected: instaconnected, youtubeconnected: youtubeconnected, about: about } })} style={style.button2} >
+            <TouchableOpacity activeOpacity={0.9} onPress={() => { EditProfile() }} style={style.button2} >
               <Text style={style.button2text} >Edit Profile</Text>
               <Ionicons style={{ marginLeft: 10 }} color={"white"} size={18} name={"edit"} />
             </TouchableOpacity>
@@ -353,29 +366,29 @@ const Profile = ({ route, navigation }) => {
 
           <View style={style.about} >
             <View style={style.aboutdiv}>
-              <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{minrange}-{maxrange}K</Text>
+              <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{data.minrange}-{data.maxrange}K</Text>
               <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Budget</Text>
             </View>
             <View style={style.aboutdiv}>
-              <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{city}</Text>
+              <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{data.city}</Text>
               <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>City</Text>
             </View>
             <View style={style.aboutdiv}>
-              {paymode == "both" ?
+              {data.paymode == "both" ?
                 <>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>Barter</Text>
                   <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>/Pay</Text>
                 </>
                 :
                 <>
-                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize", textTransform: "capitalize" }}>{paymode}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize", textTransform: "capitalize" }}>{data.paymode}</Text>
                   <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Paymode</Text>
                 </>
               }
 
             </View>
             <View style={style.aboutdiv}>
-              <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{age}</Text>
+              <Text style={{ fontSize: 14, fontWeight: "bold", color: "#3c4852", textTransform: "capitalize" }}>{data.age}</Text>
               <Text style={{ fontSize: 13, fontWeight: "bold", color: "#9bb0bf" }}>Age</Text>
             </View>
           </View>
@@ -384,11 +397,11 @@ const Profile = ({ route, navigation }) => {
 
           {/*----------------- About Column------------------- */}
 
-          {about ?
+          {data.about ?
 
             <View style={{ minHeight: 10, width: "95%", backgroundColor: "#f0f2f5", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
               <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 5 }} >About</Text>
-              <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>{about}</Text>
+              <Text style={{ fontSize: 14, fontWeight: "100", color: "#404852", textTransform: "capitalize" }}>{data.about}</Text>
             </View>
 
             :
@@ -426,13 +439,13 @@ const Profile = ({ route, navigation }) => {
 
           {/*----------------- Achievements Column------------------- */}
 
-          {achievements.length > 0 ?
+          {data.achievements ?
 
 
             <View style={{ minHeight: 100, width: "95%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
               <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Achievements</Text>
 
-              {achievements.map((items, index) =>
+              {data.achievements.map((items, index) =>
                 <View>
                   {index == 0 ?
                     null
@@ -571,11 +584,11 @@ const Profile = ({ route, navigation }) => {
 
           {/*----------------- Experiences Column------------------- */}
 
-          {experiences.length > 0 ?
+          {data.experiences ?
             <View style={{ minHeight: 100, width: "95%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, padding: 15 }} >
               <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852", alignSelf: "flex-start", marginBottom: 15 }} >Experiences</Text>
 
-              {experiences.map((item, index) =>
+              {data.experiences.map((item, index) =>
                 <View>
                   {index == 0 ?
                     null

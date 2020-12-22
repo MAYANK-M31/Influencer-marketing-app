@@ -24,10 +24,9 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditCategory = ({ navigation, route }) => {
 
-    const {state,dispatch} = useContext(MyContext)
-    const {category} = state;
+    const {dispatch} = useContext(MyContext)
 
-    const [selectcategory, setselectcategory] = useState(category)
+    const [selectcategory, setselectcategory] = useState(route.params.category)
     const [disable, setdisable] = useState(true)
 
     const select = async (item) => {
@@ -76,7 +75,7 @@ const EditCategory = ({ navigation, route }) => {
                     <View style={style.heading} >
                         <Text style={{ fontSize: 18, fontWeight: "bold", color: "#404852" }} >Edit Location</Text>
                     </View>
-                    <TouchableOpacity onPress={() => { save() }} style={style.chat} >
+                    <TouchableOpacity disabled={disable} onPress={() => { save() }} style={style.chat} >
                         <View style={{ width: 50, height: 30, backgroundColor: "#007bff", right: 10, justifyContent: "center", alignItems: "center", borderRadius: 5, paddingBottom: 2 }} >
                             <Text style={{ color: "white", fontWeight: "100" }} >Save</Text>
                         </View>

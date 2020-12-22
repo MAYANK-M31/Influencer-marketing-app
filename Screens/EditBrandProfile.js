@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
-import axios from "axios"
 import firestore from '@react-native-firebase/firestore';
 import { TouchableRipple, Modal, Dialog, Button, Paragraph } from 'react-native-paper';
 import { MyContext } from "../Screens/AppStartStack"
@@ -35,20 +34,17 @@ const EditBrandProfile = ({ route, navigation }) => {
     const { state, dispatch } = useContext(MyContext)
     const { name, brandname, city, category, email, website, applink } = state
 
-    const [nametext, setnametext] = useState(name)
-    const [brandnametext, setbrandnametext] = useState(brandname)
-    const [citytext, setcitytext] = useState(city)
-    const [categorytext, setcategorytext] = useState(category)
-    const [emailtext, setemailtext] = useState(email)
-    const [websitetext, setwebsitetext] = useState(website)
-    const [applinktext, setapplinktext] = useState(applink)
+
+    const [nametext, setnametext] = useState(route.params.data.name)
+    const [brandnametext, setbrandnametext] = useState(route.params.data.brandname)
+    const [citytext, setcitytext] = useState(route.params.data.city)
+    const [categorytext, setcategorytext] = useState(route.params.data.category)
+    const [emailtext, setemailtext] = useState(route.params.data.email)
+    const [websitetext, setwebsitetext] = useState(route.params.data.website)
+    const [applinktext, setapplinktext] = useState(route.params.data.applink)
     const [disable, setdisable] = useState(true)
-    const [visible, setvisible] = useState(false)
-
-    const [change, setchange] = useState(null)
-
-
     const [loading, setloading] = useState(false)
+    const [InitLoading, setInitLoading] = useState(true)
 
 
 
@@ -57,24 +53,6 @@ const EditBrandProfile = ({ route, navigation }) => {
 
 
 
-
-    function animateValue(start, end, duration) {
-        if (start === end) return;
-        var range = end - start;
-        var current = start;
-        var increment = end > start ? 1 : +1;
-        var stepTime = Math.abs(Math.floor(duration / range));
-        var timer = setInterval(function () {
-            current += increment;
-
-            if (current == end) {
-                clearInterval(timer);
-            }
-            setnumber(current)
-            return current
-
-        }, stepTime);
-    }
 
 
 
@@ -96,14 +74,9 @@ const EditBrandProfile = ({ route, navigation }) => {
                 applink: applinktext
             }).then(async () => {
                 setloading(false)
-                ToastAndroid.show("Updated", ToastAndroid.SHORT)
-                dispatch({ type: "ADD_NAME", payload: nametext })
-                dispatch({ type: "ADD_BRANDNAME", payload: brandnametext })
-                dispatch({ type: "ADD_EMAIL", payload: emailtext })
-                dispatch({ type: "ADD_CITY", payload: citytext })
-                dispatch({ type: "ADD_CATEGORY", payload: categorytext })
-                dispatch({ type: "ADD_WEBSITE", payload: websitetext })
-                dispatch({ type: "ADD_APPLINK", payload: applinktext })
+                ToastAndroid.show("Profile Updated Succesfully", ToastAndroid.SHORT)
+                dispatch({ type: "FETCHUSERDATA", payload: true })
+                dispatch({ type: "FETCHUSERDATA", payload: false })
                 navigation.goBack()
             })
                 .catch((err) => {

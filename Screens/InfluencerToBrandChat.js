@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
 import {
     SafeAreaView,
     StyleSheet,
@@ -28,14 +28,20 @@ const images = [
 ]
 
 const InfluencerToBrandChat = ({ navigation, route }) => {
+
+
+    const { state, dispatch } = useContext(MyContext)
+
+
+
     const [messages, setMessages] = useState([]);
     const [messagedata, setmessagedata] = useState([])
     const [myid, setmyid] = useState(null)
     const [headingData, setheadingData] = useState({ BrandImage: images[0], BrandName: "name" })
 
-    const [online,setonline] = useState(false)
+    const [online, setonline] = useState(false)
 
-    
+
 
 
 
@@ -77,16 +83,16 @@ const InfluencerToBrandChat = ({ navigation, route }) => {
             });
 
 
-            // To get Brand Is online or not
-            database()
+        // To get Brand Is online or not
+        database()
             .ref(route.params.ChatRoom_Id)
             .on('value', snapshot => {
                 // setmessagedata(snapshot.val())
                 // setMessages(snapshot.val())
                 if (snapshot.val().onlineBrand) {
-                   setonline(snapshot.val().onlineBrand)
+                    setonline(snapshot.val().onlineBrand)
 
-                }else{
+                } else {
                     setonline(false)
                 }
 
@@ -94,14 +100,14 @@ const InfluencerToBrandChat = ({ navigation, route }) => {
 
 
 
-            //TO Add User(Me Influencer) is online or offline
-            const ref = database().ref(route.params.ChatRoom_Id)
-            ref.update({onlineInfluencer:true})
-            
+        //TO Add User(Me Influencer) is online or offline
+        const ref = database().ref(route.params.ChatRoom_Id)
+        ref.update({ onlineInfluencer: true })
+        dispatch({ type: "ADD_CURRENTCHATROOMID", payload: route.params.ChatRoom_Id })
 
-            return ()=> 
-            ref.update({onlineInfluencer:false})
-            
+        return () =>
+            ref.update({ onlineInfluencer: false })
+
 
 
     }, [])
@@ -117,8 +123,10 @@ const InfluencerToBrandChat = ({ navigation, route }) => {
         const createdAt = database.ServerValue.TIMESTAMP
         const text = messages[0].text
         const user = messages[0].user
+        const type = "brand"
 
-        const datas = { _id: id, createdAt: createdAt, text: text, user: user, sent: true }
+
+        const datas = { _id: id, createdAt: createdAt, text: text, user: user, sent: true, type: type }
         //    console.log(datas);
 
         ref.push(datas)
@@ -204,7 +212,7 @@ const InfluencerToBrandChat = ({ navigation, route }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }} >
 
             <View style={style.header} >
-                <TouchableOpacity onPress={() =>  navigation.goBack()} style={style.back} >
+                <TouchableOpacity onPress={() => navigation.goBack()} style={style.back} >
                     <Ionicons style={{ marginRight: 10 }} color={"#404852"} size={30} name={"chevron-left"} />
 
                 </TouchableOpacity>
@@ -226,8 +234,8 @@ const InfluencerToBrandChat = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
 
-            <View style={{ height: 20, width: 50, backgroundColor: "white", borderWidth: 1, borderRadius: 10, borderColor: online ? "#01e491":"#e7164c", position: "absolute", alignSelf: "center", top: 80, zIndex: 1, justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ fontSize: 9, fontWeight: "bold", color: online ? "#01e491":"#e7164c" }} >{online ? "Online":"Offline" }</Text>
+            <View style={{ height: 20, width: 50, backgroundColor: "white", borderWidth: 1, borderRadius: 10, borderColor: online ? "#01e491" : "#e7164c", position: "absolute", alignSelf: "center", top: 80, zIndex: 1, justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ fontSize: 9, fontWeight: "bold", color: online ? "#01e491" : "#e7164c" }} >{online ? "Online" : "Offline"}</Text>
             </View>
 
             <GiftedChat

@@ -137,11 +137,14 @@ const BrandSendMessage = ({ navigation, route }) => {
 
                             }).catch((e) => {
                                 setloading(false)
-                                ToastAndroid.show("Something went wrong Try Again", ToastAndroid.SHORT)
+                                console.log(e);
+                                
+                                ToastAndroid.show("Something went wrong Try Again1", ToastAndroid.SHORT)
                             })
                     }).catch((e) => {
                         setloading(false)
-                        ToastAndroid.show("Something went wrong Try Again", ToastAndroid.SHORT)
+                        console.log(e);
+                        ToastAndroid.show("Something went wrong Try Again2", ToastAndroid.SHORT)
                     })
 
                 }).catch((e) => {

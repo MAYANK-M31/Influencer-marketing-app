@@ -1,4 +1,5 @@
 export const initState = {
+    FetchUserData: false,
     name: null,
     age: null,
     city: null,
@@ -23,20 +24,25 @@ export const initState = {
     email: null,
     applink: null,
     website: null,
-    campaignposts: [],
-    campaignpostedagain: false,
     brandprofileimage: null,
+    FetchMyCampaigns: false,
     requestsent: [], // To show requests user has sent for post (applied) 
     AllBrandAccountData: [], // To fetch data of brand account on home page
     InfluencerChatData: [], // To fetch save the chatid after brand send message from sendmessage page (in order to direct open chatpage in search stack for brands)
     RequestsGot: [],  // Requests got to brand by influencer
-    Chats:[], // Chats List Of Influencer and also of brand
-    AllInfluencerData: null
+    Chats: [], // Chats List Of Influencer and also of brand
+    AllInfluencerData: null,
+    CurrentChatRoomId: null
 }
 
 export const reducer = (state, action) => {
 
     switch (action.type) {
+        case "FETCHUSERDATA":
+            return {
+                ...state,
+                FetchUserData: action.payload
+            }
         case "ADD_NAME":
             return {
                 ...state,
@@ -164,16 +170,6 @@ export const reducer = (state, action) => {
                 ...state,
                 website: action.payload
             }
-        case "ADD_CAMPAIGNPOSTS":
-            return {
-                ...state,
-                campaignposts: action.payload
-            }
-        case "ADD_CAMPAIGNPOSTEDAGAIN":
-            return {
-                ...state,
-                campaignpostedagain: action.payload
-            }
 
         case "ADD_BRANDPROFILEIMAGE":
             return {
@@ -209,6 +205,16 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 AllInfluencerData: action.payload
+            }
+        case "ADD_CURRENTCHATROOMID":
+            return {
+                ...state,
+                CurrentChatRoomId: action.payload
+            }
+        case "FETCH_MY_CAMPAIGNS":
+            return {
+                ...state,
+                FetchMyCampaigns: action.payload
             }
         default:
             break;

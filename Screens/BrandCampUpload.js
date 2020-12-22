@@ -42,9 +42,9 @@ const BrandCampUpload = ({ navigation, route }) => {
     const [backgdup, setbackgdup] = useState(null)
 
 
+    const { dispatch } = useContext(MyContext)
 
-    const { state, dispatch } = useContext(MyContext)
-    const { campaignposts, campaignpostedagain } = state;
+
 
 
 
@@ -490,17 +490,16 @@ const BrandCampUpload = ({ navigation, route }) => {
                 instadata: route.params.instadata,
                 extraimages: extraimagesarray.length == 0 ? null : extraimagesarray,
                 createdAt: (new Date()).toString(),
-                postId : Math.random().toString(36).slice(2)
+                postId: Math.random().toString(36).slice(2)
             }
             setuploaded(85)
             ref.add(datamodal).then(() => {
                 setuploaded(100)
                 settext("Campaign Posted Successfully")
+                dispatch({ type: "FETCH_MY_CAMPAIGNS", payload: true })
+                dispatch({ type: "FETCH_MY_CAMPAIGNS", payload: false })
+                navigation.popToTop()
 
-                campaignposts.push(datamodal)
-                dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: false })
-                dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: campaignposts })
-                dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: true })
 
                 ToastAndroid.show("Campaign Posted Successfully", ToastAndroid.SHORT)
             })

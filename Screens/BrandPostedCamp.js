@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import Ionicons from "react-native-vector-icons/Feather"
 import { TouchableRipple } from 'react-native-paper';
+import firestore from "@react-native-firebase/firestore"
 import { MyContext } from './AppStartStack';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -33,8 +34,46 @@ const BrandPostedCamp = ({ navigation, route }) => {
 
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-    const { state, dispatch } = useContext(MyContext)
-    const { campaignposts, campaignpostedagain } = state;
+    const [loading, setloading] = useState(true)
+    const [data, setdata] = useState([])
+
+    const { state } = useContext(MyContext)
+    const {FetchMyCampaigns} = state
+
+    var array = []
+    useEffect(() => {
+        setloading(true)
+        FetchData()
+    }, [FetchMyCampaigns])
+
+    const FetchData = async () => {
+        const uid = await AsyncStorage.getItem("uid")
+
+        const ref = await firestore().collection("brandpost")
+
+        ref.where("uid", "==", uid).get()
+            .then(function (querySnapshot) {
+
+                querySnapshot.forEach(function (doc) {
+                    if (!doc.exists) return ToastAndroid.show("Cant find your account")
+                    array.push(doc.data())
+                });
+
+                if (array.length > 0) return setloading(false), setdata(array)
+
+                setloading(false)
+
+                // console.log(array[1].instadata.data[0].username)
+
+                // dispatch({ type: "ADD_CAMPAIGNPOSTS", payload: array })
+                // dispatch({ type: "ADD_CAMPAIGNPOSTEDAGAIN", payload: true })
+            })
+            .catch(function (error) {
+                console.log("Error getting documents: ", error);
+                setloading(false)
+            });
+
+    }
 
 
 
@@ -65,33 +104,33 @@ const BrandPostedCamp = ({ navigation, route }) => {
 
                 <ScrollView contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }} >
 
+                    {!loading ?
+                        data.length <= 0 ?
+                            < Text style={style.info} >No Campaigns Added Yet</Text>
+                            :
+                            <>
+                                <FlatList
+                                    data={data}
+                                    contentContainerStyle={{ paddingBottom: 50 }}
+                                    keyExtractor={(item, index) => index}
+                                    renderItem={({ item, index }) => (
 
-                    {campaignposts.length <= 0 ?
-                        < Text style={{ alignSelf: "center", fontSize: 18, alignSelf: "center", fontWeight: "bold", color: "#404852", marginTop: HEIGHT / 2.5 }} >No Campaign Added Yet</Text>
-                        :
-                        <>
-                            <FlatList
-                                data={campaignposts}
-                                contentContainerStyle={{paddingBottom:50}}
-                                keyExtractor={(item,index) => index}
-                                renderItem={({ item,index}) => (
-
-                                    <TouchableRipple onPress={() => { navigation.navigate("CampDetailPage",{data:item})}} rippleColor={"rgb(0,0,0,0.32)"} >
-                                        <View style={style.card} >
-                                            <View style={style.insidecard} >
-                                                <View style={style.cardleft} >
-                                                    <View style={{ borderRadius: 120 / 2, height: 100, width: 100, overflow: "hidden", elevation: 5, backgroundColor: "#cffcfa" }}>
-                                                        <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: item.profileimage ? item.profileimage  : "https://media-exp1.licdn.com/dms/image/C560BAQGgarC7a_EY3g/company-logo_200_200/0?e=2159024400&v=beta&t=-EXDJkxAruj-KdC-iQeRTtdn1M4TdxqL_TIDi4-plK8" }} />
+                                        <TouchableRipple onPress={() => { navigation.navigate("CampDetailPage", { data: item }) }} rippleColor={"rgb(0,0,0,0.32)"} >
+                                            <View style={style.card} >
+                                                <View style={style.insidecard} >
+                                                    <View style={style.cardleft} >
+                                                        <View style={{ borderRadius: 120 / 2, height: 100, width: 100, overflow: "hidden", elevation: 5, backgroundColor: "#cffcfa" }}>
+                                                            <Image style={{ width: "100%", height: "100%", backgroundColor: "#e6fff6" }} source={{ uri: item.profileimage ? item.profileimage : "https://media-exp1.licdn.com/dms/image/C560BAQGgarC7a_EY3g/company-logo_200_200/0?e=2159024400&v=beta&t=-EXDJkxAruj-KdC-iQeRTtdn1M4TdxqL_TIDi4-plK8" }} />
+                                                        </View>
                                                     </View>
-                                                </View>
-                                                <View style={style.cardright} >
-                                                    <View style={{ height: "100%" }} >
-                                                        <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
-                                                            <View>
-                                                                <Text style={style.name} >{item.campaigntitle}</Text>
-                                                                <Text style={style.category} >{item.brandpostcategory}</Text>
-                                                            </View>
-                                                            {/* <Switch
+                                                    <View style={style.cardright} >
+                                                        <View style={{ height: "100%" }} >
+                                                            <View style={{ width: "100%", flexDirection: "row", justifyContent: "space-between" }} >
+                                                                <View>
+                                                                    <Text style={style.name} >{item.campaigntitle}</Text>
+                                                                    <Text style={style.category} >{item.brandpostcategory}</Text>
+                                                                </View>
+                                                                {/* <Switch
                                                                 trackColor={{ false: "#f0f2f5", true: "#2989ff" }}
                                                                 thumbColor={isEnabled ? "white" : "white"}
                                                                 ios_backgroundColor="#3e3e3e"
@@ -101,61 +140,64 @@ const BrandPostedCamp = ({ navigation, route }) => {
 
 
                                                             /> */}
-                                                            <Ionicons style={{ position: "absolute", right: 5 }} color={"grey"} size={18} name={"more-vertical"} />
-                                                        </View>
+                                                                <Ionicons style={{ position: "absolute", right: 5 }} color={"grey"} size={18} name={"more-vertical"} />
+                                                            </View>
 
 
-                                                        {
-                                                            item.youtubesubs ?
-                                                                <View style={{ width: "100%", height: 20, flexDirection: "row", alignItems: "center", marginTop: 5 }}>
-                                                                    <Image style={{ width: 20, height: 20 }} source={require("../Icons/youtube.png")} />
-                                                                    <Text style={{ fontSize: 14, marginLeft: 20, color: "#878ca0", left: -10, fontWeight: "bold" }} ><Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }} >{item.youtubesubs ? item.youtubesubs : null}</Text>Subs  |</Text>
-                                                                    <View style={{ width: 60, height: 30, flexDirection: "row", justifyContent: "space-around", left: -5, alignItems: "center" }}>
-                                                                        <Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }}>5m+</Text>
-                                                                        <Ionicons name={"eye"} size={20} color={"gray"} />
+                                                            {
+                                                                item.youtubesubs ?
+                                                                    <View style={{ width: "100%", height: 20, flexDirection: "row", alignItems: "center", marginTop: 5 }}>
+                                                                        <Image style={{ width: 20, height: 20 }} source={require("../Icons/youtube.png")} />
+                                                                        <Text style={{ fontSize: 14, marginLeft: 20, color: "#878ca0", left: -10, fontWeight: "bold" }} ><Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }} >{item.youtubesubs ? item.youtubesubs : null}</Text>Subs  |</Text>
+                                                                        <View style={{ width: 60, height: 30, flexDirection: "row", justifyContent: "space-around", left: -5, alignItems: "center" }}>
+                                                                            <Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }}>5m+</Text>
+                                                                            <Ionicons name={"eye"} size={20} color={"gray"} />
+                                                                        </View>
                                                                     </View>
+                                                                    :
+                                                                    null
+                                                            }
+
+                                                            {item.instafollowers ?
+                                                                <View style={{ width: "100%", height: 20, flexDirection: "row", alignItems: "center", marginTop: 5 }}>
+                                                                    <Image style={{ width: 20, height: 20 }} source={require("../Icons/instagram.png")} />
+                                                                    <Text style={{ fontSize: 14, marginLeft: 20, color: "#878ca0", left: -10, fontWeight: "bold" }} ><Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }} >{item.instafollowers ? item.instafollowers : null} </Text>Followers</Text>
                                                                 </View>
                                                                 :
                                                                 null
-                                                        }
+                                                            }
 
-                                                        {item.instafollowers ?
-                                                            <View style={{ width: "100%", height: 20, flexDirection: "row", alignItems: "center", marginTop: 5 }}>
-                                                                <Image style={{ width: 20, height: 20 }} source={require("../Icons/instagram.png")} />
-                                                                <Text style={{ fontSize: 14, marginLeft: 20, color: "#878ca0", left: -10, fontWeight: "bold" }} ><Text style={{ fontSize: 14, color: "#404852", fontWeight: "bold", textTransform: "uppercase" }} >{item.instafollowers ? item.instafollowers : null} </Text>Followers</Text>
+
+                                                            <View style={{ width: "100%", height: 30, flexDirection: "row", alignItems: "center", marginTop: 3, position: "absolute", bottom: 2 }}>
+                                                                <Text style={{ fontSize: 14, color: "#878ca0", fontWeight: "bold" }} >{item.campaignStartDate.split(" ")[2] + "th" + " " + item.campaignStartDate.split(" ")[1] + " " + item.campaignStartDate.split(" ")[3]} - {item.campaignEndDate.split(" ")[2] + "th" + " " + item.campaignEndDate.split(" ")[1] + " " + item.campaignEndDate.split(" ")[3]}</Text>
                                                             </View>
-                                                            :
-                                                            null
-                                                        }
 
-
-                                                        <View style={{ width: "100%", height: 30, flexDirection: "row", alignItems: "center", marginTop: 3, position: "absolute", bottom: 2 }}>
-                                                            <Text style={{ fontSize: 14, color: "#878ca0", fontWeight: "bold" }} >{item.campaignStartDate.split(" ")[2] + "th" + " " + item.campaignStartDate.split(" ")[1]+" "+item.campaignStartDate.split(" ")[3]} - {item.campaignEndDate.split(" ")[2] + "th" + " " + item.campaignEndDate.split(" ")[1]+" "+item.campaignEndDate.split(" ")[3]}</Text>
                                                         </View>
 
                                                     </View>
+                                                </View>
+
+                                                <View style={style.buttondiv} >
+                                                    <View style={style.button1} >
+                                                        <Text style={style.button1text} >Remove</Text>
+                                                    </View>
+                                                    <View style={style.button2} >
+                                                        <Text style={style.button2text} >Edit</Text>
+                                                    </View>
 
                                                 </View>
+
                                             </View>
-
-                                            <View style={style.buttondiv} >
-                                                <View style={style.button1} >
-                                                    <Text style={style.button1text} >Remove</Text>
-                                                </View>
-                                                <View style={style.button2} >
-                                                    <Text style={style.button2text} >Edit</Text>
-                                                </View>
-
-                                            </View>
-
-                                        </View>
-                                    </TouchableRipple>
+                                        </TouchableRipple>
 
 
-                                )}
-                            />
+                                    )}
+                                />
 
-                        </>
+                            </>
+
+                        :
+                        < Text style={style.info} >Fetching Campaigns..</Text>
                     }
 
 
@@ -274,6 +316,15 @@ const style = StyleSheet.create({
         fontSize: 16,
         color: "#409cff",
         fontWeight: 'bold'
+    },
+    info: {
+        alignSelf: "center",
+        fontSize: 18,
+        alignSelf: "center",
+        fontWeight: "bold",
+        color: "#404852",
+        marginTop: HEIGHT / 2.5,
+        textAlign: "center"
     }
 
 

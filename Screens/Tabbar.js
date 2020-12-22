@@ -56,7 +56,7 @@ const Tabbar = () => {
                 activeTintColor: '#2989ff',
                 inactiveTintColor: 'gray',
                 tabStyle: [{ backgroundColor: "white" }],
-                labelStyle: { fontWeight: "bold", bottom: 9, fontSize: 10, },
+                labelStyle: { fontWeight: "bold", bottom: 9, fontSize: 0, },
                 style: { height: 60 },
                 keyboardHidesTabBar: true
             }}>

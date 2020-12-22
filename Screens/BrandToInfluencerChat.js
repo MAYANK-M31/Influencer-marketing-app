@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef,useContext } from 'react'
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,7 +8,7 @@ import {
     StatusBar,
     Dimensions,
     TouchableOpacity,
-    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, BackHandler, Alert
+    Image, FlatList, ImageBackground, ActivityIndicator, AsyncStorage, BackHandler, Alert, AppState,ToastAndroid
 } from 'react-native';
 
 import Ionicons from "react-native-vector-icons/Feather"
@@ -28,6 +28,10 @@ const images = [
 ]
 
 const BrandToInfluencerChat = ({ navigation, route }) => {
+
+
+    const { state, dispatch } = useContext(MyContext)
+
     const [messages, setMessages] = useState([]);
     const [messagedata, setmessagedata] = useState([])
     const [myid, setmyid] = useState(null)
@@ -53,6 +57,9 @@ const BrandToInfluencerChat = ({ navigation, route }) => {
         return () =>
             BackHandler.removeEventListener("hardwareBackPress", backAction);
     }, []);
+
+
+   
 
 
     useEffect(() => {
@@ -93,31 +100,30 @@ const BrandToInfluencerChat = ({ navigation, route }) => {
             });
 
 
-             // To get Influencer Is online or not
-             database()
-             .ref(route.params.ChatRoom_Id)
-             .on('value', snapshot => {
-                 // setmessagedata(snapshot.val())
-                 // setMessages(snapshot.val())
-                 if (snapshot.val().onlineInfluencer) {
+        // To get Influencer Is online or not
+        database()
+            .ref(route.params.ChatRoom_Id)
+            .on('value', snapshot => {
+                // setmessagedata(snapshot.val())
+                // setMessages(snapshot.val())
+                if (snapshot.val().onlineInfluencer) {
                     setonline(snapshot.val().onlineInfluencer)
- 
-                 }else{
-                     setonline(false)
-                 }
- 
-             });
+
+                } else {
+                    setonline(false)
+                }
+
+            });
 
 
         //TO Add User(Me Brand) is online or offline
         const ref = database().ref(route.params.ChatRoom_Id)
         ref.update({ onlineBrand: true })
+        dispatch({ type: "ADD_CURRENTCHATROOMID", payload: route.params.ChatRoom_Id })
 
 
         return () =>
             ref.update({ onlineBrand: false })
-
-
 
     }, [])
 
@@ -132,8 +138,9 @@ const BrandToInfluencerChat = ({ navigation, route }) => {
         const createdAt = database.ServerValue.TIMESTAMP
         const text = messages[0].text
         const user = messages[0].user
+        const type = "influencer"
 
-        const datas = { _id: id, createdAt: createdAt, text: text, user: user, sent: true }
+        const datas = { _id: id, createdAt: createdAt, text: text, user: user, sent: true ,type:type}
         //    console.log(datas);
 
         ref.push(datas)
@@ -241,8 +248,8 @@ const BrandToInfluencerChat = ({ navigation, route }) => {
                 </TouchableOpacity>
             </View>
 
-            <View style={{ height: 20, width: 50, backgroundColor: "white", borderWidth: 1, borderRadius: 10, borderColor: online ? "#01e491":"#e7164c", position: "absolute", alignSelf: "center", top: 80, zIndex: 1, justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ fontSize: 9, fontWeight: "bold", color: online ? "#01e491":"#e7164c" }} >{online ? "Online":"Offline" }</Text>
+            <View style={{ height: 20, width: 50, backgroundColor: "white", borderWidth: 1, borderRadius: 10, borderColor: online ? "#01e491" : "#e7164c", position: "absolute", alignSelf: "center", top: 80, zIndex: 1, justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ fontSize: 9, fontWeight: "bold", color: online ? "#01e491" : "#e7164c" }} >{online ? "Online" : "Offline"}</Text>
             </View>
 
             <GiftedChat

@@ -24,9 +24,8 @@ const HEIGHT = Dimensions.get("window").height
 
 const EditAge = ({ navigation, route }) => {
 
-    const {state,dispatch} = useContext(MyContext)
-    const {age} = state;
-    const [value, setvalue] = useState(age)
+    const {dispatch} = useContext(MyContext)
+    const [value, setvalue] = useState(route.params.age)
     
    
 
@@ -35,7 +34,7 @@ const EditAge = ({ navigation, route }) => {
             ToastAndroid.show("Age must be greater than 5 ", ToastAndroid.SHORT)
         } else {
 
-            const func = async () => {
+            const Fetch = async () => {
            
                 const docid = await AsyncStorage.getItem("DocId")
                 const ref = await firestore().collection("influencer").doc(docid)
@@ -44,7 +43,7 @@ const EditAge = ({ navigation, route }) => {
                 }).then(async()=>{
                     ToastAndroid.show("Updated",ToastAndroid.SHORT)
                     navigation.goBack()
-                    dispatch({type:"ADD_AGE",payload:value})
+                    // dispatch({type:"ADD_AGE",payload:value})
                     // await AsyncStorage.setItem("editage",value)
                 })
                 
@@ -52,7 +51,7 @@ const EditAge = ({ navigation, route }) => {
                   
 
             }
-              func()
+              Fetch()
 
 
             // navigation.goBack()
